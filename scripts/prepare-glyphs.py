@@ -30,6 +30,7 @@ approved=json.loads((ROOT/'references/isopromat-fonts/approved-a-models.json').r
 overrides=json.loads((ROOT/'references/isopromat-fonts/route-overrides.json').read_text())
 demonstrations=json.loads((ROOT/'references/isopromat-fonts/demonstration-routes.json').read_text())
 practice_segments=json.loads((ROOT/'references/isopromat-fonts/practice-segments.json').read_text())
+writing_instructions=json.loads((ROOT/'references/isopromat-fonts/writing-instructions.json').read_text())
 
 def simplify(points,epsilon=.25):
     if len(points)<3:return points
@@ -174,6 +175,7 @@ with tempfile.TemporaryDirectory(prefix='gost-centres-') as folder:
             mask=np.array(Image.open(tmp/(str(ord(character))+'.png')).getchannel('A'))>127
             glyph['model']=routes(mask,character)
         if character in demonstrations:glyph['demonstration']=[[[30+x/14,140-y/14] for x,y in line] for line in demonstrations[character]]
+        if character in writing_instructions:glyph['instruction']=writing_instructions[character]
         if character in practice_segments:glyph['practiceSegments']=practice_segments[character]
         glyph['routeSource']='approved-manual' if character in approved else 'authored-from-outline-v1' if character in overrides else 'outline-skeleton-v1'
         glyph['revision']=hashlib.sha256(json.dumps(glyph['model'],separators=(',',':')).encode()).hexdigest()[:12]

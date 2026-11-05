@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "date": "2026-11-03",
-  "reviewed_build": "2026-11-03.28",
+  "date": "2026-11-05",
+  "reviewed_build": "2026-11-05.50",
   "scope": "33 uppercase/lowercase pairs, source diagrams and explicit adaptations; source diagrams are inclined, app uses upright GOST. These are instructional recommendations, not a claim that GOST mandates pen order.",
   "sources": [
     {
@@ -77,9 +77,10 @@
         "note": "Рис. 6, группа 1"
       },
       "current_moves": [
-        2,
-        1
-      ]
+        3,
+        2
+      ],
+      "current_moves_note": "Число нумерованных элементов; направленные стыки могут выполняться без отрыва."
     },
     {
       "letter": "Б",
@@ -112,9 +113,10 @@
         "note": "Рис. 6, группа 1"
       },
       "current_moves": [
-        1,
-        2
-      ]
+        3,
+        4
+      ],
+      "current_moves_note": "Число нумерованных элементов; направленные стыки могут выполняться без отрыва."
     },
     {
       "letter": "В",
@@ -147,9 +149,10 @@
         "note": "Рис. 6, группа 1"
       },
       "current_moves": [
-        2,
-        2
-      ]
+        3,
+        3
+      ],
+      "current_moves_note": "Число нумерованных элементов; направленные стыки могут выполняться без отрыва."
     },
     {
       "letter": "Г",
@@ -182,9 +185,10 @@
         "note": "Рис. 6, группа 1"
       },
       "current_moves": [
-        1,
-        1
-      ]
+        2,
+        2
+      ],
+      "current_moves_note": "Число нумерованных элементов; направленные стыки могут выполняться без отрыва."
     },
     {
       "letter": "Д",
@@ -217,9 +221,10 @@
         "note": "Рис. 6, группа 1"
       },
       "current_moves": [
-        2,
-        1
-      ]
+        5,
+        3
+      ],
+      "current_moves_note": "Число нумерованных элементов; направленные стыки могут выполняться без отрыва."
     },
     {
       "letter": "Е",
@@ -252,9 +257,10 @@
         "note": "Рис. 6, группа 1"
       },
       "current_moves": [
-        2,
-        1
-      ]
+        4,
+        3
+      ],
+      "current_moves_note": "Число нумерованных элементов; направленные стыки могут выполняться без отрыва."
     },
     {
       "letter": "Ё",
@@ -289,9 +295,10 @@
         "base": "е"
       },
       "current_moves": [
-        4,
-        3
-      ]
+        6,
+        5
+      ],
+      "current_moves_note": "Число нумерованных элементов; направленные стыки могут выполняться без отрыва."
     },
     {
       "letter": "Ж",
@@ -325,9 +332,10 @@
         "base": "Ж"
       },
       "current_moves": [
-        4,
-        4
-      ]
+        5,
+        5
+      ],
+      "current_moves_note": "Число нумерованных элементов; направленные стыки могут выполняться без отрыва."
     },
     {
       "letter": "З",
@@ -363,7 +371,8 @@
       "current_moves": [
         2,
         2
-      ]
+      ],
+      "current_moves_note": "Число нумерованных элементов; направленные стыки могут выполняться без отрыва."
     },
     {
       "letter": "И",
@@ -397,9 +406,10 @@
         "base": "й"
       },
       "current_moves": [
-        1,
-        1
-      ]
+        3,
+        2
+      ],
+      "current_moves_note": "Число нумерованных элементов; направленные стыки могут выполняться без отрыва."
     },
     {
       "letter": "Й",
@@ -432,9 +442,10 @@
         "note": "Рис. 6, группа 2"
       },
       "current_moves": [
-        2,
-        2
-      ]
+        4,
+        3
+      ],
+      "current_moves_note": "Число нумерованных элементов; направленные стыки могут выполняться без отрыва."
     },
     {
       "letter": "К",
@@ -470,7 +481,8 @@
       "current_moves": [
         3,
         3
-      ]
+      ],
+      "current_moves_note": "Число нумерованных элементов; направленные стыки могут выполняться без отрыва."
     },
     {
       "letter": "Л",
@@ -504,9 +516,10 @@
         "base": "Л"
       },
       "current_moves": [
-        1,
-        1
-      ]
+        2,
+        2
+      ],
+      "current_moves_note": "Число нумерованных элементов; направленные стыки могут выполняться без отрыва."
     },
     {
       "letter": "М",
@@ -540,9 +553,10 @@
         "base": "М"
       },
       "current_moves": [
-        1,
-        1
-      ]
+        4,
+        4
+      ],
+      "current_moves_note": "Число нумерованных элементов; направленные стыки могут выполняться без отрыва."
     },
     {
       "letter": "Н",
@@ -578,7 +592,8 @@
       "current_moves": [
         3,
         3
-      ]
+      ],
+      "current_moves_note": "Число нумерованных элементов; направленные стыки могут выполняться без отрыва."
     },
     {
       "letter": "О",
@@ -612,9 +627,10 @@
         "base": "О"
       },
       "current_moves": [
-        1,
-        1
-      ]
+        2,
+        2
+      ],
+      "current_moves_note": "Число нумерованных элементов; направленные стыки могут выполняться без отрыва."
     },
     {
       "letter": "П",
@@ -647,9 +663,10 @@
         "note": "Рис. 6, группа 2"
       },
       "current_moves": [
-        1,
-        1
-      ]
+        3,
+        2
+      ],
+      "current_moves_note": "Число нумерованных элементов; направленные стыки могут выполняться без отрыва."
     },
     {
       "letter": "Р",
@@ -685,7 +702,8 @@
       "current_moves": [
         2,
         2
-      ]
+      ],
+      "current_moves_note": "Число нумерованных элементов; направленные стыки могут выполняться без отрыва."
     },
     {
       "letter": "С",
@@ -719,9 +737,10 @@
         "base": "С"
       },
       "current_moves": [
-        1,
-        1
-      ]
+        2,
+        2
+      ],
+      "current_moves_note": "Число нумерованных элементов; направленные стыки могут выполняться без отрыва."
     },
     {
       "letter": "Т",
@@ -755,8 +774,9 @@
       },
       "current_moves": [
         2,
-        2
-      ]
+        4
+      ],
+      "current_moves_note": "Число нумерованных элементов; направленные стыки могут выполняться без отрыва."
     },
     {
       "letter": "У",
@@ -792,7 +812,8 @@
       "current_moves": [
         2,
         2
-      ]
+      ],
+      "current_moves_note": "Число нумерованных элементов; направленные стыки могут выполняться без отрыва."
     },
     {
       "letter": "Ф",
@@ -826,9 +847,10 @@
         "base": "Ф"
       },
       "current_moves": [
-        2,
-        2
-      ]
+        3,
+        3
+      ],
+      "current_moves_note": "Число нумерованных элементов; направленные стыки могут выполняться без отрыва."
     },
     {
       "letter": "Х",
@@ -864,7 +886,8 @@
       "current_moves": [
         2,
         2
-      ]
+      ],
+      "current_moves_note": "Число нумерованных элементов; направленные стыки могут выполняться без отрыва."
     },
     {
       "letter": "Ц",
@@ -897,9 +920,10 @@
         "note": "Рис. 6, группа 2"
       },
       "current_moves": [
-        2,
-        2
-      ]
+        4,
+        3
+      ],
+      "current_moves_note": "Число нумерованных элементов; направленные стыки могут выполняться без отрыва."
     },
     {
       "letter": "Ч",
@@ -935,7 +959,8 @@
       "current_moves": [
         2,
         2
-      ]
+      ],
+      "current_moves_note": "Число нумерованных элементов; направленные стыки могут выполняться без отрыва."
     },
     {
       "letter": "Ш",
@@ -968,9 +993,10 @@
         "note": "Рис. 6, группа 2"
       },
       "current_moves": [
-        2,
-        2
-      ]
+        4,
+        4
+      ],
+      "current_moves_note": "Число нумерованных элементов; направленные стыки могут выполняться без отрыва."
     },
     {
       "letter": "Щ",
@@ -1003,9 +1029,10 @@
         "note": "Рис. 6, группа 2"
       },
       "current_moves": [
-        3,
-        3
-      ]
+        5,
+        5
+      ],
+      "current_moves_note": "Число нумерованных элементов; направленные стыки могут выполняться без отрыва."
     },
     {
       "letter": "Ъ",
@@ -1039,9 +1066,10 @@
         "base": "Ъ"
       },
       "current_moves": [
-        1,
-        1
-      ]
+        3,
+        3
+      ],
+      "current_moves_note": "Число нумерованных элементов; направленные стыки могут выполняться без отрыва."
     },
     {
       "letter": "Ы",
@@ -1075,9 +1103,10 @@
         "base": "Ы"
       },
       "current_moves": [
-        2,
-        2
-      ]
+        3,
+        3
+      ],
+      "current_moves_note": "Число нумерованных элементов; направленные стыки могут выполняться без отрыва."
     },
     {
       "letter": "Ь",
@@ -1111,9 +1140,10 @@
         "base": "Ь"
       },
       "current_moves": [
-        1,
-        1
-      ]
+        2,
+        2
+      ],
+      "current_moves_note": "Число нумерованных элементов; направленные стыки могут выполняться без отрыва."
     },
     {
       "letter": "Э",
@@ -1147,9 +1177,10 @@
         "base": "Э"
       },
       "current_moves": [
-        2,
-        2
-      ]
+        3,
+        3
+      ],
+      "current_moves_note": "Число нумерованных элементов; направленные стыки могут выполняться без отрыва."
     },
     {
       "letter": "Ю",
@@ -1183,9 +1214,10 @@
         "base": "Ю"
       },
       "current_moves": [
-        3,
-        3
-      ]
+        4,
+        4
+      ],
+      "current_moves_note": "Число нумерованных элементов; направленные стыки могут выполняться без отрыва."
     },
     {
       "letter": "Я",
@@ -1221,7 +1253,8 @@
       "current_moves": [
         3,
         3
-      ]
+      ],
+      "current_moves_note": "Число нумерованных элементов; направленные стыки могут выполняться без отрыва."
     }
   ],
   "coverage": {
@@ -1232,9 +1265,9 @@
   "findings": {
     "Оо": "Build28 continuous loop starts along the top to the left, counter-clockwise. LENSK fig5 shows two downward halves; OSU fig1 shows four elements. No single mandatory rotation follows from these sources.",
     "Кк": "Build28 right-side V is drawn before the left connector. LENSK fig5 shows stem, full upper arm to the stem, then lower leg from its branch.",
-    "А": "Previously approved app path rises to apex then descends in one motion. Source chart uses separate downward sides; treat this as an explicit app-specific alternative, not a GOST requirement."
+    "А": "Build50: по новому указанию владельца вместо прежнего вверх-вниз принят порядок источника: левая сторона вниз, правая вниз, перекладина вправо."
   },
-  "status": "Source coverage atlas, not a claim that all existing app motions are pedagogically validated. O/o and K/k corrected in build29; other letters preserved.",
+  "status": "Все66форм имеют отдельные проверенные учебные маршруты и статические схемы в приложении. Порядок — адаптация LENSK p36 fig5/6 к прямому типуБ;44 прямых образца,19 аналогий,3 производных формы явно отмечены. Исходные контуры, assessment model, revision и чернила в50 не менялись. Локальный PDF-атлас от03.11 остаётся историческим снимком.",
   "followup_reviews": [
     {
       "date": "2026-11-05",
@@ -1249,6 +1282,23 @@
         "е fig6/group1: outer C body, upper-right arc, then middle bar left-to-right. Exact old centre edges reordered into three movements; no assessment/model/revision changes."
       ],
       "limits": "Instructional adaptation of inclined source to upright type B; GOST does not prescribe pen order. Other letter teaching schemes were not re-reviewed in this follow-up."
+    },
+    {
+      "date": "2026-11-05",
+      "build": "2026-11-05.50",
+      "scope": "Все33пары; порядок/направление элементов, статическая инструкция и анимация из одного массива",
+      "source": "LENSK p36 fig5/6; all five upper groups and both lower groups inspected; font-specific split points adapted",
+      "differences": [
+        "Е: стойка,верх,низ,середина",
+        "В: стойка,нижняя часть,верхняя часть",
+        "М: левая стойка,правая стойка,правая диагональ,левая диагональ",
+        "И/Й: обе стойки вниз, затем диагональ сверху справа вниз влево",
+        "Ф: стойка,левая дуга,правая дуга",
+        "З: верхняя дуга с выходом влево, затем нижняя дуга",
+        "С: корпус и нижнее закругление; Э: верх/правая сторона,низ,середина справа налево",
+        "Строчные т/ш/щ имеют собственный порядок по рис6"
+      ],
+      "limits": "Учебные рекомендации, не предписание ГОСТ; для строчных по аналогии используется собственная геометрия выбранного TTF."
     }
   ]
 }

@@ -74,3 +74,12 @@ body.learner[data-variant] .sheet{padding-bottom:max(140px,calc(var(--cell-heigh
 
 /* Only completed guided work supplies a rate; blank tiles keep the same size. */
 .learner button.lesson-tile{position:relative}.lesson-tile .lesson-rate{min-height:16px;line-height:16px;font-variant-numeric:tabular-nums}.lesson-tile .lesson-rate-track{position:absolute;left:10px;right:10px;bottom:5px;height:5px;border-radius:4px;overflow:hidden;pointer-events:none}.lesson-rate-track[data-band=green]{background:#dcebdd;--rate-color:#347356}.lesson-rate-track[data-band=yellow]{background:#efdda2;--rate-color:#b58620}.lesson-rate-fill{display:block;height:100%;width:var(--lesson-rate);background:var(--rate-color)}
+
+/* Each form keeps its moving example left and a stable writing scheme right. */
+#sample-panel{width:min(760px,calc(100% - 24px));max-width:760px}
+#sample-panel .sample-pair{display:grid;gap:12px}
+#sample-panel .sample-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;min-width:0;align-items:center}
+#sample-panel .sample-form svg{display:block;width:100%;height:220px;max-height:none;min-width:0;overflow:hidden}
+#sample-panel .sample-form+.sample-form{border-top:1px solid #e2e9e1;padding-top:12px}
+@media(max-height:650px){#sample-panel .sample-form svg{height:180px}#sample-panel .sample-pair{gap:8px}}
+@media(max-width:500px){#sample-panel{padding:12px}#sample-panel .sample-form{gap:8px}#sample-panel .sample-form svg{height:190px}}

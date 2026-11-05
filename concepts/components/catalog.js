@@ -28,10 +28,10 @@ function setLetterSources(sources,letter='А'){
    if(source.practiceSegments){
     const previous=parts.splice(firstPart),prefix='gost-b90-'+character.codePointAt(0).toString(16);
     for(const segment of source.practiceSegments){
-     const line=source.demonstration?.[segment.route]?.slice(...segment.range);
+     const kind=segment.source||'demonstration',line=source[kind]?.[segment.route]?.slice(...segment.range);
      if(!line||line.length<2||length(line)<12)throw new Error('Invalid practice segment: '+character+' '+segment.key);
      const legacyIds=segment.legacyIds||previous.filter(p=>p.sourceStroke===segment.legacyModelRoute).flatMap(p=>[p.id,...(p.legacyIds||[])]);
-     parts.push({id:prefix+'-practice-v3-'+segment.key,name:character+' · '+segment.name,letters:[character],model:[line],legacyIds,primary:!!segment.primary,sourceKind:'demonstration',sourceStroke:segment.route,sourceRange:segment.range});
+     parts.push({id:prefix+'-practice-v3-'+segment.key,name:character+' · '+segment.name,letters:[character],model:[line],legacyIds,primary:!!segment.primary,sourceKind:kind,sourceStroke:segment.route,sourceRange:segment.range});
     }
    }
    if(dots.length)parts.push({id:'gost-b90-'+character.codePointAt(0).toString(16)+'-dots',name:character+' · Точки',letters:[character],model:dots});
