@@ -1,0 +1,16 @@
+const fs=require('node:fs'),vm=require('node:vm'),path=require('node:path'),assert=require('node:assert/strict');
+const context={structuredClone};vm.createContext(context);vm.runInContext(fs.readFileSync(path.join(__dirname,'../components/learning-progress.js'),'utf8'),context);const Progress=vm.runInContext('LearningProgress',context);
+const saved={},storage={getItem:k=>saved[k]||null,setItem:(k,v)=>saved[k]=v};const first=new Progress(storage),second=new Progress(storage);
+first.finish('А',{traced:1,traceScore:85,signature:'first',at:1});second.finish('О',{traced:1,traceScore:95,signature:'second',at:2});let reopened=new Progress(storage);assert.equal(reopened.summary().sessions,2);assert.equal(reopened.sessions('А').length,1);
+// The same completed work from a stale tab is still one session.
+second.finish('А',{traced:1,traceScore:85,signature:'first',at:3});assert.equal(new Progress(storage).summary().sessions,2);
+first.finish('А',{traced:2,traceScore:100,signature:'third',at:4});reopened=new Progress(storage);assert.equal(reopened.summary().sessions,3);assert.equal(reopened.sessions('О').length,1);
+// A valid session with absent/invalid score fields stays readable, never undefined%.
+saved['gost-learning-progress-v1']=JSON.stringify({version:1,letters:{'Н':{sessions:[{at:5,traced:1,independent:0,signature:'legacy'},{at:6,traced:-1,independent:0,signature:'bad'}]}}});reopened=new Progress(storage);assert.equal(reopened.sessions('Н').length,1);assert.equal(reopened.sessions('Н')[0].traceScore,null);assert.equal(reopened.sessions('Н')[0].independentScore,null);
+let fail=true;const memory={},flaky={getItem:k=>memory[k]||null,setItem(k,v){if(fail)throw Error('full');memory[k]=v}};const a=new Progress(flaky),b=new Progress(flaky);a.finish('А',{traced:1,signature:'a',at:1});assert.equal(a.lastSaveSucceeded,false);fail=false;b.finish('О',{traced:1,signature:'b',at:2});a.finish('А',{traced:1,signature:'a',at:3});reopened=new Progress(flaky);assert.equal(reopened.summary().sessions,2);assert.equal(a.lastSaveSucceeded,true);
+console.log('PASS: stale tabs preserve each other, same-work completion remains idempotent, malformed scores normalize, invalid sessions are rejected, failed-save retry merges durable work');
+
+const detailed={version:1,tolerance:8,size:92,bold:100,upper:{count:2,score:95,meanMs:3300,timedCount:2},lower:{count:1,score:90,meanMs:4200,timedCount:1},overall:{count:5,score:88}};
+const durable={},detailStorage={getItem:k=>durable[k]||null,setItem:(k,v)=>durable[k]=v},details=new Progress(detailStorage);details.finish('А',{traced:5,traceScore:88,statistics:detailed,signature:'details',at:10});assert.equal(new Progress(detailStorage).sessions('А')[0].statistics.upper.meanMs,3300);assert.equal(new Progress(detailStorage).sessions('А')[0].statistics.tolerance,8);
+const bad=structuredClone(detailed);bad.lower.meanMs=-1;bad.upper.timedCount=100;const clean=Progress.statistics(bad);assert.equal(clean.upper.meanMs,null);assert.equal(clean.upper.timedCount,0);assert.equal(clean.lower.meanMs,null);assert.equal(Progress.statistics({...detailed,tolerance:99}),null);assert.equal(Progress.statistics({...detailed,overall:{count:1,score:100}}),null);
+console.log('PASS: session statistics survive reload with captured difficulty, separate means and overall; malformed timing/counts never turn into fake durations');

@@ -1,0 +1,41 @@
+// Author-selected drawing exercises: related stroke shapes, not a requirement
+// that the pictured word starts with the lesson letter. Full catalog stays editable.
+const LessonPictures={
+ version:1,
+ lessons:{
+  'А':{ids:['art-kite','art-house','art-sailboat','art-plane','art-tent'],parts:'Две наклонные стороны и горизонтальная перемычка'},
+  'У':{ids:['art-fish','art-leaf','art-turtle'],parts:'Развилка наклонных, нисходящая линия и округлая часть'},
+  'О':{ids:['art-sun','art-ladybug','art-bus'],parts:'Замкнутый округлый контур'},
+  'Э':{ids:['art-umbrella','art-mushroom','art-cup'],parts:'Округлая сторона, стойка и поперечная линия'},
+  'И':{ids:['art-train','art-plane','art-lighthouse'],parts:'Вертикальные и диагональные линии'},
+  'Ы':{ids:['art-truck','art-turtle','art-bus'],parts:'Стойки, поперечные линии и замкнутая округлая часть'},
+  'М':{ids:['art-mountains','art-tent','art-windmill'],parts:'Сходящиеся и расходящиеся наклонные'},
+  'Н':{ids:['art-ladder','art-bridge','art-gift'],parts:'Пара вертикалей с горизонтальной перемычкой'},
+  'Л':{ids:['art-tent','art-house','art-sailboat'],parts:'Наклонная сторона и высокая правая сторона'},
+  'Р':{ids:['art-rocket','art-cup','art-lighthouse'],parts:'Длинная стойка и замкнутая округлая верхняя часть'},
+  'Е':{ids:['art-gift','art-ladder','art-bridge'],parts:'Стойки и несколько горизонтальных уровней'},
+  'Ё':{ids:['art-bus','art-gift','art-rain-cloud'],parts:'Стойки, горизонтальные уровни и небольшие отдельные детали'},
+  'Я':{ids:['art-apple','art-leaf','art-snail'],parts:'Округлый замкнутый контур и наклонное ответвление'},
+  'Ю':{ids:['art-bicycle','art-ladybug','art-sun'],parts:'Стойка, перемычка и округлый замкнутый контур'},
+  'Ь':{ids:['art-snail','art-cup','art-pear'],parts:'Короткая стойка и замкнутая округлая часть'},
+  'Г':{ids:['art-bridge','art-ladder','art-truck'],parts:'Горизонталь, соединённая с вертикалью'},
+  'К':{ids:['art-windmill','art-snowflake','art-leaf'],parts:'Наклонные ответвления от центральной линии'},
+  'З':{ids:['art-pear','art-icecream','art-bee'],parts:'Соединённые округлые выпуклости'},
+  'С':{ids:['art-rainbow','art-umbrella','art-flower'],parts:'Открытые плавные дуги'},
+  'Д':{ids:['art-house','art-castle','art-tent'],parts:'Наклонные стороны, горизонтальное основание и короткие стойки'},
+  'Т':{ids:['art-mushroom','art-umbrella','art-lighthouse'],parts:'Широкая верхняя часть над центральной стойкой'},
+  'В':{ids:['art-butterfly','art-bee','art-ladybug'],parts:'Парные округлые части вдоль вертикали'},
+  'Ф':{ids:['art-ladybug','art-bicycle','art-sun'],parts:'Замкнутый округлый контур, разделённый вертикалью'},
+  'Б':{ids:['art-turtle','art-cup','art-truck'],parts:'Верхний выступ, стойка и округлая нижняя часть'},
+  'П':{ids:['art-castle','art-house','art-gift'],parts:'Вертикали, соединённые верхней горизонталью'},
+  'Й':{ids:['art-rain-cloud','art-plane','art-train'],parts:'Прямые наклонные штрихи и отдельная верхняя дуга'},
+  'Ж':{ids:['art-snowflake','art-windmill','art-leaf'],parts:'Пересечение вертикальной и диагональных линий'},
+  'Ш':{ids:['art-bus','art-bridge','art-castle'],parts:'Несколько вертикальных разделителей и общее основание'},
+  'Ч':{ids:['art-cup','art-turtle','art-snail'],parts:'Вертикальная сторона и примыкающая округлая часть'},
+  'Щ':{ids:['art-castle','art-bridge','art-train'],parts:'Группа вертикальных сторон, основание и выступающие детали'},
+  'Х':{ids:['art-plane','art-kite','art-mountains'],parts:'Встречные пересекающиеся наклонные'},
+  'Ц':{ids:['art-lighthouse','art-bridge','art-train'],parts:'Вертикальные стороны, горизонтальное основание и нижний выступ'},
+  'Ъ':{ids:['art-turtle','art-truck','art-cup'],parts:'Верхний выступ и округлая часть у стойки'}
+ },
+ forLesson(letter,variant=0){const ids=this.lessons[letter]?.ids;if(!ids?.length)throw new Error('No lesson drawing for '+letter);return ids[variant%ids.length]}
+};

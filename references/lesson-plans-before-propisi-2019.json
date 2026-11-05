@@ -1,0 +1,669 @@
+{
+  "order": [
+    "А",
+    "У",
+    "О",
+    "Э",
+    "И",
+    "Ы",
+    "М",
+    "Н",
+    "Л",
+    "Р",
+    "Е",
+    "Ё",
+    "Я",
+    "Ю",
+    "Ь",
+    "Г",
+    "К",
+    "З",
+    "С",
+    "Д",
+    "Т",
+    "В",
+    "Ф",
+    "Б",
+    "П",
+    "Й",
+    "Ж",
+    "Ш",
+    "Ч",
+    "Щ",
+    "Х",
+    "Ц",
+    "Ъ"
+  ],
+  "plans": {
+    "А": [
+      {
+        "id": "primary",
+        "text": "ААА",
+        "repeats": 3,
+        "enabled": true
+      }
+    ],
+    "У": [
+      {
+        "id": "primary",
+        "text": "ау",
+        "repeats": 3,
+        "enabled": true
+      },
+      {
+        "id": "row-1",
+        "text": "уа",
+        "repeats": 2,
+        "enabled": true
+      }
+    ],
+    "О": [
+      {
+        "id": "primary",
+        "text": "ао",
+        "repeats": 3,
+        "enabled": true
+      },
+      {
+        "id": "row-1",
+        "text": "оу",
+        "repeats": 2,
+        "enabled": true
+      }
+    ],
+    "Э": [
+      {
+        "id": "primary",
+        "text": "эо",
+        "repeats": 3,
+        "enabled": true
+      },
+      {
+        "id": "row-1",
+        "text": "аэ",
+        "repeats": 2,
+        "enabled": true
+      }
+    ],
+    "И": [
+      {
+        "id": "primary",
+        "text": "аи",
+        "repeats": 3,
+        "enabled": true
+      },
+      {
+        "id": "row-1",
+        "text": "иа",
+        "repeats": 2,
+        "enabled": true
+      }
+    ],
+    "Ы": [
+      {
+        "id": "primary",
+        "text": "ыы",
+        "repeats": 3,
+        "enabled": true
+      },
+      {
+        "id": "row-1",
+        "text": "аы",
+        "repeats": 2,
+        "enabled": true
+      }
+    ],
+    "М": [
+      {
+        "id": "primary",
+        "text": "ма",
+        "repeats": 3,
+        "enabled": true
+      },
+      {
+        "id": "row-1",
+        "text": "мама",
+        "repeats": 2,
+        "enabled": true
+      },
+      {
+        "id": "row-2",
+        "text": "мы",
+        "repeats": 2,
+        "enabled": true
+      }
+    ],
+    "Н": [
+      {
+        "id": "primary",
+        "text": "на",
+        "repeats": 3,
+        "enabled": true
+      },
+      {
+        "id": "row-1",
+        "text": "нам",
+        "repeats": 2,
+        "enabled": true
+      },
+      {
+        "id": "row-2",
+        "text": "она",
+        "repeats": 2,
+        "enabled": true
+      }
+    ],
+    "Л": [
+      {
+        "id": "primary",
+        "text": "ла",
+        "repeats": 3,
+        "enabled": true
+      },
+      {
+        "id": "row-1",
+        "text": "мыло",
+        "repeats": 2,
+        "enabled": true
+      },
+      {
+        "id": "row-2",
+        "text": "мыла",
+        "repeats": 2,
+        "enabled": true
+      }
+    ],
+    "Р": [
+      {
+        "id": "primary",
+        "text": "ра",
+        "repeats": 3,
+        "enabled": true
+      },
+      {
+        "id": "row-1",
+        "text": "рама",
+        "repeats": 2,
+        "enabled": true
+      },
+      {
+        "id": "row-2",
+        "text": "мир",
+        "repeats": 2,
+        "enabled": true
+      },
+      {
+        "id": "row-3",
+        "text": "Мама мыла раму.",
+        "repeats": 1,
+        "enabled": true
+      }
+    ],
+    "Е": [
+      {
+        "id": "primary",
+        "text": "ме",
+        "repeats": 3,
+        "enabled": true
+      },
+      {
+        "id": "row-1",
+        "text": "ела",
+        "repeats": 2,
+        "enabled": true
+      },
+      {
+        "id": "row-2",
+        "text": "ели",
+        "repeats": 2,
+        "enabled": true
+      },
+      {
+        "id": "row-3",
+        "text": "Мама ела.",
+        "repeats": 1,
+        "enabled": true
+      }
+    ],
+    "Ё": [
+      {
+        "id": "primary",
+        "text": "мё",
+        "repeats": 3,
+        "enabled": true
+      },
+      {
+        "id": "row-1",
+        "text": "мёл",
+        "repeats": 2,
+        "enabled": true
+      },
+      {
+        "id": "row-2",
+        "text": "орёл",
+        "repeats": 2,
+        "enabled": true
+      }
+    ],
+    "Я": [
+      {
+        "id": "primary",
+        "text": "мя",
+        "repeats": 3,
+        "enabled": true
+      },
+      {
+        "id": "row-1",
+        "text": "яма",
+        "repeats": 2,
+        "enabled": true
+      },
+      {
+        "id": "row-2",
+        "text": "моя",
+        "repeats": 2,
+        "enabled": true
+      }
+    ],
+    "Ю": [
+      {
+        "id": "primary",
+        "text": "лю",
+        "repeats": 3,
+        "enabled": true
+      },
+      {
+        "id": "row-1",
+        "text": "юла",
+        "repeats": 2,
+        "enabled": true
+      },
+      {
+        "id": "row-2",
+        "text": "мою",
+        "repeats": 2,
+        "enabled": true
+      }
+    ],
+    "Ь": [
+      {
+        "id": "primary",
+        "text": "ль",
+        "repeats": 3,
+        "enabled": true
+      },
+      {
+        "id": "row-1",
+        "text": "моль",
+        "repeats": 2,
+        "enabled": true
+      },
+      {
+        "id": "row-2",
+        "text": "роль",
+        "repeats": 2,
+        "enabled": true
+      }
+    ],
+    "Г": [
+      {
+        "id": "primary",
+        "text": "га",
+        "repeats": 3,
+        "enabled": true
+      },
+      {
+        "id": "row-1",
+        "text": "гора",
+        "repeats": 2,
+        "enabled": true
+      },
+      {
+        "id": "row-2",
+        "text": "игра",
+        "repeats": 2,
+        "enabled": true
+      }
+    ],
+    "К": [
+      {
+        "id": "primary",
+        "text": "ка",
+        "repeats": 3,
+        "enabled": true
+      },
+      {
+        "id": "row-1",
+        "text": "мак",
+        "repeats": 2,
+        "enabled": true
+      },
+      {
+        "id": "row-2",
+        "text": "рука",
+        "repeats": 2,
+        "enabled": true
+      }
+    ],
+    "З": [
+      {
+        "id": "primary",
+        "text": "за",
+        "repeats": 3,
+        "enabled": true
+      },
+      {
+        "id": "row-1",
+        "text": "роза",
+        "repeats": 2,
+        "enabled": true
+      },
+      {
+        "id": "row-2",
+        "text": "зима",
+        "repeats": 2,
+        "enabled": true
+      }
+    ],
+    "С": [
+      {
+        "id": "primary",
+        "text": "са",
+        "repeats": 3,
+        "enabled": true
+      },
+      {
+        "id": "row-1",
+        "text": "сом",
+        "repeats": 2,
+        "enabled": true
+      },
+      {
+        "id": "row-2",
+        "text": "сыр",
+        "repeats": 2,
+        "enabled": true
+      }
+    ],
+    "Д": [
+      {
+        "id": "primary",
+        "text": "да",
+        "repeats": 3,
+        "enabled": true
+      },
+      {
+        "id": "row-1",
+        "text": "дом",
+        "repeats": 2,
+        "enabled": true
+      },
+      {
+        "id": "row-2",
+        "text": "дым",
+        "repeats": 2,
+        "enabled": true
+      }
+    ],
+    "Т": [
+      {
+        "id": "primary",
+        "text": "та",
+        "repeats": 3,
+        "enabled": true
+      },
+      {
+        "id": "row-1",
+        "text": "кот",
+        "repeats": 2,
+        "enabled": true
+      },
+      {
+        "id": "row-2",
+        "text": "торт",
+        "repeats": 2,
+        "enabled": true
+      }
+    ],
+    "В": [
+      {
+        "id": "primary",
+        "text": "ва",
+        "repeats": 3,
+        "enabled": true
+      },
+      {
+        "id": "row-1",
+        "text": "вода",
+        "repeats": 2,
+        "enabled": true
+      },
+      {
+        "id": "row-2",
+        "text": "сова",
+        "repeats": 2,
+        "enabled": true
+      }
+    ],
+    "Ф": [
+      {
+        "id": "primary",
+        "text": "фа",
+        "repeats": 3,
+        "enabled": true
+      },
+      {
+        "id": "row-1",
+        "text": "фара",
+        "repeats": 2,
+        "enabled": true
+      },
+      {
+        "id": "row-2",
+        "text": "форма",
+        "repeats": 2,
+        "enabled": true
+      }
+    ],
+    "Б": [
+      {
+        "id": "primary",
+        "text": "ба",
+        "repeats": 3,
+        "enabled": true
+      },
+      {
+        "id": "row-1",
+        "text": "боб",
+        "repeats": 2,
+        "enabled": true
+      },
+      {
+        "id": "row-2",
+        "text": "баран",
+        "repeats": 2,
+        "enabled": true
+      }
+    ],
+    "П": [
+      {
+        "id": "primary",
+        "text": "па",
+        "repeats": 3,
+        "enabled": true
+      },
+      {
+        "id": "row-1",
+        "text": "папа",
+        "repeats": 2,
+        "enabled": true
+      },
+      {
+        "id": "row-2",
+        "text": "суп",
+        "repeats": 2,
+        "enabled": true
+      }
+    ],
+    "Й": [
+      {
+        "id": "primary",
+        "text": "ай",
+        "repeats": 3,
+        "enabled": true
+      },
+      {
+        "id": "row-1",
+        "text": "мой",
+        "repeats": 2,
+        "enabled": true
+      },
+      {
+        "id": "row-2",
+        "text": "май",
+        "repeats": 2,
+        "enabled": true
+      }
+    ],
+    "Ж": [
+      {
+        "id": "primary",
+        "text": "жа",
+        "repeats": 3,
+        "enabled": true
+      },
+      {
+        "id": "row-1",
+        "text": "жук",
+        "repeats": 2,
+        "enabled": true
+      },
+      {
+        "id": "row-2",
+        "text": "нож",
+        "repeats": 2,
+        "enabled": true
+      }
+    ],
+    "Ш": [
+      {
+        "id": "primary",
+        "text": "ша",
+        "repeats": 3,
+        "enabled": true
+      },
+      {
+        "id": "row-1",
+        "text": "шар",
+        "repeats": 2,
+        "enabled": true
+      },
+      {
+        "id": "row-2",
+        "text": "шина",
+        "repeats": 2,
+        "enabled": true
+      }
+    ],
+    "Ч": [
+      {
+        "id": "primary",
+        "text": "ча",
+        "repeats": 3,
+        "enabled": true
+      },
+      {
+        "id": "row-1",
+        "text": "чай",
+        "repeats": 2,
+        "enabled": true
+      },
+      {
+        "id": "row-2",
+        "text": "мяч",
+        "repeats": 2,
+        "enabled": true
+      }
+    ],
+    "Щ": [
+      {
+        "id": "primary",
+        "text": "ща",
+        "repeats": 3,
+        "enabled": true
+      },
+      {
+        "id": "row-1",
+        "text": "щи",
+        "repeats": 2,
+        "enabled": true
+      },
+      {
+        "id": "row-2",
+        "text": "щука",
+        "repeats": 2,
+        "enabled": true
+      }
+    ],
+    "Х": [
+      {
+        "id": "primary",
+        "text": "ха",
+        "repeats": 3,
+        "enabled": true
+      },
+      {
+        "id": "row-1",
+        "text": "хор",
+        "repeats": 2,
+        "enabled": true
+      },
+      {
+        "id": "row-2",
+        "text": "хлеб",
+        "repeats": 2,
+        "enabled": true
+      }
+    ],
+    "Ц": [
+      {
+        "id": "primary",
+        "text": "ца",
+        "repeats": 3,
+        "enabled": true
+      },
+      {
+        "id": "row-1",
+        "text": "цирк",
+        "repeats": 2,
+        "enabled": true
+      },
+      {
+        "id": "row-2",
+        "text": "цапля",
+        "repeats": 2,
+        "enabled": true
+      }
+    ],
+    "Ъ": [
+      {
+        "id": "primary",
+        "text": "ъъ",
+        "repeats": 3,
+        "enabled": true
+      },
+      {
+        "id": "row-1",
+        "text": "подъём",
+        "repeats": 2,
+        "enabled": true
+      },
+      {
+        "id": "row-2",
+        "text": "съезд",
+        "repeats": 2,
+        "enabled": true
+      }
+    ]
+  }
+}

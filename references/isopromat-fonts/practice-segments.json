@@ -1,0 +1,125 @@
+{
+  "И": [
+    {
+      "key": "stem-left",
+      "route": 0,
+      "range": [
+        0,
+        2
+      ],
+      "legacyModelRoute": 0,
+      "name": "Левая вертикаль",
+      "primary": true,
+      "legacyIds": [
+        "gost-b90-418-route-v2-0",
+        "gost-b90-418-part-0",
+        "gost-b90-418-part-1",
+        "gost-b90-418-part-2",
+        "gost-b90-418-part-3"
+      ]
+    },
+    {
+      "key": "diagonal",
+      "route": 0,
+      "range": [
+        1,
+        3
+      ],
+      "legacyModelRoute": 1,
+      "name": "Наклонная",
+      "legacyIds": [
+        "gost-b90-418-route-v2-1",
+        "gost-b90-418-part-4",
+        "gost-b90-418-part-5",
+        "gost-b90-418-part-6"
+      ]
+    },
+    {
+      "key": "stem-right",
+      "route": 0,
+      "range": [
+        2,
+        4
+      ],
+      "legacyModelRoute": 2,
+      "name": "Правая вертикаль",
+      "legacyIds": [
+        "gost-b90-418-route-v2-2",
+        "gost-b90-418-part-7",
+        "gost-b90-418-part-8",
+        "gost-b90-418-part-9",
+        "gost-b90-418-part-10",
+        "gost-b90-418-part-11"
+      ]
+    }
+  ],
+  "Й": [
+    {
+      "key": "stem-left",
+      "route": 0,
+      "range": [
+        0,
+        2
+      ],
+      "legacyModelRoute": 0,
+      "name": "Левая вертикаль",
+      "primary": true,
+      "legacyIds": [
+        "gost-b90-419-route-v2-0",
+        "gost-b90-419-part-0",
+        "gost-b90-419-part-1",
+        "gost-b90-419-part-2",
+        "gost-b90-419-part-3"
+      ]
+    },
+    {
+      "key": "diagonal",
+      "route": 0,
+      "range": [
+        1,
+        3
+      ],
+      "legacyModelRoute": 1,
+      "name": "Наклонная",
+      "legacyIds": [
+        "gost-b90-419-route-v2-1",
+        "gost-b90-419-part-4",
+        "gost-b90-419-part-5",
+        "gost-b90-419-part-6"
+      ]
+    },
+    {
+      "key": "stem-right",
+      "route": 0,
+      "range": [
+        2,
+        4
+      ],
+      "legacyModelRoute": 2,
+      "name": "Правая вертикаль",
+      "legacyIds": [
+        "gost-b90-419-route-v2-2",
+        "gost-b90-419-part-7",
+        "gost-b90-419-part-8",
+        "gost-b90-419-part-9",
+        "gost-b90-419-part-10",
+        "gost-b90-419-part-11"
+      ]
+    },
+    {
+      "key": "top-mark",
+      "route": 1,
+      "range": [
+        0,
+        2
+      ],
+      "legacyModelRoute": 3,
+      "name": "Верхний знак",
+      "legacyIds": [
+        "gost-b90-419-route-v2-3",
+        "gost-b90-419-part-12",
+        "gost-b90-419-part-13"
+      ]
+    }
+  ]
+}

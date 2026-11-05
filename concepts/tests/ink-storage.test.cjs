@@ -1,0 +1,25 @@
+const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
+const h=fs.readFileSync(path.join(__dirname,'worksheet.test.cjs'),'utf8').split('let app=boot();')[0];const boot=saved=>new Function('require','__dirname',h+"return boot(arguments[2],'learner');")(require,__dirname,saved);
+function field(app,index){const descendants=node=>[node,...node.children.flatMap(descendants)];return descendants(app.nodes.practice).find(r=>r.dataset.component==='gost-b90-A-bar').children[index].parts}
+function draw(app,index){const cell=field(app,index),frame=JSON.parse(cell.canvas.attrs['data-view-box']),r=cell.canvas.getBoundingClientRect(),line=app.run('WorksheetCatalog.elements.find(d=>d.id==="gost-b90-A-bar").model[0]'),xy=p=>[(p[0]-frame.x)/frame.width*r.width,(p[1]-frame.y)/frame.height*r.height];cell.canvas.emit('pointerdown',xy(line[0]));cell.canvas.emit('pointermove',xy(line.at(-1)));cell.canvas.emit('pointerup',xy(line.at(-1)))}
+const key='letter-worksheet-v3-0',id=i=>'element-v1-gost-b90-A-bar-'+i;
+let saved={},a=boot(saved),b=boot(saved);draw(a,0);b.run("build(0,'О')");assert.equal(JSON.parse(saved[key])[id(0)].length,1,'navigating a stale tab erased ink');
+saved={};a=boot(saved);b=boot(saved);draw(a,0);draw(b,1);assert.equal(JSON.parse(saved[key])[id(0)].length,1,'new ink in another field erased first field');assert.equal(JSON.parse(saved[key])[id(1)].length,1);
+b.nodes.undo.onclick();assert.equal(JSON.parse(saved[key])[id(0)].length,1,'undo erased another tab’s field');assert(!JSON.parse(saved[key])[id(1)]?.length);
+draw(b,1);field(b,1).button.onclick();assert.equal(JSON.parse(saved[key])[id(0)].length,1);assert.equal(JSON.parse(saved[key])[id(1)].length,0);b.nodes.undo.onclick();assert.equal(JSON.parse(saved[key])[id(0)].length,1);assert.equal(JSON.parse(saved[key])[id(1)].length,1);
+a.run("build(0,'О');build(0,'А')");assert.equal(a.run(`data[${JSON.stringify(id(1))}].length`),1,'return reused stale memory instead of current stored ink');
+// Pending local writes survive a storage error and merge a peer’s saved field.
+saved={};a=boot(saved);b=boot(saved);a.context.localStorage.setItem=(k,v)=>{if(k===key)throw Error('full');saved[k]=v};draw(a,0);draw(b,1);a.context.localStorage.setItem=(k,v)=>saved[k]=v;a.run('save()');assert.equal(JSON.parse(saved[key])[id(0)].length,1);assert.equal(JSON.parse(saved[key])[id(1)].length,1);
+console.log('PASS: stale-tab navigation, separate-field edits, reset/undo, return/reload and failed-write retry preserve peer ink');
+
+// Critical fast path: percentage→reset before any feedback work can run.
+const learner=new Function('require','__dirname',h+"return boot({},'learner');")(require,__dirname),trial=learner.nodes.practice.children.find(r=>r.dataset.lessonStage==='lower-letter').children[0].parts,tid=trial.canvas.attrs['data-surface-id'];learner.context.resetTestId=tid;
+learner.run('surfaces.filter(s=>s.id&&!s.id.startsWith("art")).slice(0,8).forEach((s,k)=>{data[s.id]=[Array.from({length:500},(_,i)=>[(i%100)/100,(Math.sin(i*.15+k)+1)/2])]});refresh();resetCalls=0;const resetEvaluate=evaluate;evaluate=function(...args){resetCalls++;return resetEvaluate(...args)};feedbackCalls=0;const resetSteps=TraceFeedback.steps;TraceFeedback.steps=function(...args){feedbackCalls++;return resetSteps.apply(this,args)}');
+const resetBefore=JSON.parse(learner.run('JSON.stringify(data)')),resetHandler=trial.button.onclick;trial.output.onclick();assert.equal(trial.button.hidden,false);assert.equal(trial.button.onclick,resetHandler);assert.equal(learner.run('feedbackCalls'),0,'Percentage must not calculate geometry inline');trial.button.onclick();assert.equal(learner.run('data[resetTestId].length'),0);assert.equal(learner.run('resetCalls'),1,'Reset may reassess only the changed field');assert.equal(learner.run('Object.keys(history.at(-1).before).length'),1,'Single-field undo must not clone the entire worksheet');learner.flushFeedback();assert.equal(learner.run('feedbackCalls'),0,'Immediate reset must cancel queued feedback');assert.equal(trial.correction.html,'');for(const [id,strokes] of Object.entries(resetBefore))if(id!==tid)assert.deepEqual(JSON.parse(learner.run(`JSON.stringify(data[${JSON.stringify(id)}])`)),strokes);learner.nodes.undo.onclick();assert.deepEqual(JSON.parse(learner.run('JSON.stringify(data)')),resetBefore);
+// Visible independent work is already assessed by its surface.
+learner.run('LearnerExperience.independent=true;reflowPage();data["independent-gost-b90-а"]=[[[.4,.5],[.5,.6]]];refresh();resetCalls=0;LearnerExperience.refresh()');assert.equal(learner.run('resetCalls'),0,'Counter refresh must not assess visible independent fields twice');
+console.log('PASS quick reset: ready handler, zero inline/deferred feedback after immediate reset, one assessment, field-only snapshot, peer ink/undo safe and no duplicate independent assessment');
+
+require('./helpers/writing-times.cjs')();
+require('./helpers/i-contour.cjs')();
+require('./helpers/short-i.cjs')();

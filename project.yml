@@ -1,0 +1,16 @@
+name: LetterDrawing
+options:
+  deploymentTarget:
+    iOS: '17.0'
+targets:
+  LetterDrawing:
+    type: application
+    platform: iOS
+    sources: [LetterDrawing]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.letterdrawing
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Буква А
+        TARGETED_DEVICE_FAMILY: '2'
+        SWIFT_VERSION: '5.0'

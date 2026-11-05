@@ -1,0 +1,136 @@
+<!doctype html><html lang="ru"><head><base href="../../concepts/"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Пять вариантов — буква А</title><style>
+*{box-sizing:border-box}body{margin:0;background:#e9eeea;color:#233732;font:16px system-ui,sans-serif}button{font:inherit;cursor:pointer}header{max-width:1100px;margin:auto;padding:20px 20px 8px}h1{font-size:25px;margin:0 0 6px}header p{color:#667970;margin:0 0 16px}.tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px}.tabs button{white-space:nowrap;border:1px solid #ccd9d0;background:#fff;color:#425b4d;padding:10px 14px;border-radius:10px}.tabs button[aria-selected=true]{background:#305e4c;color:white;border-color:#305e4c}.wrap{max-width:1040px;margin:0 auto;padding:8px 20px 36px}.meta{position:sticky;top:0;z-index:10;background:#e9eeea;padding:10px;border-radius:12px;display:flex;justify-content:space-between;gap:15px;align-items:center;margin-bottom:12px}.meta p{margin:0;color:#65776d}.toolbar{display:flex;gap:8px;flex-wrap:wrap}.toolbar button{border:0;border-radius:9px;background:#d8e8dd;color:#264b38;padding:10px 13px}.toolbar button.primary{background:#305e4c;color:white}.sheet{position:relative;width:100%;aspect-ratio:1000/1100;background:#fff;box-shadow:0 6px 24px #29423517;border-radius:6px;overflow:hidden}.sheet svg,.sheet canvas{position:absolute;inset:0;width:100%;height:100%}.sheet canvas{touch-action:none}.note{color:#667970;font-size:13px}.fail{color:#a13b2d}.papertext{font-family:system-ui,sans-serif;fill:#263c36}.label{font-size:20px;font-weight:650}.small{font-size:15px;fill:#74887d}.solid{fill:none;stroke:#344e43;stroke-linecap:round;stroke-linejoin:round}.trace{fill:none;stroke:#aabdb1;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:5 7}.pale{fill:none;stroke:#d4dfd7;stroke-linecap:round;stroke-linejoin:round}.rules{stroke:#dce8df;stroke-width:1}.corridor{fill:none;stroke:#d9eee0;stroke-linecap:round;stroke-linejoin:round;opacity:.75}.moving{fill:none;stroke:#438f69;stroke-width:7;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1}.playing .moving{animation:ink .8s linear forwards}.pen{opacity:0;fill:#438f69;stroke:white;stroke-width:2}.playing .pen{opacity:1;animation:penmove 2.7s linear forwards}@keyframes penmove{0%{offset-distance:0%}29.5%{offset-distance:40%}33.3%{offset-distance:40%}62.9%{offset-distance:80%}66.7%{offset-distance:80%}96.3%,100%{offset-distance:100%}}.playing .m2{animation-delay:.9s}.playing .m3{animation-delay:1.8s}@keyframes ink{to{stroke-dashoffset:0}}@media(max-width:600px){.wrap,header{padding-left:12px;padding-right:12px}.meta{align-items:flex-start;flex-direction:column}}
+
+body[data-concept="0"]{background:#e8eee9;--accent:#438f69;--pencil:#e5a437}
+body[data-concept="1"]{background:#f5e4d8;--accent:#d76d4c;--pencil:#e88060}body[data-concept="1"] .sheet{border-radius:24px;box-shadow:0 9px 0 #e4c5b4}body[data-concept="1"] .rules{stroke:#f1d7cb}body[data-concept="1"] .solid{stroke:#7a5145}body[data-concept="1"] .trace{stroke:#d7a898}
+body[data-concept="2"]{background:#e7ebfb;--accent:#725dc7;--pencil:#927ee3}body[data-concept="2"] .sheet{border-radius:28px}body[data-concept="2"] .rules{stroke:#e3def8;stroke-width:2}body[data-concept="2"] .solid{stroke:#4b4175}body[data-concept="2"] .trace{stroke:#b8afe0}
+body[data-concept="3"]{background:#dbe9ee;--accent:#277da0;--pencil:#e5a437}body[data-concept="3"] .sheet{border-radius:0;box-shadow:0 4px 15px #426b7f2b}body[data-concept="3"] .rules{stroke:#b9d6e0}body[data-concept="3"] .solid{stroke:#284c60}body[data-concept="3"] .trace{stroke:#8db7c7}
+body[data-concept="4"]{background:#f5eecf;--accent:#b94d44;--pencil:#df7861}body[data-concept="4"] .sheet{border-radius:16px;box-shadow:0 9px 25px #7d6d3724}body[data-concept="4"] .rules{stroke:#eee5ca}body[data-concept="4"] .solid{stroke:#73564c}body[data-concept="4"] .trace{stroke:#d8b8a9}
+</style></head><body><header><h1>Какой лист для буквы А ближе?</h1><p>Пять вариантов одной страницы. Переключайтесь между ними и пробуйте рисовать.</p><nav class="tabs" aria-label="Варианты страницы"></nav></header><main class="wrap"><div class="meta"><p id="description"></p><div class="toolbar"><button class="primary" id="play">▶ Показать написание</button><button id="undo">↶ Отменить</button><button id="reset-cell" disabled>Очистить букву</button><button id="clear">Очистить лист</button></div></div><div class="sheet"><svg id="sheet" viewBox="0 0 1000 1100" aria-label="Лист буквы А" role="img"></svg><canvas id="canvas" aria-label="Поле для рисования на листе"></canvas></div><p class="note">Каждый вариант хранит свой рисунок в этом браузере. Для прокрутки страницы касайтесь области за листом.</p><p id="status" class="note fail" role="status"></p></main><script>
+const ns='http://www.w3.org/2000/svg',svg=document.querySelector('#sheet'),canvas=document.querySelector('#canvas'),ctx=canvas.getContext('2d'),status=document.querySelector('#status');
+const configs=[['1 · Тетрадь','Образец, арбуз и строки для письма.'],['2 · Мастерская','Большая буква и рисунок вверху; упражнения идут от отдельных линий к целой букве.'],['3 · Крупные шаги','Большие зоны для первого знакомства: посмотри, обведи, напиши сам и дорисуй.'],['4 · Чертёжный лист','Строгая сетка, крупный технический образец и ритмичные строки для тренировки.'],['5 · Рисунок рядом','Арбуз и образец объединены в большой верхней сцене, а нижняя половина оставлена для письма.']];
+let current=null,strokes=[],active=null,demoPoints=[],demoFrame=null,selectedCell=null,cells=[];const tabs=document.querySelector('.tabs');configs.forEach((c,i)=>{const b=document.createElement('button');b.textContent=c[0];b.setAttribute('role','tab');b.onclick=()=>select(i);tabs.append(b)});
+function text(x,y,s,cls='label',extra=''){return `<text x="${x}" y="${y}" class="papertext ${cls}" ${extra}>${s}</text>`}
+function letter(x,y,w,h,style='trace',sw=5,animate=false){
+ const points=[[[x,y+h],[x+w/2,y]],[[x+w/2,y],[x+w,y+h]],[[x+w*.25,y+h*.57],[x+w*.75,y+h*.57]]];
+ const paths=points.map(([a,b])=>`M ${a[0]} ${a[1]} L ${b[0]} ${b[1]}`);
+ let out=paths.map(d=>`<path d="${d}" class="${style}" stroke-width="${sw}"/>`).join('');
+ if(animate)out+=paths.map((d,i)=>`<path d="${d}" data-demo-line="${i}" pathLength="1" fill="none" stroke="var(--accent,#438f69)" stroke-width="${sw+1}" stroke-linecap="round" stroke-dasharray="1" stroke-dashoffset="1"/>`).reverse().join('');
+ if(animate){out+=`<g data-demo-pen transform="translate(${x} ${y+h})"><circle r="9" fill="#fffaf0" stroke="var(--accent,#438f69)" stroke-width="2"/><g transform="rotate(32)"><path d="M-5 -12V-43Q0 -48 5 -43V-12L0 -2Z" fill="var(--pencil,#e5a437)" stroke="#755333" stroke-width="1.4"/><path d="M-5 -12H5L0 -2Z" fill="#fff0c9"/><path d="M-2 -5L0 -2L2 -5" fill="#34483b"/></g></g>`; demoPoints=points}
+ return out
+}
+function watermelon(x,y,w,h){
+ // Each composition uses its own illustration. Dashed parts are for the child.
+ const frame=(inner)=>`<g transform="translate(${x} ${y}) scale(${w/200} ${h/160})">${inner}</g>`;
+ const fixed='fill="none" stroke="#526b55" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"';
+ const dashed='fill="none" stroke="#9bb8a5" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6 7"';
+ const seeds=(positions)=>positions.map(([cx,cy,r])=>`<ellipse cx="${cx}" cy="${cy}" rx="3" ry="6" transform="rotate(${r} ${cx} ${cy})" fill="#6a5145"/>`).join('');
+ if(current===0)return frame(`<path d="M16 54 Q100 92 184 54 Q176 126 100 140 Q24 126 16 54Z" fill="#f6a99e" stroke="#567451" stroke-width="5"/><path d="M21 66 Q100 102 179 66" ${dashed}/><path d="M16 54 Q100 18 184 54" ${dashed}/>${seeds([[60,75,-25],[95,86,0],[133,74,25],[105,110,0]])}`);
+ if(current===1)return frame(`<path d="M30 60 Q100 34 170 60 Q164 126 100 139 Q36 126 30 60Z" fill="#f5aaa0" stroke="#6e8a53" stroke-width="6"/><path d="M30 60 Q100 88 170 60" ${dashed}/><path d="M42 72 Q52 122 100 128 Q148 122 158 72" ${fixed} opacity=".35"/>${seeds([[65,82,-25],[100,94,0],[135,82,25]])}<path d="M100 37 C95 25 104 19 115 24" ${dashed}/><path d="M107 24 Q126 9 140 24 Q125 36 107 24Z" fill="#b5d59b" stroke="#6e8a53" stroke-width="3"/>`);
+ if(current===2)return frame(`<circle cx="100" cy="80" r="63" fill="#f6bbb0" stroke="#73986d" stroke-width="8"/><circle cx="100" cy="80" r="51" ${dashed}/>${seeds([[78,55,-40],[119,56,40],[70,87,-75],[130,88,75],[100,108,0]])}<path d="M92 79q8 8 16 0" ${fixed}/><circle cx="80" cy="76" r="3" fill="#526b55"/><circle cx="120" cy="76" r="3" fill="#526b55"/>`);
+ if(current===3)return frame(`<path d="M25 120 L100 20 L175 120Z" fill="#f5b2a7" stroke="#516b62" stroke-width="4"/><path d="M25 120 Q100 145 175 120" fill="none" stroke="#729576" stroke-width="10" stroke-linecap="round"/><path d="M35 109 Q100 130 165 109" ${dashed}/>${seeds([[100,55,0],[78,82,-25],[122,82,25]])}`);
+ return frame(`<ellipse cx="106" cy="86" rx="76" ry="54" fill="#b6d49c" stroke="#62835d" stroke-width="4"/><path d="M60 44 Q45 88 60 128 M90 33 Q78 84 90 138 M120 33 Q108 84 120 138 M150 45 Q136 85 150 125" ${dashed}/><path d="M106 32 Q105 18 118 15" ${fixed}/><path d="M115 17 Q130 5 143 17 Q129 27 115 17Z" fill="#84b875" stroke="#62835d" stroke-width="3"/>`)
+}
+function lines(y,h=115){return `<g class="rules"><path d="M45 ${y} H955 M45 ${y+h*.5} H955 M45 ${y+h} H955"/></g>`}
+function row(y,count=4,opts={}){let s=lines(y,110);for(let i=0;i<count+1;i++){if(i>0){cells.push({left:65+i*112,top:y+13,w:56,h:83});s+=letter(65+i*112,y+13,56,83,'corridor',20);}s+=letter(65+i*112,y+13,56,83,i===0?'solid':(opts.pale?'pale':'trace'),i===0?4:3)}return s}
+function build(i){cells=[];let s='';if(i===0){s+=text(45,56,'А','label')+text(85,56,'арбуз','small');s+=letter(65,90,95,135,'pale',6,true);s+=watermelon(680,80,190,160);[370,525,680,835].forEach((y,j)=>{s+=row(y,5)});}
+if(i===1){s+=`<rect width="1000" height="270" fill="#eff7ee"/>`+text(45,55,'МАСТЕРСКАЯ БУКВЫ','small')+text(45,105,'А','label','style="font-size:46px"')+letter(145,62,100,145,'pale',6,true)+text(300,110,'А — арбуз','label')+watermelon(720,65,200,160);s+=lines(345,135);for(let k=0;k<5;k++)s+=`<path d="M${90+k*90} 465 l48 -105" class="${k?'trace':'solid'}" stroke-width="4"/><path d="M${570+k*75} 360 l45 105" class="trace" stroke-width="4"/>`;s+=row(570,5)+row(735,5)+row(950,5)}
+if(i===2){s+=text(45,65,'А','label','style="font-size:38px"')+`<rect x="45" y="90" width="410" height="270" rx="18" fill="#f2f7f2"/>`+letter(170,115,150,210,'pale',7,true)+`<rect x="480" y="90" width="475" height="270" rx="18" fill="#faf6ec"/>`+watermelon(580,150,260,165);s+=lines(430,250);for(let k=0;k<4;k++){let x=85+k*205;cells.push({left:x,top:455,w:125,h:195});s+=letter(x,455,125,195,'corridor',24)+letter(x,455,125,195,'trace',5)}s+=lines(765,240);for(let k=0;k<4;k++){let x=85+k*205;cells.push({left:x,top:790,w:125,h:195});s+=letter(x,790,125,195,'corridor',24)+letter(x,790,125,195,'trace',5)}}
+if(i===3){s+=`<rect x="35" y="35" width="930" height="1030" fill="none" stroke="#97afa1" stroke-width="2"/>`+text(60,75,'БУКВА  /  01','small')+text(60,125,'А','label','style="font-size:38px"')+text(115,125,'конструкция буквы','small');for(let x=45;x<=955;x+=35)s+=`<path d="M${x} 160 V330" class="rules"/>`;for(let y=160;y<=330;y+=35)s+=`<path d="M45 ${y} H955" class="rules"/>`;s+=letter(95,175,90,130,'pale',5,true)+watermelon(720,170,180,135);[410,565,720,875].forEach((y,j)=>s+=row(y,5,{pale:j===2}));}
+if(i===4){s+=`<rect width="1000" height="430" fill="#f8f5ea"/>`+text(55,65,'А  ·  АРБУЗ','label','style="font-size:26px"')+letter(80,110,155,235,'pale',7,true)+watermelon(455,110,410,245);[525,680,835].forEach((y,j)=>s+=row(y,5));}
+return s}
+function select(i){if(active!==null)return;if(current!==null)save();current=i;trials.clear();selectedCell=null;document.querySelector('#reset-cell').disabled=true;document.body.dataset.concept=String(i);tabs.querySelectorAll('button').forEach((b,j)=>b.setAttribute('aria-selected',String(i===j)));document.querySelector('#description').textContent=configs[i][1];svg.innerHTML=build(i);svg.classList.remove('playing');status.textContent='';try{const v=JSON.parse(localStorage.getItem('letter-concepts-'+i)||'[]');strokes=Array.isArray(v)?v.filter(s=>Array.isArray(s)&&s.every(p=>Array.isArray(p)&&p.length===2&&p.every(Number.isFinite))):[]}catch{strokes=[];status.textContent='Не удалось прочитать сохранённый рисунок.'}draw();recheck();playDemo()}
+function save(){try{localStorage.setItem('letter-concepts-'+current,JSON.stringify(strokes));status.textContent=''}catch{status.textContent='Не удалось сохранить рисунок — он пока остаётся на экране.'}}
+function draw(){const r=canvas.getBoundingClientRect(),d=devicePixelRatio||1;canvas.width=Math.round(r.width*d);canvas.height=Math.round(r.height*d);ctx.setTransform(canvas.width,0,0,canvas.height,0,0);ctx.strokeStyle='#3974aa';ctx.lineWidth=4/r.width;ctx.lineCap='round';ctx.lineJoin='round';for(const s of strokes){if(!s.length)continue;ctx.beginPath();ctx.moveTo(...s[0]);if(s.length===1)ctx.lineTo(s[0][0]+.0001,s[0][1]);for(const p of s.slice(1))ctx.lineTo(...p);ctx.stroke()}}
+
+// Each model is in viewBox coordinates. The corridor has radius 10 units.
+const trials=new Map();
+function segmentDistance(p,a,b){const dx=b[0]-a[0],dy=b[1]-a[1],t=Math.max(0,Math.min(1,((p[0]-a[0])*dx+(p[1]-a[1])*dy)/(dx*dx+dy*dy)));return Math.hypot(p[0]-a[0]-t*dx,p[1]-a[1]-t*dy)}
+function comparePath(actual,expected){
+ if(actual.length<2)return false;
+ const distance=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);
+ const length=a=>a.slice(1).reduce((sum,p,i)=>sum+distance(p,a[i]),0);
+ const expectedLength=length(expected),actualLength=length(actual);
+ if(distance(actual[0],expected[0])>16||distance(actual.at(-1),expected.at(-1))>16||actualLength<expectedLength*.85||actualLength>expectedLength*1.45)return false;
+ const samples=[];for(let j=1;j<actual.length;j++){const a=actual[j-1],b=actual[j],n=Math.max(1,Math.ceil(distance(a,b)/3));for(let k=0;k<=n;k++)samples.push([a[0]+(b[0]-a[0])*k/n,a[1]+(b[1]-a[1])*k/n])}
+ if(samples.some(p=>Math.min(...expected.slice(1).map((b,i)=>segmentDistance(p,expected[i],b)))>12))return false;
+ if(expected.length===3&&!samples.some(p=>distance(p,expected[1])<15))return false;
+ return true;
+}
+function cellOf(stroke){
+ if(!stroke?.length)return null;const x=stroke[0][0]*1000,y=stroke[0][1]*1100;
+ const candidates=cells.map((c,i)=>({ ...c,key:String(i),distance:Math.hypot((x-(c.left+c.w/2))/c.w,(y-(c.top+c.h/2))/c.h)})).filter(c=>x>=c.left-c.w*.28&&x<=c.left+c.w*1.28&&y>=c.top-c.h*.25&&y<=c.top+c.h*1.25).sort((a,b)=>a.distance-b.distance);
+ return candidates[0]||null;
+}
+// Geometric tracing similarity, not OCR or a calibrated handwriting grade.
+// Sample physical strokes independently: lifting the pen never fills the gap.
+const qualityDistance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
+const pathLength=points=>points.slice(1).reduce((sum,p,i)=>sum+qualityDistance(points[i],p),0);
+const clamp=value=>Math.max(0,Math.min(1,value));
+function samples(strokes,budget=768){
+ const lengths=strokes.map(pathLength),total=lengths.reduce((a,b)=>a+b,0),step=Math.max(1,total/Math.max(1,budget-strokes.length));
+ const result=[];
+ for(let k=0;k<strokes.length;k++){
+  const points=strokes[k];if(!points.length)continue;
+  result.push(points[0]);let carry=step;
+  for(let i=1;i<points.length;i++){
+   const a=points[i-1],b=points[i],length=qualityDistance(a,b);
+   if(!length)continue;
+   for(let at=carry;at<=length;at+=step){const t=at/length;result.push({x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t});}
+   carry=((carry-length)%step+step)%step;if(carry<1e-8)carry=step;
+  }
+  if(lengths[k]>0)result.push(points.at(-1));
+ }
+ return {points:result,length:total};
+}
+function nearest(points,other){return points.map(p=>other.reduce((best,q)=>Math.min(best,qualityDistance(p,q)),Infinity));}
+const qualityMean=values=>values.length?values.reduce((a,b)=>a+b,0)/values.length:0;
+function measureStrokeQuality(actualStrokes,expectedStrokes,{tolerance=4.5}={}){
+ const actual=samples(actualStrokes),expected=samples(expectedStrokes);
+ if(!actual.points.length||!expected.points.length)return {score:0,coverage:0,precision:0,lengthRatio:0,error:0};
+ const missing=nearest(expected.points,actual.points),extra=nearest(actual.points,expected.points);
+ const coverage=qualityMean(missing.map(d=>d<=tolerance?1:0)),precision=qualityMean(extra.map(d=>d<=tolerance?1:0));
+ const completeness=coverage+precision?2*coverage*precision/(coverage+precision):0;
+ const fidelity=Math.sqrt(qualityMean(missing.map(d=>Math.exp(-(Math.max(0,d-.7)**2)/(2*tolerance**2))))*qualityMean(extra.map(d=>Math.exp(-(Math.max(0,d-.7)**2)/(2*tolerance**2)))));
+ const ratio=expected.length?actual.length/expected.length:0;
+ const enoughInk=clamp(ratio/.9),excessInk=ratio>1.35?clamp(1.35/ratio):1;
+ return {score:Math.round(100*completeness*fidelity*enoughInk*excessInk),coverage,precision,lengthRatio:ratio,error:(qualityMean(missing)+qualityMean(extra))/2};
+}
+
+function checkAttempt(stroke){
+ const cell=cellOf(stroke);if(!cell)return;const {left,top,w,h,key}=cell;
+ const asObject=([x,y])=>({x:x*1000,y:y*1100});
+ const expected=[[[left,top+h],[left+w/2,top],[left+w,top+h]],[[left+w*.25,top+h*.57],[left+w*.75,top+h*.57]]];
+ let group=trials.get(key)||[];if(group.length>=2)group=[];group.push(stroke.map(asObject));trials.set(key,group);
+ const ref=expected.map(line=>line.map(([x,y])=>({x,y}))),tolerance=Math.min(w,h)*.18;
+ const quality=measureStrokeQuality(group,ref,{tolerance});
+ const ordered=group.every((line,i)=>comparePath(line.map(p=>[p.x,p.y]),expected[i]));
+ const score=Math.min(quality.score,ordered?100:59);
+ svg.querySelector(`[data-result="${key}"]`)?.remove();const mark=document.createElementNS(ns,'text');mark.setAttribute('data-result',key);mark.setAttribute('x',left+w/2);mark.setAttribute('y',top+h+25);mark.setAttribute('text-anchor','middle');mark.setAttribute('font-family','system-ui');mark.setAttribute('font-size','18');mark.setAttribute('fill',score>=90?'#438f69':score>=80?'#ad7b22':'#b65b52');mark.textContent=`${score}%`;svg.append(mark);
+}
+
+function selectCell(cell){
+ svg.querySelector('[data-selected]')?.remove();const r=document.createElementNS(ns,'rect');r.setAttribute('data-selected','true');r.setAttribute('x',cell.left-9);r.setAttribute('y',cell.top-9);r.setAttribute('width',cell.w+18);r.setAttribute('height',cell.h+40);r.setAttribute('rx',8);r.setAttribute('fill','none');r.setAttribute('stroke','#438f69');r.setAttribute('stroke-width','2');svg.append(r);
+}
+function recheck(){trials.clear();svg.querySelectorAll('[data-result]').forEach(n=>n.remove());for(const stroke of strokes)checkAttempt(stroke)}
+
+function point(e){const r=canvas.getBoundingClientRect();return [(e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height]}canvas.addEventListener('pointerdown',e=>{if(active!==null)return;e.preventDefault();active=e.pointerId;canvas.setPointerCapture(active);strokes.push([point(e)]);{const cell=cellOf(strokes.at(-1));if(cell){selectedCell=cell.key;document.querySelector('#reset-cell').disabled=false;selectCell(cell)}}draw()});canvas.addEventListener('pointermove',e=>{if(active!==e.pointerId)return;for(const p of e.getCoalescedEvents?.()||[e])strokes.at(-1).push(point(p));draw()});function finish(e){if(active!==e.pointerId)return;active=null;const last=strokes.at(-1);if(last?.length<2){strokes.pop()}else checkAttempt(last);save()}canvas.addEventListener('pointerup',finish);canvas.addEventListener('pointercancel',finish);document.querySelector('#undo').onclick=()=>{strokes.pop();recheck();draw();save()};document.querySelector('#reset-cell').onclick=()=>{if(selectedCell===null)return;strokes=strokes.filter(stroke=>cellOf(stroke)?.key!==selectedCell);selectedCell=null;document.querySelector('#reset-cell').disabled=true;svg.querySelector('[data-selected]')?.remove();recheck();draw();save()};document.querySelector('#clear').onclick=()=>{if(confirm('Очистить рисунок в этом варианте?')){strokes=[];selectedCell=null;document.querySelector('#reset-cell').disabled=true;svg.querySelector('[data-selected]')?.remove();trials.clear();svg.querySelectorAll('[data-result]').forEach(n=>n.remove());draw();save()}};function playDemo(){
+ if(demoFrame!==null)cancelAnimationFrame(demoFrame);
+ const paths=[...svg.querySelectorAll('[data-demo-line]')].sort((a,b)=>Number(a.dataset.demoLine)-Number(b.dataset.demoLine)),pen=svg.querySelector('[data-demo-pen]'),points=demoPoints.map(s=>s.map(p=>[...p]));
+ if(paths.length!==3||!pen)return;
+ const lengths=points.map(([a,b])=>Math.hypot(b[0]-a[0],b[1]-a[1])),duration=lengths.map(l=>Math.max(650,l*5));
+ // Connected strokes form one movement; lift the pen only across a real gap.
+ const connected=(a,b)=>Math.hypot(a[1][0]-b[0][0],a[1][1]-b[0][1])<0.01;
+ const starts=[450];
+ for(let i=1;i<points.length;i++)starts.push(starts[i-1]+duration[i-1]+(connected(points[i-1],points[i])?0:420));
+ const total=starts[2]+duration[2]+1300,start=performance.now();
+ function tick(now){const t=(now-start)%total;let position=null;
+  for(let i=0;i<3;i++){const q=Math.max(0,Math.min(1,(t-starts[i])/duration[i]));paths[i].setAttribute('stroke-dashoffset',String(1-q));if(t>=starts[i]&&t<=starts[i]+duration[i]){const [a,b]=points[i];position=[a[0]+(b[0]-a[0])*q,a[1]+(b[1]-a[1])*q]}}
+  if(t<starts[0])position=points[0][0];
+  if(position){pen.setAttribute('transform',`translate(${position[0]} ${position[1]})`);pen.removeAttribute('visibility')}else pen.setAttribute('visibility','hidden');
+  demoFrame=requestAnimationFrame(tick)
+ }
+ demoFrame=requestAnimationFrame(tick)
+}
+document.querySelector('#play').onclick=playDemo;new ResizeObserver(draw).observe(canvas);select(0);
+</script></body></html>

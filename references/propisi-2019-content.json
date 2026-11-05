@@ -1,0 +1,2285 @@
+{
+  "schema": 1,
+  "status": "complete",
+  "source": {
+    "path": "/Users/dcor/Downloads/66142_2cc440b0376755cd1072b6a64bfce323.pdf",
+    "sha256": "a6b6767cb1c54766c416420168a112ba53196b6b33c5de0114625683dc8f3d07",
+    "pages": 72,
+    "bytes": 30148485
+  },
+  "method": "Полные изображения всех 72 страниц просмотрены визуально в листах по шесть страниц; К 17-18 и существенные текстовые/смысловые задания проверены отдельно в полном размере. OCR всего файла не выполнялся. Описания являются пересказом; неоднозначные мелкие слова не транскрибированы.",
+  "findings": [
+    [
+      "Главная поправка",
+      "Уроки не построены по одному шаблону. Из 33 буквенных групп 9 занимают одну страницу, 18 - две, 6 - три. Заголовок новой буквы не описывает содержание следующих страниц."
+    ],
+    [
+      "Уже Т - три страницы",
+      "Т - 7-я буквенная группа, страницы 14-16. К - 8-я, страницы 17-18. С - 9-я, страницы 19-20. Здесь уже есть целые предложения, пропуски, изменение по образцу и повторение."
+    ],
+    [
+      "Дальше растёт самостоятельность",
+      "Тексты для списывания: пустыня (28), Жучка (49), котёнок (52), Земля (42). Есть ответ на вопрос (35), сборка предложения из слов (46), загадка (68), итоговый текст с пропусками (71). Это разные письменные действия."
+    ],
+    [
+      "Что это проверяет",
+      "Обводка учит форме, списывание - воспроизведению текста, дополнение и ответ - выбору содержания. Наличие этих заданий не означает, что пособие задаёт автоматические баллы, уровни допуска или обязательное число успешных попыток."
+    ],
+    [
+      "Как адаптировать под наш ГОСТ",
+      "Сохранять рост сложности и буквенные группы, но использовать точные ГОСТ-формы и релевантные части. Короткое занятие - часть урока, а не универсальное сокращение всего материала буквы до одинакового набора полей."
+    ],
+    [
+      "Что не переносить автоматически",
+      "Школьные связки, наклонная сетка, требование неотрывного движения и вся грамматическая программа не становятся задачами нашего тренажёра по факту наличия в источнике. Содержание и объём каждой группы требуют авторской адаптации."
+    ]
+  ],
+  "pages": [
+    {
+      "pdf_page": 1,
+      "printed_page": null,
+      "title": "Титул",
+      "kind": "служебная",
+      "content": "Название «Пропись. 1 класс», авторы, 13-е издание, Ташкент, «Узбекистан», 2019; указано утверждение министерством образования.",
+      "action": "Учебных упражнений нет.",
+      "features": [
+        "metadata"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-01.jpg",
+      "letter_group": null
+    },
+    {
+      "pdf_page": 2,
+      "printed_page": null,
+      "title": "Условные обозначения",
+      "kind": "легенда заданий",
+      "content": "14 обозначений: изменить по образцу, поставить ударение, разделить на слоги, подчеркнуть гласные/мягкие согласные, ответить, запомнить, вставить букву/слово, выделить общую часть, списать, тренировка, конец урока, списать из букваря.",
+      "action": "Различать вид задания по значку рядом со строкой.",
+      "features": [
+        "legend"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-02.jpg",
+      "letter_group": null
+    },
+    {
+      "pdf_page": 3,
+      "printed_page": 3,
+      "title": "Рукописный алфавит",
+      "kind": "справочный образец",
+      "content": "Полный алфавит заглавных и строчных рукописных букв на сетке. Это справочный алфавит, а не порядок введения букв в уроках.",
+      "action": "Сверять формы букв.",
+      "features": [
+        "alphabet-reference"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-03.jpg",
+      "letter_group": null
+    },
+    {
+      "pdf_page": 4,
+      "printed_page": 4,
+      "title": "Подготовка руки: формы и линии",
+      "kind": "подготовка",
+      "content": "Солнце, овалы и круги, цветочные формы, квадраты, лица; группы наклонных отрезков и ломаных. Чёрный образец переходит в бледную обводку и свободное место.",
+      "action": "Обводить и продолжать ряд; контролировать форму, длину и ритм.",
+      "features": [
+        "shapes",
+        "trace",
+        "continue"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-04.jpg",
+      "letter_group": null
+    },
+    {
+      "pdf_page": 5,
+      "printed_page": 5,
+      "title": "Подготовка: крючки и соединения",
+      "kind": "подготовка",
+      "content": "Ряды коротких штрихов с закруглениями, верхними и нижними поворотами; сочетания нескольких элементов. Два блока разделены знаком окончания урока.",
+      "action": "Повторять элементы и их последовательности, удерживая строку.",
+      "features": [
+        "parts",
+        "trace",
+        "continue"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-05.jpg",
+      "letter_group": null
+    },
+    {
+      "pdf_page": 6,
+      "printed_page": 6,
+      "title": "Подготовка: нижние повороты",
+      "kind": "подготовка",
+      "content": "Короткие и длинные элементы с нижним закруглением, чередование прямых и изогнутых штрихов, сердечки, соединённые пары элементов.",
+      "action": "Обводить и продолжать сочетания; тренировать смену движения.",
+      "features": [
+        "parts",
+        "shapes",
+        "trace",
+        "continue"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-06.jpg",
+      "letter_group": null
+    },
+    {
+      "pdf_page": 7,
+      "printed_page": 7,
+      "title": "Подготовка: сложные сочетания",
+      "kind": "подготовка",
+      "content": "Группы из нескольких крючков, длинные и короткие элементы, петли и дуги; переход от простых штрихов к контурам, похожим на буквы.",
+      "action": "Продолжать ряды и повторять сочетания без введения новой буквенной темы.",
+      "features": [
+        "parts",
+        "trace",
+        "continue"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-07.jpg",
+      "letter_group": null
+    },
+    {
+      "pdf_page": 8,
+      "printed_page": 8,
+      "title": "Аа: первая буквенная страница",
+      "kind": "введение буквы",
+      "content": "Пара Аа и арбуз; части строчной, строчная а и аа; части заглавной и А; в конце протяжное «А-а-а!» с образцом для повторения.",
+      "action": "Обводить, дописывать элементы и целые буквы; повторять короткую буквенную запись.",
+      "features": [
+        "letter",
+        "parts",
+        "trace",
+        "continue",
+        "combinations"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-08.jpg",
+      "letter_group": "А"
+    },
+    {
+      "pdf_page": 9,
+      "printed_page": 9,
+      "title": "Оо: овальные формы",
+      "kind": "введение буквы",
+      "content": "Пара Оо и очки; строчная о и переходы к а; заглавная О; сочетания с ранее введённой А и тренировочные соединения.",
+      "action": "Обводить и продолжать буквы и сочетания, сопоставлять округлые формы.",
+      "features": [
+        "letter",
+        "parts",
+        "trace",
+        "continue",
+        "combinations"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-09.jpg",
+      "letter_group": "О"
+    },
+    {
+      "pdf_page": 10,
+      "printed_page": 10,
+      "title": "Ии: повтор и чередование",
+      "kind": "введение буквы",
+      "content": "Пара Ии и индюк; элементы и обе формы; сочетания аи, ии и более длинные чередования известных букв; внизу «Иа-иа-иа!».",
+      "action": "Продолжать ряды и писать сочетания известных букв по образцу.",
+      "features": [
+        "letter",
+        "parts",
+        "trace",
+        "continue",
+        "combinations"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-10.jpg",
+      "letter_group": "И"
+    },
+    {
+      "pdf_page": 11,
+      "printed_page": 11,
+      "title": "Уу: первые короткие записи",
+      "kind": "введение буквы",
+      "content": "Пара Уу и утюг; обе формы; ау, уа и другие сочетания гласных; «Ау!»; внизу смешанные записи с заглавными А, О, У, И.",
+      "action": "Писать буквы и сочетания, переносить их в короткую запись со знаком препинания.",
+      "features": [
+        "letter",
+        "trace",
+        "continue",
+        "combinations",
+        "exclamation"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-11.jpg",
+      "letter_group": "У"
+    },
+    {
+      "pdf_page": 12,
+      "printed_page": 12,
+      "title": "Ы: сочетания со строчной",
+      "kind": "введение буквы",
+      "content": "Ы и тыквы; элементы строчной ы; сочетания ы с известными гласными и разные позиции внутри коротких буквенных рядов.",
+      "action": "Обводить и продолжать строчную и её сочетания; отдельных слов и связного текста ещё нет.",
+      "features": [
+        "letter",
+        "parts",
+        "trace",
+        "continue",
+        "combinations"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-12.jpg",
+      "letter_group": "Ы"
+    },
+    {
+      "pdf_page": 13,
+      "printed_page": 13,
+      "title": "Нн: от сочетаний к словам",
+      "kind": "введение буквы",
+      "content": "Нн и ножницы; ни, ин; он, оно, она, они; рисунок с местоимениями; заглавная Н, имена Нонна/Инна; предложение с картинкой вместо слова.",
+      "action": "Писать сочетания, слова и имена; соотносить текст с изображением, дополнять смысл предложения.",
+      "features": [
+        "letter",
+        "parts",
+        "trace",
+        "words",
+        "names",
+        "picture-word",
+        "sentence"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-13.jpg",
+      "letter_group": "Н"
+    },
+    {
+      "pdf_page": 14,
+      "printed_page": 14,
+      "title": "Тт: строчная, слова, предложения",
+      "kind": "введение буквы",
+      "content": "Тт и телефон; строчная т; та, ту, то, ты, ит; тут, тот, там, ноты; два предложения об Антоне и Нонне; внизу повторение элементов.",
+      "action": "Продолжать букву, писать слоги и слова, затем целые предложения по образцу.",
+      "features": [
+        "letter",
+        "trace",
+        "combinations",
+        "words",
+        "sentences",
+        "review"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-14.jpg",
+      "letter_group": "Т"
+    },
+    {
+      "pdf_page": 15,
+      "printed_page": 15,
+      "title": "Т: заглавная и смысловые фразы",
+      "kind": "закрепление",
+      "content": "Заглавная Т и сочетания Та/То; фраза об Анне; вопрос и восклицание с именем Нина; сопоставление того, что есть у Тони и Тани. Значки списывания, ударения и гласных.",
+      "action": "Списывать, ставить ударение и выделять гласные по значкам; работать с разными типами предложения.",
+      "features": [
+        "capital",
+        "names",
+        "sentences",
+        "copy",
+        "stress",
+        "vowels"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-15.jpg",
+      "letter_group": "Т"
+    },
+    {
+      "pdf_page": 16,
+      "printed_page": 16,
+      "title": "Т: дополнение и списывание",
+      "kind": "закрепление",
+      "content": "Тренировочное различение коротких слов, запись имени; предложение с пропущенной буквой, фразы про Аниту и маму; контрастные слова тот/ты/т; повторные элементы.",
+      "action": "Вставлять букву, списывать осмысленные фразы и повторять изученные формы.",
+      "features": [
+        "words",
+        "names",
+        "missing-letter",
+        "copy",
+        "sentences",
+        "review"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-16.jpg",
+      "letter_group": "Т"
+    },
+    {
+      "pdf_page": 17,
+      "printed_page": 17,
+      "title": "Кк: строчная и смысловые пары",
+      "kind": "введение буквы",
+      "content": "Кк и компьютер; строчная к; ко, ка, ки; кот, кит, кто, тик, так; два связанных по смыслу предложения об Ане и Тане; пара кот/котик.",
+      "action": "Дописывать букву, писать слоги и слова, затем предложения по образцу.",
+      "features": [
+        "letter",
+        "trace",
+        "combinations",
+        "words",
+        "sentences",
+        "word-change"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-17.jpg",
+      "letter_group": "К"
+    },
+    {
+      "pdf_page": 18,
+      "printed_page": 18,
+      "title": "К: заглавная и предложения",
+      "kind": "закрепление",
+      "content": "Заглавная К, Ка/Ки; предложения о Кате, Никите и Нине; внизу повторение ранее введённых форм и соединений.",
+      "action": "Писать заглавную, списывать предложения; выполнять отмеченные задания на изменение и мягкие согласные; повторять старые формы.",
+      "features": [
+        "capital",
+        "trace",
+        "sentences",
+        "copy",
+        "soft-consonants",
+        "review"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-18.jpg",
+      "letter_group": "К"
+    },
+    {
+      "pdf_page": 19,
+      "printed_page": 19,
+      "title": "Сс: слова и короткий сюжет",
+      "kind": "введение буквы",
+      "content": "Сс и собака; строчная и заглавная; Со/Са и обратные сочетания; ток, сок, сук; предложения про сосну и кота; перестановка слогов в паре сосна/насос; краткие слова внизу.",
+      "action": "Писать буквы и слова, связывать два предложения, замечать состав и перестановку слогов.",
+      "features": [
+        "letter",
+        "trace",
+        "combinations",
+        "words",
+        "sentences",
+        "syllables"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-19.jpg",
+      "letter_group": "С"
+    },
+    {
+      "pdf_page": 20,
+      "printed_page": 20,
+      "title": "С: закрепление на предложениях",
+      "kind": "закрепление",
+      "content": "Несколько фраз о косе и Костике; слова кисти/кости; преобразования по образцу «сон - сны», далее сосна, кусок, носок с местом для ответа.",
+      "action": "Списывать предложения, отмечать гласные и самостоятельно изменять слова по образцу.",
+      "features": [
+        "sentences",
+        "words",
+        "word-change",
+        "vowels"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-20.jpg",
+      "letter_group": "С"
+    },
+    {
+      "pdf_page": 21,
+      "printed_page": 21,
+      "title": "Лл: буква и короткий связный фрагмент",
+      "kind": "введение буквы",
+      "content": "Лл и лампа; элементы, строчная и заглавная, ла/лу; слова кукла и улитка; две связанные фразы об Оле и Лоле; восклицательная запись.",
+      "action": "Продолжать буквы, писать слова и предложения; соотносить имя и действие.",
+      "features": [
+        "letter",
+        "parts",
+        "trace",
+        "words",
+        "names",
+        "sentences"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-21.jpg",
+      "letter_group": "Л"
+    },
+    {
+      "pdf_page": 22,
+      "printed_page": 22,
+      "title": "Пп: пропуски и связные фразы",
+      "kind": "введение буквы",
+      "content": "Пп и петух; оп/уп/ип, па/папа; слово палка с пропусками разных гласных; заглавная; предложения о папах и их работе, два предложения о пиле.",
+      "action": "Вставлять буквы, писать заглавную и списывать смысловые фразы; выделять гласные и мягкие согласные.",
+      "features": [
+        "letter",
+        "trace",
+        "words",
+        "missing-letter",
+        "sentences",
+        "soft-consonants"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-22.jpg",
+      "letter_group": "П"
+    },
+    {
+      "pdf_page": 23,
+      "printed_page": 23,
+      "title": "Рр: словоизменение и сюжет",
+      "kind": "введение буквы",
+      "content": "Рр и рыба; р/п/т для различения, ра и слова; пары рука/руки; две фразы о кроте и ранке; внизу кран, танк, клоун и тренировочные элементы.",
+      "action": "Писать букву и слова, различать похожие формы, работать с числом слова и предложениями.",
+      "features": [
+        "letter",
+        "trace",
+        "words",
+        "word-change",
+        "sentences",
+        "review"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-23.jpg",
+      "letter_group": "Р"
+    },
+    {
+      "pdf_page": 24,
+      "printed_page": 24,
+      "title": "Р: имена, пропуск слова, списывание",
+      "kind": "закрепление",
+      "content": "Заглавная Р; Руслан и Рита; предложения о красках и покраске; строка о Никите и раке с пропущенным словом; короткий текст для списывания; повторение заглавных.",
+      "action": "Писать имена, вставлять подходящее слово, списывать и выполнять языковые отметки по значкам.",
+      "features": [
+        "capital",
+        "names",
+        "sentences",
+        "missing-word",
+        "copy",
+        "review"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-24.jpg",
+      "letter_group": "Р"
+    },
+    {
+      "pdf_page": 25,
+      "printed_page": 25,
+      "title": "Вв: изменение слов и два предложения",
+      "kind": "введение буквы",
+      "content": "Вв и верблюд; во/ви/вы и слова; пример волна/волны и незаполненные пары стена, трава; ворота/ворона; две связанные фразы про Ивана и корову.",
+      "action": "Продолжать букву, менять слова по образцу, ставить ударение и писать небольшой смысловой фрагмент.",
+      "features": [
+        "letter",
+        "trace",
+        "words",
+        "word-change",
+        "stress",
+        "sentences"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-25.jpg",
+      "letter_group": "В"
+    },
+    {
+      "pdf_page": 26,
+      "printed_page": 26,
+      "title": "В: дополнение фразы и повторение",
+      "kind": "закрепление",
+      "content": "Заглавная В, Во/Ви/Ву; фразы о кактусе и Вике, одна с пропуском слова; «санитары» с делением на слоги; внизу таблица изученных пар букв.",
+      "action": "Вставлять слово, списывать предложения, выделять мягкие согласные и повторять буквы.",
+      "features": [
+        "capital",
+        "trace",
+        "sentences",
+        "missing-word",
+        "syllables",
+        "review"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-26.jpg",
+      "letter_group": "В"
+    },
+    {
+      "pdf_page": 27,
+      "printed_page": 27,
+      "title": "Ее: буква, слова, предложения",
+      "kind": "введение буквы",
+      "content": "Ее и ёж; строчная е и Е; ес/ер; слова текст, тесто, театр; несколько предложений о еде, сливе и тыкве с языковыми значками.",
+      "action": "Писать буквы и слова, списывать предложения, ставить ударение и подчёркивать гласные.",
+      "features": [
+        "letter",
+        "trace",
+        "combinations",
+        "words",
+        "sentences",
+        "stress",
+        "vowels"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-27.jpg",
+      "letter_group": "Е"
+    },
+    {
+      "pdf_page": 28,
+      "printed_page": 28,
+      "title": "Е: связный текст о пустыне",
+      "kind": "списывание текста",
+      "content": "Текст из четырёх предложений о саксауле, селине и варане, записанный несколькими строками. Внизу дан бледный старт строки для повторения.",
+      "action": "Списывать связный текст целиком, соблюдая слова, границы предложений и строки.",
+      "features": [
+        "connected-text",
+        "copy"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-28.jpg",
+      "letter_group": "Е"
+    },
+    {
+      "pdf_page": 29,
+      "printed_page": 29,
+      "title": "Е: закрепление слов и предложений",
+      "kind": "закрепление",
+      "content": "Слова с цифрами над буквами для перестановки, далее несколько предложений: пилот в ракете, Ева и торт, лиса у ели, норка. Разные значки языковых действий.",
+      "action": "Работать с порядком букв, писать предложения и выполнять отмеченные задания на гласные/согласные.",
+      "features": [
+        "letter-order",
+        "words",
+        "sentences",
+        "vowels",
+        "soft-consonants"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-29.jpg",
+      "letter_group": "Е"
+    },
+    {
+      "pdf_page": 30,
+      "printed_page": 30,
+      "title": "Мм: обе формы, слова и фразы",
+      "kind": "введение буквы",
+      "content": "Мм и медведь; ма/ми/ум; обе формы; мы, мир, мама, мала; имена Мара/Мансур; две связанные фразы о работе мамы и её усталости.",
+      "action": "Писать букву, слова и имена, затем предложения; ставить ударение по значку.",
+      "features": [
+        "letter",
+        "trace",
+        "combinations",
+        "words",
+        "names",
+        "sentences",
+        "stress"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-30.jpg",
+      "letter_group": "М"
+    },
+    {
+      "pdf_page": 31,
+      "printed_page": 31,
+      "title": "М: связный фрагмент и повторение",
+      "kind": "закрепление",
+      "content": "Пары коротких слов с разными гласными; три предложения о маме и Лоле; внизу известные строчные и заглавные для изменения по образцу.",
+      "action": "Списывать слова и связный фрагмент, выполнять языковые отметки и повторять формы.",
+      "features": [
+        "words",
+        "connected-text",
+        "copy",
+        "soft-consonants",
+        "review"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-31.jpg",
+      "letter_group": "М"
+    },
+    {
+      "pdf_page": 32,
+      "printed_page": 32,
+      "title": "Зз: слова и маленькие сюжеты",
+      "kind": "введение буквы",
+      "content": "Зз и зонт; за/зу, зима, зло и другие слова; короткий фрагмент о розах, затем предложение об узоре из роз. Есть образцы ударения и деления слова на слоги.",
+      "action": "Писать строчную, слова и предложения; списывать смысловой фрагмент и работать с ударением.",
+      "features": [
+        "letter",
+        "trace",
+        "words",
+        "connected-text",
+        "copy",
+        "stress",
+        "syllables"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-32.jpg",
+      "letter_group": "З"
+    },
+    {
+      "pdf_page": 33,
+      "printed_page": 33,
+      "title": "З: имена и зимний фрагмент",
+      "kind": "закрепление",
+      "content": "Заглавная З; Зина/Зима, Зиннур/Мурод; слово «зима» разделено на слоги; две связанные фразы о санках; повторение заглавных З, Е, Л, М.",
+      "action": "Писать имена, делить слова на слоги, списывать предложения и повторять буквы.",
+      "features": [
+        "capital",
+        "trace",
+        "names",
+        "syllables",
+        "sentences",
+        "review"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-33.jpg",
+      "letter_group": "З"
+    },
+    {
+      "pdf_page": 34,
+      "printed_page": 34,
+      "title": "Дд: слова, списывание, пропуски",
+      "kind": "введение буквы",
+      "content": "Дд и дерево; до/ду, дом, дым, дыл, дул и другие слова; предложение о старике в море; строки про реку и слона с пропущенными буквами.",
+      "action": "Писать строчную и слова, списывать предложение, восстанавливать буквы по смыслу.",
+      "features": [
+        "letter",
+        "trace",
+        "words",
+        "copy",
+        "sentences",
+        "missing-letter"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-34.jpg",
+      "letter_group": "Д"
+    },
+    {
+      "pdf_page": 35,
+      "printed_page": 35,
+      "title": "Д: имена и вопрос",
+      "kind": "закрепление",
+      "content": "Заглавная Д; Да/Ди, Дима/Динара; предложение о сделанных домиках; отдельный вопрос «Что сделал Дима?» и свободные строки ниже.",
+      "action": "Писать имена и предложение, формулировать ответ на вопрос.",
+      "features": [
+        "capital",
+        "trace",
+        "names",
+        "sentence",
+        "question",
+        "response"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-35.jpg",
+      "letter_group": "Д"
+    },
+    {
+      "pdf_page": 36,
+      "printed_page": 36,
+      "title": "Бб: слова и небольшой фрагмент",
+      "kind": "введение буквы",
+      "content": "Бб и бабочка; ба/бе/бы/бу, барабан с пропусками; зубр, зебра, забор; предложения о зоопарке, волке, лисе и белке.",
+      "action": "Писать строчную и слова, вставлять буквы, ставить ударение и списывать смысловые фразы.",
+      "features": [
+        "letter",
+        "trace",
+        "words",
+        "missing-letter",
+        "sentences",
+        "copy",
+        "stress"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-36.jpg",
+      "letter_group": "Б"
+    },
+    {
+      "pdf_page": 37,
+      "printed_page": 37,
+      "title": "Б: изменение слов и текст про оркестр",
+      "kind": "закрепление",
+      "content": "Заглавная Б; бо/бу; пример дуб/дубы/дубок и продолжение для зуб; связный фрагмент о детях, играющих на разных инструментах; внизу повторение заглавных.",
+      "action": "Менять слова по образцу, списывать текст из нескольких предложений и повторять формы.",
+      "features": [
+        "capital",
+        "trace",
+        "word-change",
+        "connected-text",
+        "copy",
+        "review"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-37.jpg",
+      "letter_group": "Б"
+    },
+    {
+      "pdf_page": 38,
+      "printed_page": 38,
+      "title": "Гг: дополнение слов и фраз",
+      "kind": "введение буквы",
+      "content": "Гг и грибы; обе формы и слоги; палка/палки и незаполненная пара; фраза о Галине с пропущенным словом; предложения о белых грибах и супе.",
+      "action": "Писать букву, изменять слова, вставлять слово в предложение; выполнять задания по значкам.",
+      "features": [
+        "letter",
+        "trace",
+        "combinations",
+        "word-change",
+        "missing-word",
+        "sentences"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-38.jpg",
+      "letter_group": "Г"
+    },
+    {
+      "pdf_page": 39,
+      "printed_page": 39,
+      "title": "Ь: различение смысла слов",
+      "kind": "введение знака",
+      "content": "Мягкий знак и сочетания; кони/конь/коньки, окуни, дни; фраза о рыбах; сопоставление лося и рыси через вопрос; пара сладко/горько.",
+      "action": "Писать знак внутри слова, соотносить формы со смыслом, отвечать на вопрос по образцу.",
+      "features": [
+        "sign",
+        "trace",
+        "words",
+        "question",
+        "word-change"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-39.jpg",
+      "letter_group": "Ь"
+    },
+    {
+      "pdf_page": 40,
+      "printed_page": 40,
+      "title": "Ь: связный фрагмент и букварь",
+      "kind": "закрепление",
+      "content": "Три предложения о Гене: работа в саду, посадка дерева, выросшее дерево и плоды. Строка «Пишу красиво» с пропуском; значок «спиши из букваря» перед свободной областью.",
+      "action": "Списывать фрагмент, вставлять букву и переносить текст из другого источника.",
+      "features": [
+        "connected-text",
+        "copy",
+        "missing-letter",
+        "copy-primer"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-40.jpg",
+      "letter_group": "Ь"
+    },
+    {
+      "pdf_page": 41,
+      "printed_page": 41,
+      "title": "Яя: формы, имена и смысловые фразы",
+      "kind": "введение буквы",
+      "content": "Яя и яблоко; обе формы; ла/ля и рад/ряд; фраза о глубокой яме с пропуском; Яна и Витя; предложения о яме, яблоне и будущем саде.",
+      "action": "Писать формы и слова, вставлять слово по смыслу, списывать короткие фразы.",
+      "features": [
+        "letter",
+        "trace",
+        "words",
+        "names",
+        "missing-word",
+        "sentences"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-41.jpg",
+      "letter_group": "Я"
+    },
+    {
+      "pdf_page": 42,
+      "printed_page": 42,
+      "title": "Я: текст о Земле",
+      "kind": "списывание текста",
+      "content": "Сопоставление Коля/колья. Далее связный фрагмент о планете Земля, морях, океанах, реках, горах, ледниках и растениях с обращением беречь планету.",
+      "action": "Списывать связный текст; выполнять отмеченное выделение гласных.",
+      "features": [
+        "words",
+        "connected-text",
+        "copy",
+        "vowels"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-42.jpg",
+      "letter_group": "Я"
+    },
+    {
+      "pdf_page": 43,
+      "printed_page": 43,
+      "title": "Чч: формы и словарное правило",
+      "kind": "введение буквы",
+      "content": "Чч и часы; обе формы; ча/чи/чу/че/чь, что, ручка; чудо, чудеса, чадить, задача; фраза про заданную задачу и знак «запомни».",
+      "action": "Писать букву и сочетания, различать слова и закреплять написание сочетаний с ч.",
+      "features": [
+        "letter",
+        "trace",
+        "combinations",
+        "words",
+        "spelling",
+        "sentence"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-43.jpg",
+      "letter_group": "Ч"
+    },
+    {
+      "pdf_page": 44,
+      "printed_page": 44,
+      "title": "Ч: пропуск и текст про мяч",
+      "kind": "закрепление",
+      "content": "Туча/тучка, ночь и незаполненная форма, выделенное «ночные»; затем небольшой связный сюжет о мяче, укатившемся в речку; повторение заглавных.",
+      "action": "Вставлять буквы, списывать связный фрагмент, выполнять отметки и повторять формы.",
+      "features": [
+        "words",
+        "missing-letter",
+        "spelling",
+        "connected-text",
+        "copy",
+        "review"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-44.jpg",
+      "letter_group": "Ч"
+    },
+    {
+      "pdf_page": 45,
+      "printed_page": 45,
+      "title": "Шш: имена и короткий рассказ",
+      "kind": "введение буквы",
+      "content": "Шш и шары; обе формы и ши; Шура, Шарик, шарик, шили; несколько предложений о кошке на крыше и вороне, в одном пропущена буква; правило отмечено знаком.",
+      "action": "Писать букву и слова, различать имя и название, дополнять и списывать фрагмент.",
+      "features": [
+        "letter",
+        "trace",
+        "names",
+        "words",
+        "connected-text",
+        "missing-letter",
+        "spelling"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-45.jpg",
+      "letter_group": "Ш"
+    },
+    {
+      "pdf_page": 46,
+      "printed_page": 46,
+      "title": "Ш: перестановка и сборка предложения",
+      "kind": "закрепление",
+      "content": "Цепочки близких по написанию слов и незавершённая цепочка для продолжения; разрозненные слова «груши, Дети, сочные, ели»; пропуск в слове «красивая»; фразы о чистом письме.",
+      "action": "Продолжать цепочки, составлять осмысленное предложение из данных слов, вставлять букву и списывать.",
+      "features": [
+        "words",
+        "word-change",
+        "sentence-build",
+        "missing-letter",
+        "copy"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-46.jpg",
+      "letter_group": "Ш"
+    },
+    {
+      "pdf_page": 47,
+      "printed_page": 47,
+      "title": "Ш: правило ши и текст про детей",
+      "kind": "закрепление",
+      "content": "Заглавная Ш; две фразы для списывания; шина/машина, мал/малыши; явно выделенное правило «Ши - пиши с и»; фрагмент о Даше и Шохрухе.",
+      "action": "Писать заглавную, списывать предложения, применять правило и выделять общие/мягкие части по значкам.",
+      "features": [
+        "capital",
+        "trace",
+        "words",
+        "spelling",
+        "connected-text",
+        "copy"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-47.jpg",
+      "letter_group": "Ш"
+    },
+    {
+      "pdf_page": 48,
+      "printed_page": 48,
+      "title": "Жж: словоизменение и пропуски",
+      "kind": "введение буквы",
+      "content": "Жж и жук; жа/жу/же; жаба, жук, желе и другие слова; друг/дружок и продолжение для луг; жар/шар, жаль; две фразы с пропущенными буквами.",
+      "action": "Писать строчную, менять слова, различать ж/ш, восстанавливать буквы и выполнять языковые отметки.",
+      "features": [
+        "letter",
+        "trace",
+        "words",
+        "word-change",
+        "missing-letter",
+        "spelling"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-48.jpg",
+      "letter_group": "Ж"
+    },
+    {
+      "pdf_page": 49,
+      "printed_page": 49,
+      "title": "Ж: заглавная и рассказ о Жучке",
+      "kind": "списывание текста",
+      "content": "Заглавная Ж, жи/ши; вопрос о том, что такое Жучка; связный рассказ о мальчике Жоре, собаке и принесённой из реки палке.",
+      "action": "Писать заглавную, читать вопрос и списывать связный рассказ из нескольких предложений.",
+      "features": [
+        "capital",
+        "trace",
+        "question",
+        "connected-text",
+        "copy"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-49.jpg",
+      "letter_group": "Ж"
+    },
+    {
+      "pdf_page": 50,
+      "printed_page": 50,
+      "title": "Ж: правило жи и осмысленные фразы",
+      "kind": "закрепление",
+      "content": "Правило «Жи - пиши с и»; жи/Жи; предложение о бабушке с пропуском слова; дружить/дружи; фразы о Родине и жизни; жила, жива, жито.",
+      "action": "Вставлять слово, изменять по образцу, закреплять орфографическое правило и писать фразы.",
+      "features": [
+        "combinations",
+        "spelling",
+        "missing-word",
+        "word-change",
+        "sentences"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-50.jpg",
+      "letter_group": "Ж"
+    },
+    {
+      "pdf_page": 51,
+      "printed_page": 51,
+      "title": "Ёё: формы, согласование и словоизменение",
+      "kind": "введение буквы",
+      "content": "Ёё и ёлка; ё и сочетания; пары нос/нёс, воз/вёз, ров/рёв; письмо, лыжи, рубашка с пропусками перед моя/моё/мои; лось/лосёнок и продолжение для тигра; предложение о ёжике.",
+      "action": "Писать ё, различать слова, дополнять сочетания и изменять слово по образцу.",
+      "features": [
+        "letter",
+        "trace",
+        "words",
+        "missing-word",
+        "word-change",
+        "sentence"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-51.jpg",
+      "letter_group": "Ё"
+    },
+    {
+      "pdf_page": 52,
+      "printed_page": 52,
+      "title": "Ё: связный текст про котёнка",
+      "kind": "списывание текста",
+      "content": "Заглавная Ё и имена Еж, Еркин. В двух помеченных блоках - история Егора и котёнка Пушок: появление котёнка, кормление молоком, действие мальчика.",
+      "action": "Писать заглавную и имена, списывать связные абзацы с сохранением предложений и имён.",
+      "features": [
+        "capital",
+        "trace",
+        "names",
+        "connected-text",
+        "copy"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-52.jpg",
+      "letter_group": "Ё"
+    },
+    {
+      "pdf_page": 53,
+      "printed_page": 53,
+      "title": "Ё: пропуски, сравнение и повторение",
+      "kind": "закрепление",
+      "content": "Рифмованная пара строк о ёжике с пропуском; пел/поёт и незавершённые пары; предложения с пропущенными буквами; внизу контрастные согласные и гласные, нёс/несёт и другие пары.",
+      "action": "Вставлять буквы/слова, изменять по образцу, различать изученные буквы и их сочетания.",
+      "features": [
+        "missing-letter",
+        "missing-word",
+        "word-change",
+        "sentences",
+        "review"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-53.jpg",
+      "letter_group": "Ё"
+    },
+    {
+      "pdf_page": 54,
+      "printed_page": 54,
+      "title": "Йй: имена и формы действия",
+      "kind": "введение буквы",
+      "content": "Йй и йогурт; ай/ой/ей; заглавная; пример читай/читайте, незавершённые формы пой/мой/пей/гуляй; обращение к Сергею; пропуск в слове «красивый».",
+      "action": "Писать букву и слова, менять форму по образцу, списывать и дополнять предложения.",
+      "features": [
+        "letter",
+        "trace",
+        "combinations",
+        "names",
+        "word-change",
+        "missing-letter",
+        "sentences"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-54.jpg",
+      "letter_group": "Й"
+    },
+    {
+      "pdf_page": 55,
+      "printed_page": 55,
+      "title": "Й: дополнение по смыслу",
+      "kind": "закрепление",
+      "content": "Яблоко, лейка, травка; предложения про зайца и берёзу с пропусками; молодой/молодые и другие формы; фразы о мытье рук и папе-герое; мой/твой/свой для изменения.",
+      "action": "Восстанавливать буквы и слова по смыслу, изменять формы, списывать целые предложения.",
+      "features": [
+        "words",
+        "missing-letter",
+        "missing-word",
+        "word-change",
+        "sentences",
+        "copy"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-55.jpg",
+      "letter_group": "Й"
+    },
+    {
+      "pdf_page": 56,
+      "printed_page": 56,
+      "title": "Хх: соединить смысл и закончить фразу",
+      "kind": "введение буквы",
+      "content": "Хх и хлеб; строчная и заглавная, ха/ах; два предложения про зайчиху и грачиху с перекрёстными стрелками к детёнышам; рифмованный фрагмент с пропущенным последним словом.",
+      "action": "Писать букву, устанавливать правильные смысловые пары, списывать и дополнять фразу.",
+      "features": [
+        "letter",
+        "trace",
+        "combinations",
+        "match-meaning",
+        "missing-word",
+        "copy"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-56.jpg",
+      "letter_group": "Х"
+    },
+    {
+      "pdf_page": 57,
+      "printed_page": 57,
+      "title": "Х: различение слов и общая часть",
+      "kind": "закрепление",
+      "content": "Заглавная Х и сочетание Хх; хорёк/хлопок и другие словосочетания; хлеб/хлеба/хлебный с выделением общей части; предложение о Хиве с пропущенной буквой.",
+      "action": "Писать слова и заглавную, сравнивать значения, выделять общую часть и вставлять буквы.",
+      "features": [
+        "capital",
+        "trace",
+        "words",
+        "question",
+        "word-family",
+        "missing-letter"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-57.jpg",
+      "letter_group": "Х"
+    },
+    {
+      "pdf_page": 58,
+      "printed_page": 58,
+      "title": "Юю: разные формы одного слова",
+      "kind": "введение буквы",
+      "content": "Юю и юла; ю и сочетания; цепочка читай/читаю/читают, незаполненные изменения для других глаголов; фразы про июнь и июль, пропущенная буква.",
+      "action": "Писать строчную и сочетания, преобразовывать формы, дополнять и списывать фразы.",
+      "features": [
+        "letter",
+        "trace",
+        "combinations",
+        "word-change",
+        "word-family",
+        "missing-letter",
+        "sentences"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-58.jpg",
+      "letter_group": "Ю"
+    },
+    {
+      "pdf_page": 59,
+      "printed_page": 59,
+      "title": "Ю: заглавная, имена и контрасты",
+      "kind": "закрепление",
+      "content": "Заглавная Ю; юла/Юля, мыл/мою и незавершённые пары; Юра, Юля, Юлдуз; предложение о Юле; люк/тюк/клюк/клюв и фраза о поездке к морю.",
+      "action": "Писать заглавную и имена, изменять формы и различать близкие записи, списывать предложения.",
+      "features": [
+        "capital",
+        "trace",
+        "names",
+        "word-change",
+        "words",
+        "sentences",
+        "copy"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-59.jpg",
+      "letter_group": "Ю"
+    },
+    {
+      "pdf_page": 60,
+      "printed_page": 60,
+      "title": "Фф: формы, слова и вопрос",
+      "kind": "введение буквы",
+      "content": "Фф и фонарь; ф и слоги фа/фо/фу; флаг/флаги, фата, ферма с незаполненными парами; предложения о светофоре и телефоне; вопрос о фамилии.",
+      "action": "Писать букву и слова, менять формы, работать с предложениями и личным ответом.",
+      "features": [
+        "letter",
+        "trace",
+        "combinations",
+        "word-change",
+        "sentences",
+        "question",
+        "response"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-60.jpg",
+      "letter_group": "Ф"
+    },
+    {
+      "pdf_page": 61,
+      "printed_page": 61,
+      "title": "Ф: имена, связные фразы, повторение",
+      "kind": "закрепление",
+      "content": "Строчная ф и фа/фе/фя; Фарход, Фёдор, Феруза; две связанные фразы о поездке Лолы в Фергану к бабушке; Веня/Феруза; известные заглавные с местом для продолжения.",
+      "action": "Писать имена и связный фрагмент, сопоставлять буквы и повторять заглавные.",
+      "features": [
+        "trace",
+        "names",
+        "connected-text",
+        "copy",
+        "review"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-61.jpg",
+      "letter_group": "Ф"
+    },
+    {
+      "pdf_page": 62,
+      "printed_page": 62,
+      "title": "Цц: слова и связная пара предложений",
+      "kind": "введение буквы",
+      "content": "Цц и циркуль; ца/цу/ци, цапля, бойцу, цепь; две фразы о бойцах на посту; сопоставление цапля/капля; синица и цапля как птицы.",
+      "action": "Писать строчную и слова, соотносить смысл, списывать предложения и отмечать гласные.",
+      "features": [
+        "letter",
+        "trace",
+        "combinations",
+        "words",
+        "sentences",
+        "question",
+        "vowels"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-62.jpg",
+      "letter_group": "Ц"
+    },
+    {
+      "pdf_page": 63,
+      "printed_page": 63,
+      "title": "Ц: правило, формы и пропуск слова",
+      "kind": "закрепление",
+      "content": "Заглавная Ц и слоги; фраза о красивом письме цифр; цыган/цыпочки/цыплёнок со знаком «запомни»; заяц/зайцы и продолжение для овцы; предложение о солнце и строка с пропущенным словом.",
+      "action": "Продолжать заглавную, менять слова по образцу, применять правило и завершать предложение.",
+      "features": [
+        "capital",
+        "trace",
+        "spelling",
+        "word-change",
+        "missing-word",
+        "sentences"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-63.jpg",
+      "letter_group": "Ц"
+    },
+    {
+      "pdf_page": 64,
+      "printed_page": 64,
+      "title": "Ээ: слова, предложение и букварь",
+      "kind": "введение буквы",
+      "content": "Ээ и экскаватор; обе формы; это/эта/эти, этажи/экипаж/поэт, эх/эхо; предложение об эхе; значок списывания из букваря; внизу противопоставления букв.",
+      "action": "Писать букву, слова и фразу, списывать из другого источника, различать похожие формы.",
+      "features": [
+        "letter",
+        "trace",
+        "words",
+        "sentence",
+        "copy-primer",
+        "review"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-64.jpg",
+      "letter_group": "Э"
+    },
+    {
+      "pdf_page": 65,
+      "printed_page": 65,
+      "title": "Э: словарь и смысловые фразы",
+      "kind": "закрепление",
+      "content": "Несколько предложений об экране и аэробусах; слова экипаж, экран, электрик, эмир, эстрада, эра; пояснение связи эму и страуса; внизу контрастные сочетания.",
+      "action": "Писать слова и предложения, ставить ударение, сопоставлять смысл и различать сочетания.",
+      "features": [
+        "words",
+        "sentences",
+        "stress",
+        "question",
+        "soft-consonants",
+        "review"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-65.jpg",
+      "letter_group": "Э"
+    },
+    {
+      "pdf_page": 66,
+      "printed_page": 66,
+      "title": "Щщ: формы, вопросы и ответы",
+      "kind": "введение буквы",
+      "content": "Щщ и щётка; обе формы; ща/щу/щь с запоминанием; переходы уго-/по- к угощу/погощу; вопросы «Кто пищит?» и «Кто трещит?» с пропусками; две фразы про овощи и птиц.",
+      "action": "Писать формы, дополнять ответы, изменять слова и списывать предложения.",
+      "features": [
+        "letter",
+        "trace",
+        "spelling",
+        "word-change",
+        "question",
+        "missing-word",
+        "response",
+        "sentences"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-66.jpg",
+      "letter_group": "Щ"
+    },
+    {
+      "pdf_page": 67,
+      "printed_page": 67,
+      "title": "Щ: правила и сравнение сочетаний",
+      "kind": "закрепление",
+      "content": "Правила «щу - с у» и «ща - с а»; пища, роща, чаща; пищит/пищут/блестит; пара предложений про звёзды и волны; внизу ча/ща/чу/щу и жи/ши/чк/чн.",
+      "action": "Писать слова и предложения, применять правила и различать близкие сочетания.",
+      "features": [
+        "spelling",
+        "words",
+        "sentences",
+        "question",
+        "review"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-67.jpg",
+      "letter_group": "Щ"
+    },
+    {
+      "pdf_page": 68,
+      "printed_page": 68,
+      "title": "Шипящие: обобщение и загадка",
+      "kind": "обобщение",
+      "content": "Ч, ш, щ, ж названы шипящими; ряды жи/ши, ча/ща, чу/щу; предложение о тишине в классе; тишь/тише; загадка о молчащем знающем предмете.",
+      "action": "Обобщать изученные сочетания, писать фразы и отвечать на загадку.",
+      "features": [
+        "spelling",
+        "combinations",
+        "words",
+        "sentences",
+        "riddle",
+        "response"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-68.jpg",
+      "letter_group": "Щ"
+    },
+    {
+      "pdf_page": 69,
+      "printed_page": 69,
+      "title": "Ъ: смысл и написание знака",
+      "kind": "введение знака",
+      "content": "Ъ; пары села/съела, ели/съели; съезд, въезд, подъезд, отъезд с общей частью; предложения о поездке в Бухару, ели и еде.",
+      "action": "Писать знак в слове, сравнивать смысл, выделять общую часть и списывать предложения.",
+      "features": [
+        "sign",
+        "trace",
+        "words",
+        "word-family",
+        "question",
+        "sentences",
+        "copy"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-69.jpg",
+      "letter_group": "Ъ"
+    },
+    {
+      "pdf_page": 70,
+      "printed_page": 70,
+      "title": "Ъ: закрепление и итоговая тренировка",
+      "kind": "закрепление",
+      "content": "Формы с разделительным знаком и слово компьютер с выделениями; пословица об ученье; фраза с пропусками; предложение об Илье и горе; повторение ъ, ь и похожих форм.",
+      "action": "Дополнять буквы, списывать осмысленные фразы, различать знаки и ранее изученные формы.",
+      "features": [
+        "words",
+        "missing-letter",
+        "sentences",
+        "copy",
+        "soft-consonants",
+        "review"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-70.jpg",
+      "letter_group": "Ъ"
+    },
+    {
+      "pdf_page": 71,
+      "printed_page": 71,
+      "title": "Итог: связный текст о весне",
+      "kind": "итоговая практика",
+      "content": "Небольшой текст о весне и перелётных птицах с пропущенными буквами; ниже лужи/лёт/дождик, названия птиц и заключительное предложение о весне и тепле.",
+      "action": "Восстанавливать текст, писать связный фрагмент и отдельные слова, отмечать слоги по значку.",
+      "features": [
+        "connected-text",
+        "missing-letter",
+        "words",
+        "sentences",
+        "syllables"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-71.jpg",
+      "letter_group": null
+    },
+    {
+      "pdf_page": 72,
+      "printed_page": null,
+      "title": "Выходные сведения",
+      "kind": "служебная",
+      "content": "Библиографическое описание, авторы, редакционные и печатные сведения, тираж и издательская информация. Учебного материала нет.",
+      "action": "Учебных упражнений нет.",
+      "features": [
+        "metadata"
+      ],
+      "review": "full-page visual review; task details checked from page image",
+      "preview": "propisi-2019-content/pages/page-72.jpg",
+      "letter_group": null
+    }
+  ],
+  "reviewed_on": "2026-11-03",
+  "lesson_groups": [
+    {
+      "letter": "А",
+      "ordinal": 1,
+      "start": 8,
+      "end": 8,
+      "count": 1,
+      "range": "8",
+      "structure": "введение буквы",
+      "page_ids": [
+        8
+      ],
+      "features": [
+        "combinations",
+        "continue",
+        "letter",
+        "parts",
+        "trace"
+      ]
+    },
+    {
+      "letter": "О",
+      "ordinal": 2,
+      "start": 9,
+      "end": 9,
+      "count": 1,
+      "range": "9",
+      "structure": "введение буквы",
+      "page_ids": [
+        9
+      ],
+      "features": [
+        "combinations",
+        "continue",
+        "letter",
+        "parts",
+        "trace"
+      ]
+    },
+    {
+      "letter": "И",
+      "ordinal": 3,
+      "start": 10,
+      "end": 10,
+      "count": 1,
+      "range": "10",
+      "structure": "введение буквы",
+      "page_ids": [
+        10
+      ],
+      "features": [
+        "combinations",
+        "continue",
+        "letter",
+        "parts",
+        "trace"
+      ]
+    },
+    {
+      "letter": "У",
+      "ordinal": 4,
+      "start": 11,
+      "end": 11,
+      "count": 1,
+      "range": "11",
+      "structure": "введение буквы",
+      "page_ids": [
+        11
+      ],
+      "features": [
+        "combinations",
+        "continue",
+        "exclamation",
+        "letter",
+        "trace"
+      ]
+    },
+    {
+      "letter": "Ы",
+      "ordinal": 5,
+      "start": 12,
+      "end": 12,
+      "count": 1,
+      "range": "12",
+      "structure": "введение буквы",
+      "page_ids": [
+        12
+      ],
+      "features": [
+        "combinations",
+        "continue",
+        "letter",
+        "parts",
+        "trace"
+      ]
+    },
+    {
+      "letter": "Н",
+      "ordinal": 6,
+      "start": 13,
+      "end": 13,
+      "count": 1,
+      "range": "13",
+      "structure": "введение буквы",
+      "page_ids": [
+        13
+      ],
+      "features": [
+        "letter",
+        "names",
+        "parts",
+        "picture-word",
+        "sentence",
+        "trace",
+        "words"
+      ]
+    },
+    {
+      "letter": "Т",
+      "ordinal": 7,
+      "start": 14,
+      "end": 16,
+      "count": 3,
+      "range": "14-16",
+      "structure": "введение буквы → закрепление → закрепление",
+      "page_ids": [
+        14,
+        15,
+        16
+      ],
+      "features": [
+        "capital",
+        "combinations",
+        "copy",
+        "letter",
+        "missing-letter",
+        "names",
+        "review",
+        "sentences",
+        "stress",
+        "trace",
+        "vowels",
+        "words"
+      ]
+    },
+    {
+      "letter": "К",
+      "ordinal": 8,
+      "start": 17,
+      "end": 18,
+      "count": 2,
+      "range": "17-18",
+      "structure": "введение буквы → закрепление",
+      "page_ids": [
+        17,
+        18
+      ],
+      "features": [
+        "capital",
+        "combinations",
+        "copy",
+        "letter",
+        "review",
+        "sentences",
+        "soft-consonants",
+        "trace",
+        "word-change",
+        "words"
+      ]
+    },
+    {
+      "letter": "С",
+      "ordinal": 9,
+      "start": 19,
+      "end": 20,
+      "count": 2,
+      "range": "19-20",
+      "structure": "введение буквы → закрепление",
+      "page_ids": [
+        19,
+        20
+      ],
+      "features": [
+        "combinations",
+        "letter",
+        "sentences",
+        "syllables",
+        "trace",
+        "vowels",
+        "word-change",
+        "words"
+      ]
+    },
+    {
+      "letter": "Л",
+      "ordinal": 10,
+      "start": 21,
+      "end": 21,
+      "count": 1,
+      "range": "21",
+      "structure": "введение буквы",
+      "page_ids": [
+        21
+      ],
+      "features": [
+        "letter",
+        "names",
+        "parts",
+        "sentences",
+        "trace",
+        "words"
+      ]
+    },
+    {
+      "letter": "П",
+      "ordinal": 11,
+      "start": 22,
+      "end": 22,
+      "count": 1,
+      "range": "22",
+      "structure": "введение буквы",
+      "page_ids": [
+        22
+      ],
+      "features": [
+        "letter",
+        "missing-letter",
+        "sentences",
+        "soft-consonants",
+        "trace",
+        "words"
+      ]
+    },
+    {
+      "letter": "Р",
+      "ordinal": 12,
+      "start": 23,
+      "end": 24,
+      "count": 2,
+      "range": "23-24",
+      "structure": "введение буквы → закрепление",
+      "page_ids": [
+        23,
+        24
+      ],
+      "features": [
+        "capital",
+        "copy",
+        "letter",
+        "missing-word",
+        "names",
+        "review",
+        "sentences",
+        "trace",
+        "word-change",
+        "words"
+      ]
+    },
+    {
+      "letter": "В",
+      "ordinal": 13,
+      "start": 25,
+      "end": 26,
+      "count": 2,
+      "range": "25-26",
+      "structure": "введение буквы → закрепление",
+      "page_ids": [
+        25,
+        26
+      ],
+      "features": [
+        "capital",
+        "letter",
+        "missing-word",
+        "review",
+        "sentences",
+        "stress",
+        "syllables",
+        "trace",
+        "word-change",
+        "words"
+      ]
+    },
+    {
+      "letter": "Е",
+      "ordinal": 14,
+      "start": 27,
+      "end": 29,
+      "count": 3,
+      "range": "27-29",
+      "structure": "введение буквы → списывание текста → закрепление",
+      "page_ids": [
+        27,
+        28,
+        29
+      ],
+      "features": [
+        "combinations",
+        "connected-text",
+        "copy",
+        "letter",
+        "letter-order",
+        "sentences",
+        "soft-consonants",
+        "stress",
+        "trace",
+        "vowels",
+        "words"
+      ]
+    },
+    {
+      "letter": "М",
+      "ordinal": 15,
+      "start": 30,
+      "end": 31,
+      "count": 2,
+      "range": "30-31",
+      "structure": "введение буквы → закрепление",
+      "page_ids": [
+        30,
+        31
+      ],
+      "features": [
+        "combinations",
+        "connected-text",
+        "copy",
+        "letter",
+        "names",
+        "review",
+        "sentences",
+        "soft-consonants",
+        "stress",
+        "trace",
+        "words"
+      ]
+    },
+    {
+      "letter": "З",
+      "ordinal": 16,
+      "start": 32,
+      "end": 33,
+      "count": 2,
+      "range": "32-33",
+      "structure": "введение буквы → закрепление",
+      "page_ids": [
+        32,
+        33
+      ],
+      "features": [
+        "capital",
+        "connected-text",
+        "copy",
+        "letter",
+        "names",
+        "review",
+        "sentences",
+        "stress",
+        "syllables",
+        "trace",
+        "words"
+      ]
+    },
+    {
+      "letter": "Д",
+      "ordinal": 17,
+      "start": 34,
+      "end": 35,
+      "count": 2,
+      "range": "34-35",
+      "structure": "введение буквы → закрепление",
+      "page_ids": [
+        34,
+        35
+      ],
+      "features": [
+        "capital",
+        "copy",
+        "letter",
+        "missing-letter",
+        "names",
+        "question",
+        "response",
+        "sentence",
+        "sentences",
+        "trace",
+        "words"
+      ]
+    },
+    {
+      "letter": "Б",
+      "ordinal": 18,
+      "start": 36,
+      "end": 37,
+      "count": 2,
+      "range": "36-37",
+      "structure": "введение буквы → закрепление",
+      "page_ids": [
+        36,
+        37
+      ],
+      "features": [
+        "capital",
+        "connected-text",
+        "copy",
+        "letter",
+        "missing-letter",
+        "review",
+        "sentences",
+        "stress",
+        "trace",
+        "word-change",
+        "words"
+      ]
+    },
+    {
+      "letter": "Г",
+      "ordinal": 19,
+      "start": 38,
+      "end": 38,
+      "count": 1,
+      "range": "38",
+      "structure": "введение буквы",
+      "page_ids": [
+        38
+      ],
+      "features": [
+        "combinations",
+        "letter",
+        "missing-word",
+        "sentences",
+        "trace",
+        "word-change"
+      ]
+    },
+    {
+      "letter": "Ь",
+      "ordinal": 20,
+      "start": 39,
+      "end": 40,
+      "count": 2,
+      "range": "39-40",
+      "structure": "введение знака → закрепление",
+      "page_ids": [
+        39,
+        40
+      ],
+      "features": [
+        "connected-text",
+        "copy",
+        "copy-primer",
+        "missing-letter",
+        "question",
+        "sign",
+        "trace",
+        "word-change",
+        "words"
+      ]
+    },
+    {
+      "letter": "Я",
+      "ordinal": 21,
+      "start": 41,
+      "end": 42,
+      "count": 2,
+      "range": "41-42",
+      "structure": "введение буквы → списывание текста",
+      "page_ids": [
+        41,
+        42
+      ],
+      "features": [
+        "connected-text",
+        "copy",
+        "letter",
+        "missing-word",
+        "names",
+        "sentences",
+        "trace",
+        "vowels",
+        "words"
+      ]
+    },
+    {
+      "letter": "Ч",
+      "ordinal": 22,
+      "start": 43,
+      "end": 44,
+      "count": 2,
+      "range": "43-44",
+      "structure": "введение буквы → закрепление",
+      "page_ids": [
+        43,
+        44
+      ],
+      "features": [
+        "combinations",
+        "connected-text",
+        "copy",
+        "letter",
+        "missing-letter",
+        "review",
+        "sentence",
+        "spelling",
+        "trace",
+        "words"
+      ]
+    },
+    {
+      "letter": "Ш",
+      "ordinal": 23,
+      "start": 45,
+      "end": 47,
+      "count": 3,
+      "range": "45-47",
+      "structure": "введение буквы → закрепление → закрепление",
+      "page_ids": [
+        45,
+        46,
+        47
+      ],
+      "features": [
+        "capital",
+        "connected-text",
+        "copy",
+        "letter",
+        "missing-letter",
+        "names",
+        "sentence-build",
+        "spelling",
+        "trace",
+        "word-change",
+        "words"
+      ]
+    },
+    {
+      "letter": "Ж",
+      "ordinal": 24,
+      "start": 48,
+      "end": 50,
+      "count": 3,
+      "range": "48-50",
+      "structure": "введение буквы → списывание текста → закрепление",
+      "page_ids": [
+        48,
+        49,
+        50
+      ],
+      "features": [
+        "capital",
+        "combinations",
+        "connected-text",
+        "copy",
+        "letter",
+        "missing-letter",
+        "missing-word",
+        "question",
+        "sentences",
+        "spelling",
+        "trace",
+        "word-change",
+        "words"
+      ]
+    },
+    {
+      "letter": "Ё",
+      "ordinal": 25,
+      "start": 51,
+      "end": 53,
+      "count": 3,
+      "range": "51-53",
+      "structure": "введение буквы → списывание текста → закрепление",
+      "page_ids": [
+        51,
+        52,
+        53
+      ],
+      "features": [
+        "capital",
+        "connected-text",
+        "copy",
+        "letter",
+        "missing-letter",
+        "missing-word",
+        "names",
+        "review",
+        "sentence",
+        "sentences",
+        "trace",
+        "word-change",
+        "words"
+      ]
+    },
+    {
+      "letter": "Й",
+      "ordinal": 26,
+      "start": 54,
+      "end": 55,
+      "count": 2,
+      "range": "54-55",
+      "structure": "введение буквы → закрепление",
+      "page_ids": [
+        54,
+        55
+      ],
+      "features": [
+        "combinations",
+        "copy",
+        "letter",
+        "missing-letter",
+        "missing-word",
+        "names",
+        "sentences",
+        "trace",
+        "word-change",
+        "words"
+      ]
+    },
+    {
+      "letter": "Х",
+      "ordinal": 27,
+      "start": 56,
+      "end": 57,
+      "count": 2,
+      "range": "56-57",
+      "structure": "введение буквы → закрепление",
+      "page_ids": [
+        56,
+        57
+      ],
+      "features": [
+        "capital",
+        "combinations",
+        "copy",
+        "letter",
+        "match-meaning",
+        "missing-letter",
+        "missing-word",
+        "question",
+        "trace",
+        "word-family",
+        "words"
+      ]
+    },
+    {
+      "letter": "Ю",
+      "ordinal": 28,
+      "start": 58,
+      "end": 59,
+      "count": 2,
+      "range": "58-59",
+      "structure": "введение буквы → закрепление",
+      "page_ids": [
+        58,
+        59
+      ],
+      "features": [
+        "capital",
+        "combinations",
+        "copy",
+        "letter",
+        "missing-letter",
+        "names",
+        "sentences",
+        "trace",
+        "word-change",
+        "word-family",
+        "words"
+      ]
+    },
+    {
+      "letter": "Ф",
+      "ordinal": 29,
+      "start": 60,
+      "end": 61,
+      "count": 2,
+      "range": "60-61",
+      "structure": "введение буквы → закрепление",
+      "page_ids": [
+        60,
+        61
+      ],
+      "features": [
+        "combinations",
+        "connected-text",
+        "copy",
+        "letter",
+        "names",
+        "question",
+        "response",
+        "review",
+        "sentences",
+        "trace",
+        "word-change"
+      ]
+    },
+    {
+      "letter": "Ц",
+      "ordinal": 30,
+      "start": 62,
+      "end": 63,
+      "count": 2,
+      "range": "62-63",
+      "structure": "введение буквы → закрепление",
+      "page_ids": [
+        62,
+        63
+      ],
+      "features": [
+        "capital",
+        "combinations",
+        "letter",
+        "missing-word",
+        "question",
+        "sentences",
+        "spelling",
+        "trace",
+        "vowels",
+        "word-change",
+        "words"
+      ]
+    },
+    {
+      "letter": "Э",
+      "ordinal": 31,
+      "start": 64,
+      "end": 65,
+      "count": 2,
+      "range": "64-65",
+      "structure": "введение буквы → закрепление",
+      "page_ids": [
+        64,
+        65
+      ],
+      "features": [
+        "copy-primer",
+        "letter",
+        "question",
+        "review",
+        "sentence",
+        "sentences",
+        "soft-consonants",
+        "stress",
+        "trace",
+        "words"
+      ]
+    },
+    {
+      "letter": "Щ",
+      "ordinal": 32,
+      "start": 66,
+      "end": 68,
+      "count": 3,
+      "range": "66-68",
+      "structure": "введение буквы → закрепление → обобщение",
+      "page_ids": [
+        66,
+        67,
+        68
+      ],
+      "features": [
+        "combinations",
+        "letter",
+        "missing-word",
+        "question",
+        "response",
+        "review",
+        "riddle",
+        "sentences",
+        "spelling",
+        "trace",
+        "word-change",
+        "words"
+      ]
+    },
+    {
+      "letter": "Ъ",
+      "ordinal": 33,
+      "start": 69,
+      "end": 70,
+      "count": 2,
+      "range": "69-70",
+      "structure": "введение знака → закрепление",
+      "page_ids": [
+        69,
+        70
+      ],
+      "features": [
+        "copy",
+        "missing-letter",
+        "question",
+        "review",
+        "sentences",
+        "sign",
+        "soft-consonants",
+        "trace",
+        "word-family",
+        "words"
+      ]
+    }
+  ],
+  "group_size_counts": {
+    "1": 9,
+    "3": 6,
+    "2": 18
+  },
+  "legend": [
+    {
+      "code": "change",
+      "meaning": "измени по образцу"
+    },
+    {
+      "code": "stress",
+      "meaning": "поставь ударение"
+    },
+    {
+      "code": "syllables",
+      "meaning": "слово раздели на слоги"
+    },
+    {
+      "code": "vowels",
+      "meaning": "подчеркни гласные"
+    },
+    {
+      "code": "soft-consonants",
+      "meaning": "подчеркни мягкие согласные"
+    },
+    {
+      "code": "question",
+      "meaning": "ответь на вопрос"
+    },
+    {
+      "code": "remember",
+      "meaning": "запомни"
+    },
+    {
+      "code": "missing-letter",
+      "meaning": "вставь букву"
+    },
+    {
+      "code": "missing-word",
+      "meaning": "вставь слово"
+    },
+    {
+      "code": "word-family",
+      "meaning": "выдели в слове общую часть"
+    },
+    {
+      "code": "copy",
+      "meaning": "спиши"
+    },
+    {
+      "code": "practice",
+      "meaning": "задания для тренировки"
+    },
+    {
+      "code": "lesson-end",
+      "meaning": "окончание урока"
+    },
+    {
+      "code": "copy-primer",
+      "meaning": "спиши из букваря"
+    }
+  ],
+  "adaptation": {
+    "status": "reference only; app build 27 not changed by this review",
+    "preserve": [
+      "ГОСТ типа Б без наклона; геометрическая проверка без порядка штрихов и требования неотрывности",
+      "Одна страница приложения на букву: внутри могут быть несколько последовательных блоков/занятий",
+      "Уже введённые буквы в тексте, понятный образец и постепенное уменьшение помощи",
+      "Ручные составы и все чернила сохраняются при будущей адаптации"
+    ],
+    "proposed_progression": [
+      {
+        "stage": "знакомство",
+        "writing": "части ГОСТ и формы буквы, короткие сочетания",
+        "source_pages": [
+          8,
+          13,
+          14
+        ]
+      },
+      {
+        "stage": "применение",
+        "writing": "несколько слов, предложения, связь текста и смысла",
+        "source_pages": [
+          17,
+          18,
+          19,
+          20
+        ]
+      },
+      {
+        "stage": "связное письмо",
+        "writing": "копирование короткого текста на доступном буквенном составе",
+        "source_pages": [
+          28,
+          31,
+          42,
+          49,
+          52
+        ]
+      },
+      {
+        "stage": "дополнение и самостоятельный ответ",
+        "writing": "пропуски, сборка фразы или короткий ответ с отдельным местом для письма",
+        "source_pages": [
+          24,
+          35,
+          46,
+          68,
+          71
+        ]
+      }
+    ],
+    "not_decided": [
+      "Обязательный объём и деление на короткие занятия для каждой буквы",
+      "Какие языковые упражнения полезны именно обучению ГОСТ, а какие исключить",
+      "Способ ввода свободного ответа и его проверки; не заменять его заранее выбранным словом без отдельного решения"
+    ]
+  }
+}

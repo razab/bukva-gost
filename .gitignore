@@ -1,0 +1,19 @@
+.DS_Store
+node_modules/
+.env
+.env.*
+!.env.example
+__pycache__/
+*.pyc
+/dist/
+/reports/
+/snapshots/
+/tmp/
+/output/
+# Optional research originals and generated reference scans stay local.
+/references/**/*.pdf
+/references/**/*.ttf
+/references/**/*.zip
+/references/**/*.jpg
+/references/**/*.png
+/references/propisi-2019-content/

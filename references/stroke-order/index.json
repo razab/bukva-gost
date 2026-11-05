@@ -1,0 +1,1254 @@
+{
+  "schema": 1,
+  "date": "2026-11-03",
+  "reviewed_build": "2026-11-03.28",
+  "scope": "33 uppercase/lowercase pairs, source diagrams and explicit adaptations; source diagrams are inclined, app uses upright GOST. These are instructional recommendations, not a claim that GOST mandates pen order.",
+  "sources": [
+    {
+      "id": "LENSK",
+      "url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+      "title": "Ленский технологический техникум. Техническая графика, 2022",
+      "page": 36,
+      "figures": [
+        5,
+        6
+      ],
+      "local": "references/stroke-order/sources/lensk-technical-graphics.pdf",
+      "sha256": "a2c91a60db79444b1af425e1dff92cacef4112b5c7c9cd23afc7477d8875e51e"
+    },
+    {
+      "id": "OSU",
+      "url": "https://elib.osu.ru/bitstream/123456789/10355/1/%D0%9A%D0%B0%D0%BF%D0%B8%D1%86%D0%B0.pdf#page=7",
+      "title": "Капица, Саблина. Оформление чертежей, ОГУ, 2013",
+      "pages": [
+        7,
+        8
+      ],
+      "figures": [
+        1
+      ],
+      "local": "references/stroke-order/sources/osu-kapitsa-2013.pdf",
+      "sha256": "c58873330734547992231581526395070629bd69b976721bb81524157c8b9e25"
+    },
+    {
+      "id": "TPU",
+      "url": "https://portal.tpu.ru/SHARED/a/ASOT/students/Tab/nacher_geom_zachita.pdf#page=123",
+      "title": "Учебник на портале ТПУ: общие рекомендации движения",
+      "page": 123,
+      "local": "references/stroke-order/sources/tpu-drawing.pdf",
+      "sha256": "1557a06961cd05df353c037e35364a27dfc3e99f4b0ec84652bca7973825f042"
+    },
+    {
+      "id": "UTAH",
+      "url": "https://uurc.utah.edu/general/letterformation.php#o",
+      "title": "University of Utah Reading Clinic: обычная латинская o, не ГОСТ",
+      "scope": "Only motor-pattern comparison, not source of GOST letter construction."
+    }
+  ],
+  "rows": [
+    {
+      "letter": "А",
+      "upper": {
+        "type": "direct",
+        "figure": 5,
+        "box": [
+          49,
+          105,
+          119,
+          211
+        ],
+        "group": 2,
+        "image": "references/stroke-order/letters/0410.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 5, группа 2"
+      },
+      "lower": {
+        "type": "direct",
+        "figure": 6,
+        "box": [
+          113,
+          0,
+          166,
+          88
+        ],
+        "group": 1,
+        "image": "references/stroke-order/letters/0430.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 6, группа 1"
+      },
+      "current_moves": [
+        2,
+        1
+      ]
+    },
+    {
+      "letter": "Б",
+      "upper": {
+        "type": "direct",
+        "figure": 5,
+        "box": [
+          49,
+          438,
+          113,
+          536
+        ],
+        "group": 5,
+        "image": "references/stroke-order/letters/0411.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 5, группа 5"
+      },
+      "lower": {
+        "type": "direct",
+        "figure": 6,
+        "box": [
+          166,
+          0,
+          228,
+          88
+        ],
+        "group": 1,
+        "image": "references/stroke-order/letters/0431.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 6, группа 1"
+      },
+      "current_moves": [
+        1,
+        2
+      ]
+    },
+    {
+      "letter": "В",
+      "upper": {
+        "type": "direct",
+        "figure": 5,
+        "box": [
+          113,
+          438,
+          177,
+          536
+        ],
+        "group": 5,
+        "image": "references/stroke-order/letters/0412.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 5, группа 5"
+      },
+      "lower": {
+        "type": "direct",
+        "figure": 6,
+        "box": [
+          228,
+          0,
+          281,
+          88
+        ],
+        "group": 1,
+        "image": "references/stroke-order/letters/0432.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 6, группа 1"
+      },
+      "current_moves": [
+        2,
+        2
+      ]
+    },
+    {
+      "letter": "Г",
+      "upper": {
+        "type": "direct",
+        "figure": 5,
+        "box": [
+          49,
+          0,
+          108,
+          103
+        ],
+        "group": 1,
+        "image": "references/stroke-order/letters/0413.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 5, группа 1"
+      },
+      "lower": {
+        "type": "direct",
+        "figure": 6,
+        "box": [
+          394,
+          0,
+          447,
+          88
+        ],
+        "group": 1,
+        "image": "references/stroke-order/letters/0433.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 6, группа 1"
+      },
+      "current_moves": [
+        1,
+        1
+      ]
+    },
+    {
+      "letter": "Д",
+      "upper": {
+        "type": "direct",
+        "figure": 5,
+        "box": [
+          49,
+          222,
+          116,
+          325
+        ],
+        "group": 3,
+        "image": "references/stroke-order/letters/0414.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 5, группа 3"
+      },
+      "lower": {
+        "type": "direct",
+        "figure": 6,
+        "box": [
+          281,
+          0,
+          337,
+          88
+        ],
+        "group": 1,
+        "image": "references/stroke-order/letters/0434.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 6, группа 1"
+      },
+      "current_moves": [
+        2,
+        1
+      ]
+    },
+    {
+      "letter": "Е",
+      "upper": {
+        "type": "direct",
+        "figure": 5,
+        "box": [
+          108,
+          0,
+          162,
+          103
+        ],
+        "group": 1,
+        "image": "references/stroke-order/letters/0415.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 5, группа 1"
+      },
+      "lower": {
+        "type": "direct",
+        "figure": 6,
+        "box": [
+          337,
+          0,
+          394,
+          88
+        ],
+        "group": 1,
+        "image": "references/stroke-order/letters/0435.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 6, группа 1"
+      },
+      "current_moves": [
+        2,
+        1
+      ]
+    },
+    {
+      "letter": "Ё",
+      "upper": {
+        "type": "diacritic",
+        "figure": 5,
+        "box": [
+          108,
+          0,
+          162,
+          103
+        ],
+        "group": 1,
+        "image": "references/stroke-order/letters/0415.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Схема Е + две точки; адаптация.",
+        "base": "Е"
+      },
+      "lower": {
+        "type": "diacritic",
+        "figure": 6,
+        "box": [
+          337,
+          0,
+          394,
+          88
+        ],
+        "group": 1,
+        "image": "references/stroke-order/letters/0435.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Схема е + две точки; адаптация.",
+        "base": "е"
+      },
+      "current_moves": [
+        4,
+        3
+      ]
+    },
+    {
+      "letter": "Ж",
+      "upper": {
+        "type": "direct",
+        "figure": 5,
+        "box": [
+          119,
+          105,
+          207,
+          211
+        ],
+        "group": 2,
+        "image": "references/stroke-order/letters/0416.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 5, группа 2"
+      },
+      "lower": {
+        "type": "analogy",
+        "figure": 5,
+        "box": [
+          119,
+          105,
+          207,
+          211
+        ],
+        "group": 2,
+        "image": "references/stroke-order/letters/0416.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Схема Ж; пропорции и вынос - строчные.",
+        "base": "Ж"
+      },
+      "current_moves": [
+        4,
+        4
+      ]
+    },
+    {
+      "letter": "З",
+      "upper": {
+        "type": "direct",
+        "figure": 5,
+        "box": [
+          177,
+          438,
+          226,
+          536
+        ],
+        "group": 5,
+        "image": "references/stroke-order/letters/0417.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 5, группа 5"
+      },
+      "lower": {
+        "type": "analogy",
+        "figure": 5,
+        "box": [
+          177,
+          438,
+          226,
+          536
+        ],
+        "group": 5,
+        "image": "references/stroke-order/letters/0417.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Схема З; пропорции и вынос - строчные.",
+        "base": "З"
+      },
+      "current_moves": [
+        2,
+        2
+      ]
+    },
+    {
+      "letter": "И",
+      "upper": {
+        "type": "direct",
+        "figure": 5,
+        "box": [
+          207,
+          105,
+          268,
+          211
+        ],
+        "group": 2,
+        "image": "references/stroke-order/letters/0418.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 5, группа 2"
+      },
+      "lower": {
+        "type": "diacritic",
+        "figure": 6,
+        "box": [
+          109,
+          104,
+          169,
+          191
+        ],
+        "group": 2,
+        "image": "references/stroke-order/letters/0439.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Схема й без верхней черты; адаптация.",
+        "base": "й"
+      },
+      "current_moves": [
+        1,
+        1
+      ]
+    },
+    {
+      "letter": "Й",
+      "upper": {
+        "type": "direct",
+        "figure": 5,
+        "box": [
+          268,
+          105,
+          327,
+          211
+        ],
+        "group": 2,
+        "image": "references/stroke-order/letters/0419.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 5, группа 2"
+      },
+      "lower": {
+        "type": "direct",
+        "figure": 6,
+        "box": [
+          109,
+          104,
+          169,
+          191
+        ],
+        "group": 2,
+        "image": "references/stroke-order/letters/0439.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 6, группа 2"
+      },
+      "current_moves": [
+        2,
+        2
+      ]
+    },
+    {
+      "letter": "К",
+      "upper": {
+        "type": "direct",
+        "figure": 5,
+        "box": [
+          333,
+          117,
+          394,
+          201
+        ],
+        "group": 2,
+        "image": "references/stroke-order/letters/041a.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 5, группа 2"
+      },
+      "lower": {
+        "type": "analogy",
+        "figure": 5,
+        "box": [
+          333,
+          117,
+          394,
+          201
+        ],
+        "group": 2,
+        "image": "references/stroke-order/letters/041a.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Схема К; пропорции и вынос - строчные.",
+        "base": "К"
+      },
+      "current_moves": [
+        3,
+        3
+      ]
+    },
+    {
+      "letter": "Л",
+      "upper": {
+        "type": "direct",
+        "figure": 5,
+        "box": [
+          116,
+          222,
+          178,
+          325
+        ],
+        "group": 3,
+        "image": "references/stroke-order/letters/041b.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 5, группа 3"
+      },
+      "lower": {
+        "type": "analogy",
+        "figure": 5,
+        "box": [
+          116,
+          222,
+          178,
+          325
+        ],
+        "group": 3,
+        "image": "references/stroke-order/letters/041b.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Схема Л; пропорции и вынос - строчные.",
+        "base": "Л"
+      },
+      "current_moves": [
+        1,
+        1
+      ]
+    },
+    {
+      "letter": "М",
+      "upper": {
+        "type": "direct",
+        "figure": 5,
+        "box": [
+          393,
+          105,
+          466,
+          211
+        ],
+        "group": 2,
+        "image": "references/stroke-order/letters/041c.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 5, группа 2"
+      },
+      "lower": {
+        "type": "analogy",
+        "figure": 5,
+        "box": [
+          393,
+          105,
+          466,
+          211
+        ],
+        "group": 2,
+        "image": "references/stroke-order/letters/041c.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Схема М; пропорции и вынос - строчные.",
+        "base": "М"
+      },
+      "current_moves": [
+        1,
+        1
+      ]
+    },
+    {
+      "letter": "Н",
+      "upper": {
+        "type": "direct",
+        "figure": 5,
+        "box": [
+          162,
+          0,
+          220,
+          103
+        ],
+        "group": 1,
+        "image": "references/stroke-order/letters/041d.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 5, группа 1"
+      },
+      "lower": {
+        "type": "analogy",
+        "figure": 5,
+        "box": [
+          162,
+          0,
+          220,
+          103
+        ],
+        "group": 1,
+        "image": "references/stroke-order/letters/041d.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Схема Н; пропорции и вынос - строчные.",
+        "base": "Н"
+      },
+      "current_moves": [
+        3,
+        3
+      ]
+    },
+    {
+      "letter": "О",
+      "upper": {
+        "type": "direct",
+        "figure": 5,
+        "box": [
+          49,
+          337,
+          111,
+          432
+        ],
+        "group": 4,
+        "image": "references/stroke-order/letters/041e.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 5, группа 4"
+      },
+      "lower": {
+        "type": "analogy",
+        "figure": 5,
+        "box": [
+          49,
+          337,
+          111,
+          432
+        ],
+        "group": 4,
+        "image": "references/stroke-order/letters/041e.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Схема О; пропорции и вынос - строчные.",
+        "base": "О"
+      },
+      "current_moves": [
+        1,
+        1
+      ]
+    },
+    {
+      "letter": "П",
+      "upper": {
+        "type": "direct",
+        "figure": 5,
+        "box": [
+          220,
+          0,
+          281,
+          103
+        ],
+        "group": 1,
+        "image": "references/stroke-order/letters/041f.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 5, группа 1"
+      },
+      "lower": {
+        "type": "direct",
+        "figure": 6,
+        "box": [
+          169,
+          104,
+          226,
+          191
+        ],
+        "group": 2,
+        "image": "references/stroke-order/letters/043f.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 6, группа 2"
+      },
+      "current_moves": [
+        1,
+        1
+      ]
+    },
+    {
+      "letter": "Р",
+      "upper": {
+        "type": "direct",
+        "figure": 5,
+        "box": [
+          226,
+          438,
+          281,
+          536
+        ],
+        "group": 5,
+        "image": "references/stroke-order/letters/0420.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 5, группа 5"
+      },
+      "lower": {
+        "type": "analogy",
+        "figure": 5,
+        "box": [
+          226,
+          438,
+          281,
+          536
+        ],
+        "group": 5,
+        "image": "references/stroke-order/letters/0420.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Схема Р; пропорции и вынос - строчные.",
+        "base": "Р"
+      },
+      "current_moves": [
+        2,
+        2
+      ]
+    },
+    {
+      "letter": "С",
+      "upper": {
+        "type": "direct",
+        "figure": 5,
+        "box": [
+          111,
+          337,
+          167,
+          432
+        ],
+        "group": 4,
+        "image": "references/stroke-order/letters/0421.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 5, группа 4"
+      },
+      "lower": {
+        "type": "analogy",
+        "figure": 5,
+        "box": [
+          111,
+          337,
+          167,
+          432
+        ],
+        "group": 4,
+        "image": "references/stroke-order/letters/0421.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Схема С; пропорции и вынос - строчные.",
+        "base": "С"
+      },
+      "current_moves": [
+        1,
+        1
+      ]
+    },
+    {
+      "letter": "Т",
+      "upper": {
+        "type": "direct",
+        "figure": 5,
+        "box": [
+          281,
+          0,
+          332,
+          103
+        ],
+        "group": 1,
+        "image": "references/stroke-order/letters/0422.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 5, группа 1"
+      },
+      "lower": {
+        "type": "direct",
+        "figure": 6,
+        "box": [
+          282,
+          104,
+          349,
+          191
+        ],
+        "group": 2,
+        "image": "references/stroke-order/letters/0442.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 6, группа 2"
+      },
+      "current_moves": [
+        2,
+        2
+      ]
+    },
+    {
+      "letter": "У",
+      "upper": {
+        "type": "direct",
+        "figure": 5,
+        "box": [
+          178,
+          222,
+          249,
+          325
+        ],
+        "group": 3,
+        "image": "references/stroke-order/letters/0423.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 5, группа 3"
+      },
+      "lower": {
+        "type": "analogy",
+        "figure": 5,
+        "box": [
+          178,
+          222,
+          249,
+          325
+        ],
+        "group": 3,
+        "image": "references/stroke-order/letters/0423.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Схема У; пропорции и вынос - строчные.",
+        "base": "У"
+      },
+      "current_moves": [
+        2,
+        2
+      ]
+    },
+    {
+      "letter": "Ф",
+      "upper": {
+        "type": "direct",
+        "figure": 5,
+        "box": [
+          167,
+          337,
+          238,
+          432
+        ],
+        "group": 4,
+        "image": "references/stroke-order/letters/0424.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 5, группа 4"
+      },
+      "lower": {
+        "type": "analogy",
+        "figure": 5,
+        "box": [
+          167,
+          337,
+          238,
+          432
+        ],
+        "group": 4,
+        "image": "references/stroke-order/letters/0424.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Схема Ф; пропорции и вынос - строчные.",
+        "base": "Ф"
+      },
+      "current_moves": [
+        2,
+        2
+      ]
+    },
+    {
+      "letter": "Х",
+      "upper": {
+        "type": "direct",
+        "figure": 5,
+        "box": [
+          466,
+          105,
+          536,
+          211
+        ],
+        "group": 2,
+        "image": "references/stroke-order/letters/0425.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 5, группа 2"
+      },
+      "lower": {
+        "type": "analogy",
+        "figure": 5,
+        "box": [
+          466,
+          105,
+          536,
+          211
+        ],
+        "group": 2,
+        "image": "references/stroke-order/letters/0425.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Схема Х; пропорции и вынос - строчные.",
+        "base": "Х"
+      },
+      "current_moves": [
+        2,
+        2
+      ]
+    },
+    {
+      "letter": "Ц",
+      "upper": {
+        "type": "direct",
+        "figure": 5,
+        "box": [
+          332,
+          0,
+          389,
+          103
+        ],
+        "group": 1,
+        "image": "references/stroke-order/letters/0426.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 5, группа 1"
+      },
+      "lower": {
+        "type": "direct",
+        "figure": 6,
+        "box": [
+          226,
+          104,
+          282,
+          191
+        ],
+        "group": 2,
+        "image": "references/stroke-order/letters/0446.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 6, группа 2"
+      },
+      "current_moves": [
+        2,
+        2
+      ]
+    },
+    {
+      "letter": "Ч",
+      "upper": {
+        "type": "direct",
+        "figure": 5,
+        "box": [
+          249,
+          222,
+          315,
+          325
+        ],
+        "group": 3,
+        "image": "references/stroke-order/letters/0427.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 5, группа 3"
+      },
+      "lower": {
+        "type": "analogy",
+        "figure": 5,
+        "box": [
+          249,
+          222,
+          315,
+          325
+        ],
+        "group": 3,
+        "image": "references/stroke-order/letters/0427.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Схема Ч; пропорции и вынос - строчные.",
+        "base": "Ч"
+      },
+      "current_moves": [
+        2,
+        2
+      ]
+    },
+    {
+      "letter": "Ш",
+      "upper": {
+        "type": "direct",
+        "figure": 5,
+        "box": [
+          389,
+          0,
+          465,
+          103
+        ],
+        "group": 1,
+        "image": "references/stroke-order/letters/0428.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 5, группа 1"
+      },
+      "lower": {
+        "type": "direct",
+        "figure": 6,
+        "box": [
+          349,
+          104,
+          423,
+          191
+        ],
+        "group": 2,
+        "image": "references/stroke-order/letters/0448.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 6, группа 2"
+      },
+      "current_moves": [
+        2,
+        2
+      ]
+    },
+    {
+      "letter": "Щ",
+      "upper": {
+        "type": "direct",
+        "figure": 5,
+        "box": [
+          465,
+          0,
+          536,
+          103
+        ],
+        "group": 1,
+        "image": "references/stroke-order/letters/0429.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 5, группа 1"
+      },
+      "lower": {
+        "type": "direct",
+        "figure": 6,
+        "box": [
+          423,
+          104,
+          503,
+          191
+        ],
+        "group": 2,
+        "image": "references/stroke-order/letters/0449.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 6, группа 2"
+      },
+      "current_moves": [
+        3,
+        3
+      ]
+    },
+    {
+      "letter": "Ъ",
+      "upper": {
+        "type": "direct",
+        "figure": 5,
+        "box": [
+          281,
+          438,
+          347,
+          536
+        ],
+        "group": 5,
+        "image": "references/stroke-order/letters/042a.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 5, группа 5"
+      },
+      "lower": {
+        "type": "analogy",
+        "figure": 5,
+        "box": [
+          281,
+          438,
+          347,
+          536
+        ],
+        "group": 5,
+        "image": "references/stroke-order/letters/042a.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Схема Ъ; пропорции и вынос - строчные.",
+        "base": "Ъ"
+      },
+      "current_moves": [
+        1,
+        1
+      ]
+    },
+    {
+      "letter": "Ы",
+      "upper": {
+        "type": "direct",
+        "figure": 5,
+        "box": [
+          347,
+          438,
+          411,
+          536
+        ],
+        "group": 5,
+        "image": "references/stroke-order/letters/042b.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 5, группа 5"
+      },
+      "lower": {
+        "type": "analogy",
+        "figure": 5,
+        "box": [
+          347,
+          438,
+          411,
+          536
+        ],
+        "group": 5,
+        "image": "references/stroke-order/letters/042b.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Схема Ы; пропорции и вынос - строчные.",
+        "base": "Ы"
+      },
+      "current_moves": [
+        2,
+        2
+      ]
+    },
+    {
+      "letter": "Ь",
+      "upper": {
+        "type": "direct",
+        "figure": 5,
+        "box": [
+          411,
+          438,
+          475,
+          536
+        ],
+        "group": 5,
+        "image": "references/stroke-order/letters/042c.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 5, группа 5"
+      },
+      "lower": {
+        "type": "analogy",
+        "figure": 5,
+        "box": [
+          411,
+          438,
+          475,
+          536
+        ],
+        "group": 5,
+        "image": "references/stroke-order/letters/042c.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Схема Ь; пропорции и вынос - строчные.",
+        "base": "Ь"
+      },
+      "current_moves": [
+        1,
+        1
+      ]
+    },
+    {
+      "letter": "Э",
+      "upper": {
+        "type": "direct",
+        "figure": 5,
+        "box": [
+          238,
+          337,
+          300,
+          432
+        ],
+        "group": 4,
+        "image": "references/stroke-order/letters/042d.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 5, группа 4"
+      },
+      "lower": {
+        "type": "analogy",
+        "figure": 5,
+        "box": [
+          238,
+          337,
+          300,
+          432
+        ],
+        "group": 4,
+        "image": "references/stroke-order/letters/042d.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Схема Э; пропорции и вынос - строчные.",
+        "base": "Э"
+      },
+      "current_moves": [
+        2,
+        2
+      ]
+    },
+    {
+      "letter": "Ю",
+      "upper": {
+        "type": "direct",
+        "figure": 5,
+        "box": [
+          300,
+          337,
+          377,
+          432
+        ],
+        "group": 4,
+        "image": "references/stroke-order/letters/042e.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 5, группа 4"
+      },
+      "lower": {
+        "type": "analogy",
+        "figure": 5,
+        "box": [
+          300,
+          337,
+          377,
+          432
+        ],
+        "group": 4,
+        "image": "references/stroke-order/letters/042e.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Схема Ю; пропорции и вынос - строчные.",
+        "base": "Ю"
+      },
+      "current_moves": [
+        3,
+        3
+      ]
+    },
+    {
+      "letter": "Я",
+      "upper": {
+        "type": "direct",
+        "figure": 5,
+        "box": [
+          475,
+          438,
+          536,
+          536
+        ],
+        "group": 5,
+        "image": "references/stroke-order/letters/042f.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Рис. 5, группа 5"
+      },
+      "lower": {
+        "type": "analogy",
+        "figure": 5,
+        "box": [
+          475,
+          438,
+          536,
+          536
+        ],
+        "group": 5,
+        "image": "references/stroke-order/letters/042f.png",
+        "source_url": "https://lensktekhnikum.ru/sveden/files/rip/OP.02_MRPR_Texnicheskaya_grafika_MSR-22.pdf#page=36",
+        "note": "Схема Я; пропорции и вынос - строчные.",
+        "base": "Я"
+      },
+      "current_moves": [
+        3,
+        3
+      ]
+    }
+  ],
+  "coverage": {
+    "direct_glyph_diagrams": 44,
+    "adapted_by_analogy": 19,
+    "adapted_by_diacritic": 3
+  },
+  "findings": {
+    "Оо": "Build28 continuous loop starts along the top to the left, counter-clockwise. LENSK fig5 shows two downward halves; OSU fig1 shows four elements. No single mandatory rotation follows from these sources.",
+    "Кк": "Build28 right-side V is drawn before the left connector. LENSK fig5 shows stem, full upper arm to the stem, then lower leg from its branch.",
+    "А": "Previously approved app path rises to apex then descends in one motion. Source chart uses separate downward sides; treat this as an explicit app-specific alternative, not a GOST requirement."
+  },
+  "status": "Source coverage atlas, not a claim that all existing app motions are pedagogically validated. O/o and K/k corrected in build29; other letters preserved.",
+  "followup_reviews": [
+    {
+      "date": "2026-11-05",
+      "build": "2026-11-05.47",
+      "scope": [
+        "И warm-up",
+        "е demonstration"
+      ],
+      "source": "LENSK p36 figures5–6; existing upright font contours retained",
+      "findings": [
+        "И warm-up used noisy raster-skeleton junctions although its demonstration was already straight. Reviewed opt-in parts now reference literal demonstration segments; new IDs retain aliases and archived old ink.",
+        "е fig6/group1: outer C body, upper-right arc, then middle bar left-to-right. Exact old centre edges reordered into three movements; no assessment/model/revision changes."
+      ],
+      "limits": "Instructional adaptation of inclined source to upright type B; GOST does not prescribe pen order. Other letter teaching schemes were not re-reviewed in this follow-up."
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "sourcePath": "/Users/dcor/Downloads/66142_2cc440b0376755cd1072b6a64bfce323.pdf",
+  "title": "Пропись. 1 класс",
+  "authors": [
+    "М.Х. Тохтаходжаева",
+    "В.А. Белова",
+    "Н.М. Вейцман"
+  ],
+  "place": "Ташкент",
+  "year": 2019,
+  "edition": 13,
+  "publisher": "Узбекистан",
+  "pageCount": 72,
+  "method": "Selected complete pages rendered and visually inspected. No full OCR or extraction of all workbook pages.",
+  "inspectedPages": [
+    1,
+    2,
+    3,
+    4,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    24
+  ],
+  "referenceAlphabetPage": 3,
+  "verifiedLessonPrefix": [
+    {
+      "letter": "А",
+      "page": 8
+    },
+    {
+      "letter": "О",
+      "page": 9
+    },
+    {
+      "letter": "И",
+      "page": 10
+    },
+    {
+      "letter": "У",
+      "page": 11
+    },
+    {
+      "letter": "Ы",
+      "page": 12
+    },
+    {
+      "letter": "Н",
+      "page": 13
+    }
+  ],
+  "fullLetterOrderVerified": false,
+  "observations": [
+    {
+      "page": 4,
+      "type": "preparation",
+      "content": "Pictures, circles/ovals, straight segments, zigzags before letter lessons."
+    },
+    {
+      "page": 8,
+      "type": "lesson",
+      "letter": "А",
+      "content": "Printed pair and word illustration; elements and lowercase а, аа; uppercase components and А; ending А-а-а!."
+    },
+    {
+      "page": 13,
+      "type": "lesson",
+      "letter": "Н",
+      "content": "Lowercase elements and н; ни/ин, он/оно, она/они; illustration prompts; uppercase Н and names Нонна/Инна; sentence with a picture replacing a word."
+    },
+    {
+      "page": 24,
+      "type": "consolidation",
+      "content": "Р, names Руслан/Рита; sentences; missing-word prompt; copying; practice of already known capitals."
+    }
+  ],
+  "applicationImplications": [
+    "Carry over the progression from letter-specific parts to lowercase, combinations/words, capitals and meaningful practice.",
+    "Allow a different lesson composition per letter; not every page has the same repeated letter rows.",
+    "Treat alphabet reference order separately from teaching order.",
+    "Use actual GOST letter parts instead of copying school-cursive primitives and joins.",
+    "Do not claim the full 33-letter sequence from this selective inspection."
+  ],
+  "followUp": "Historical selective review preserved. Full order was then verified from headers in propisi-2019-order.json. On 2026-11-03 all 72 complete pages were visually reviewed; see propisi-2019-content.json and output/pdf/propisi-2019-content-reference.pdf."
+}

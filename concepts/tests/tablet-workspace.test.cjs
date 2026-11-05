@@ -1,0 +1,19 @@
+const fs=require('fs'),path=require('path'),assert=require('assert/strict');
+const harness=fs.readFileSync(path.join(__dirname,'worksheet.test.cjs'),'utf8').split('let app=boot();')[0];
+const boot=saved=>new Function('require','__dirname',harness+'return boot(arguments[2]);')(require,__dirname,saved);
+let app=boot();const run=s=>app.run(s);const field=()=>app.nodes.practice.children.find(r=>r.dataset.component==='gost-b90-A-bar').children[0].parts;
+function fire(canvas,type,p,{pointerType='pen',pointerId=20,...extra}={}){const frame=JSON.parse(canvas.attrs['data-view-box']||'{"x":0,"y":0,"width":200,"height":200}'),r=canvas.getBoundingClientRect();for(const fn of canvas.handlers[type]||[])fn({pointerId,pointerType,button:0,clientX:(p[0]-frame.x)/frame.width*r.width,clientY:(p[1]-frame.y)/frame.height*r.height,preventDefault(){},...extra})}
+function trace(type,id=20){const canvas=field().canvas,line=run('WorksheetCatalog.elements[0].model[0]');fire(canvas,'pointerdown',line[0],{pointerType:type,pointerId:id});for(const p of line.slice(1))fire(canvas,'pointermove',p,{pointerType:type,pointerId:id,getCoalescedEvents:()=>[]});fire(canvas,'pointerup',line.at(-1),{pointerType:type,pointerId:id});}
+assert.equal(run('stylusOnly'),true);trace('touch');assert.equal(field().output.textContent,'—');assert.equal(run('activePointer'),null);assert.equal(run('history.length'),0);
+trace('pen');assert.equal(field().output.textContent,'100%');app.nodes['clear-all'].onclick();
+// A quick stroke with no move delivery still includes its final endpoint.
+let canvas=field().canvas,line=run('WorksheetCatalog.elements[0].model[0]');fire(canvas,'pointerdown',line[0]);fire(canvas,'pointerup',line.at(-1));assert.equal(field().output.textContent,'100%');app.nodes['clear-all'].onclick();
+run('configureInput(false)');trace('touch');assert.equal(field().output.textContent,'100%');app.nodes['clear-all'].onclick();
+// A stylus arriving after a touch in another field preempts only that draft.
+fire(app.nodes['art-canvas'],'pointerdown',[30,40],{pointerType:'touch',pointerId:10});assert.equal(run('activePointer'),10);trace('pen',21);assert.equal(field().output.textContent,'100%');assert.equal(run('data["art-kite"]?.length||0'),0);fire(app.nodes['art-canvas'],'pointerup',[40,60],{pointerType:'touch',pointerId:10});assert.equal(run('activePointer'),null);
+app.nodes['clear-all'].onclick();fire(canvas,'pointerdown',line[0],{pointerId:22});fire(app.nodes['art-canvas'],'pointerdown',[30,40],{pointerType:'touch',pointerId:11});assert.equal(run('activePointer'),22);fire(canvas,'pointercancel',line[0],{pointerId:22});assert.equal(field().output.textContent,'—');
+fire(canvas,'pointerdown',line[0],{pointerType:'touch',pointerId:12,isPrimary:false});assert.equal(run('activePointer'),null);
+run('configure({size:80,bold:120,tolerance:12});build(0,"М")');assert.equal(run('preferences.size'),80);assert.equal(run('preferences.tolerance'),12);assert.equal(run('stylusOnly'),false);const reopened=boot(app.saved);assert.equal(reopened.run('preferences.size'),80);assert.equal(reopened.run('stylusOnly'),false);
+app.nodes['settings-defaults'].onclick();assert.equal(run('stylusOnly'),true);assert.equal(run('preferences.size'),118);
+app.nodes['open-settings'].onclick();assert.equal(app.nodes['configuration-panel'].attrs.open,'');assert.equal(app.nodes['open-settings'].attrs['aria-expanded'],'true');app.nodes['close-settings'].onclick();assert.equal(app.nodes['configuration-panel'].attrs.open,undefined);assert.equal(app.nodes['open-settings'].attrs['aria-expanded'],'false');
+console.log('PASS: global settings/input persist across lessons/reload; touch rejected by default; pen/mouse supported; empty coalescing and final endpoints retained; pen preempts touch; secondary touch and cancelled drafts ignored; configuration opens/closes independently');
