@@ -8,7 +8,9 @@
     "test:quick": "node scripts/test.mjs quick",
     "test:medium": "node scripts/test.mjs medium",
     "test:full": "node scripts/test.mjs full",
-    "test:list": "node scripts/test.mjs --list"
+    "test:list": "node scripts/test.mjs --list",
+    "spec": "node scripts/openspec.mjs",
+    "spec:check": "node scripts/openspec.mjs validate --all --strict --no-interactive"
   },
   "engines": {
     "node": ">=20"
