@@ -11,6 +11,13 @@ module.exports=function(){
   for(let i=0;i<count;i++){assert.equal(layout[i].line,model[i]);assert.deepEqual(plain(layout[i].label),metadata[c].notation[i].label);assert.equal(layout[i].arrows.length,metadata[c].notation[i].dot?0:1);assert(layout[i].arrowLine.flat().every(Number.isFinite));assert(layout[i].label[0]>=8&&layout[i].label[0]<=142&&layout[i].label[1]>=8&&layout[i].label[1]<=172,c+' clipped label');for(let j=0;j<i;j++)assert(Math.hypot(layout[i].label[0]-layout[j].label[0],layout[i].label[1]-layout[j].label[1])>=15,c+' colliding labels');for(const arrow of layout[i].arrows)assert(arrow.point.every(Number.isFinite)&&arrow.unit.every(Number.isFinite))}
   assert.equal(run(`WritingScheme.layout(DrawingGlyphs[${JSON.stringify(c)}].demonstration)===WritingScheme.layout(DrawingGlyphs[${JSON.stringify(c)}].demonstration)`),true);
  }
+ // Association is separate from collision clearance: a number can sit in the
+ // wrong bowl without touching anything. Curved paths are sampled every3 units;
+ // allow2 units only when neighbouring arrow ends meet.
+ const associationErrors=parts=>parts.flatMap((p,i)=>{if(!p.arrowLine.length)return [];const distance=q=>Math.hypot(p.label[0]-q[0],p.label[1]-q[1]),own=Math.min(...p.arrowLine.map(distance)),other=Math.min(...parts.flatMap((q,j)=>i===j?[]:q.arrowLine.map(distance)));return distance(p.arrowLine[0])>30||own>other+2?[i+1]:[]});
+ for(const c of Object.keys({...upper,...lower}))assert.equal(associationErrors(run(`WritingScheme.layout(DrawingGlyphs[${JSON.stringify(c)}].demonstration)`)).length,0,c+' misleading number/arrow association');
+ const bigV=run('WritingScheme.layout(DrawingGlyphs.В.demonstration)');assert(bigV[1].label[0]>after.В.inkBounds[2]+8&&bigV[1].label[1]>=85&&bigV[1].label[1]<=112,'В2 belongs outside the lower bowl');
+ const oldBigV=bigV.map((p,i)=>({...p,label:i===1?[63,64]:p.label}));assert(associationErrors(oldBigV).includes(2),'must reject the reported В2 placement in the upper bowl');
  // Notation regression: numbers identify parallel arrows, never a shared start.
  for(const c of ['Е','Ё']){const q=run(`WritingScheme.layout(DrawingGlyphs[${JSON.stringify(c)}].demonstration)`);assert(q[0].arrowLine.every(p=>p[0]<40));assert(q[0].label[0]<30&&q[0].label[1]>40&&q[0].label[1]<65);assert(q[1].arrowLine.every(p=>p[1]<40));assert(q[1].label[1]<30);assert(q[2].arrowLine.every(p=>p[1]>140));assert(q[3].label[1]<q[3].line[0][1]);}
  const lowerE=run('WritingScheme.layout(DrawingGlyphs.е.demonstration)');assert(lowerE[0].label[0]<30&&lowerE[0].label[1]>75&&lowerE[0].label[1]<95);assert(lowerE[1].label[0]>100);assert(lowerE[2].arrowLine.at(-1)[0]>lowerE[2].arrowLine[0][0]);
@@ -49,6 +56,6 @@ module.exports=function(){
  for(let i=0;i<20;i++)run(`sequenceClock().at(${i*400})`);assert.equal(a.nodes['scheme-upper'].html,source);
  const ink=run('JSON.stringify(data)'),key=run('worksheetStorageKey()');run('configure({bold:150})');assert.equal(run('JSON.stringify(data)'),ink);assert.equal(run('worksheetStorageKey()'),key);assert(a.nodes['scheme-upper'].html.includes('data-step-number="3"'));
  a.nodes['sample-panel'].close();run("build(0,'Е')");a.nodes['open-sample'].onclick();assert(a.nodes['scheme-upper'].html.includes('data-step-number="4"'));assert(a.nodes['scheme-lower'].html.includes('data-step-number="3"'));for(const prefix of ['hero-scheme-','dock-scheme-']){assert(a.nodes[prefix+'upper'].html.includes('data-step-number="4"'));assert(a.nodes[prefix+'lower'].html.includes('data-step-number="3"'))}
- require('./writing-scheme-clearance.cjs')({letters:'ЕеЁё',negative:true});
- console.log('PASS53: explicit parallel-arrow/number notation for66 forms; Е/е ownership/start-label regression; 66 source step counts/provenance/font round trips; static paths share demo arrays, labels in bounds/nonoverlapping, cached geometry; source-specific straight/curved/diacritic order and continuous joins; real dialog/bold/navigation; all assessment/storage geometry unchanged');
+ require('./writing-scheme-clearance.cjs')({letters:'ЕеЁёВдвФж',negative:true});
+ console.log('PASS54:196 arrow/number associations including rejected old В2;  explicit parallel-arrow/number notation for66 forms; Е/е ownership/start-label regression; 66 source step counts/provenance/font round trips; static paths share demo arrays, labels in bounds/nonoverlapping, cached geometry; source-specific straight/curved/diacritic order and continuous joins; real dialog/bold/navigation; all assessment/storage geometry unchanged');
 };
