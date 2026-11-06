@@ -31,7 +31,7 @@ const message=document.querySelector('#message');
 const writingTimes=new WritingTimes(localStorage,()=>{message.textContent='Время письма остаётся в этой вкладке; сохранить его не удалось.'});
 let composition;const compositions=new Map();
 function editComposition(patch){if(activePointer!==null)return;composition.update(variant,patch);const oldHistory=history;build(variant);history=oldHistory;refresh()}
-const worksheetBuild='2026-11-06.54';
+const worksheetBuild='2026-11-06.55';
 const practiceGeometry=size=>({width:size*1.5,height:size*1.8});
 const preferenceDefaults=Object.freeze({size:118,bold:100,tolerance:8,rowGap:22,columnGap:12,letterGap:20,leftInset:15,penWidth:3,smoothing:0});
 const preferenceLimits={size:[30,160],bold:[100,150],tolerance:[.5,16],rowGap:[0,80],columnGap:[0,60],letterGap:[0,50],leftInset:[0,30],penWidth:[.5,8],smoothing:[0,2]};
