@@ -12,8 +12,8 @@ module.exports=function(){
   assert.equal(run(`WritingScheme.layout(DrawingGlyphs[${JSON.stringify(c)}].demonstration)===WritingScheme.layout(DrawingGlyphs[${JSON.stringify(c)}].demonstration)`),true);
  }
  // Notation regression: numbers identify parallel arrows, never a shared start.
- for(const c of ['Е','Ё']){const q=run(`WritingScheme.layout(DrawingGlyphs[${JSON.stringify(c)}].demonstration)`);assert(q[0].arrowLine.every(p=>p[0]<40));assert(q[0].label[0]<30&&q[0].label[1]>65&&q[0].label[1]<115);assert(q[1].arrowLine.every(p=>p[1]<40));assert(q[1].label[1]<30);assert(q[2].arrowLine.every(p=>p[1]>140));assert(q[3].label[1]<q[3].line[0][1]);}
- const lowerE=run('WritingScheme.layout(DrawingGlyphs.е.demonstration)');assert(lowerE[0].label[0]<30);assert(lowerE[1].label[0]>100);assert(lowerE[2].arrowLine.at(-1)[0]>lowerE[2].arrowLine[0][0]);
+ for(const c of ['Е','Ё']){const q=run(`WritingScheme.layout(DrawingGlyphs[${JSON.stringify(c)}].demonstration)`);assert(q[0].arrowLine.every(p=>p[0]<40));assert(q[0].label[0]<30&&q[0].label[1]>40&&q[0].label[1]<65);assert(q[1].arrowLine.every(p=>p[1]<40));assert(q[1].label[1]<30);assert(q[2].arrowLine.every(p=>p[1]>140));assert(q[3].label[1]<q[3].line[0][1]);}
+ const lowerE=run('WritingScheme.layout(DrawingGlyphs.е.demonstration)');assert(lowerE[0].label[1]<60);assert(lowerE[1].label[0]>100);assert(lowerE[2].arrowLine.at(-1)[0]>lowerE[2].arrowLine[0][0]);
  const notationMarkup=run('WritingScheme.markup(DrawingGlyphs.Е.demonstration,"")');assert(!notationMarkup.includes('<circle'));assert(!notationMarkup.includes('data-leader'));assert.equal((notationMarkup.match(/data-direction-line=/g)||[]).length,4);
  const moves=c=>plain(after[c].demonstration),down=l=>l[0][1]<l.at(-1)[1];
  // Independent semantic checks from the source, rather than final paint alone.
@@ -49,5 +49,5 @@ module.exports=function(){
  for(let i=0;i<20;i++)run(`sequenceClock().at(${i*400})`);assert.equal(a.nodes['scheme-upper'].html,source);
  const ink=run('JSON.stringify(data)'),key=run('worksheetStorageKey()');run('configure({bold:150})');assert.equal(run('JSON.stringify(data)'),ink);assert.equal(run('worksheetStorageKey()'),key);assert(a.nodes['scheme-upper'].html.includes('data-step-number="3"'));
  a.nodes['sample-panel'].close();run("build(0,'Е')");a.nodes['open-sample'].onclick();assert(a.nodes['scheme-upper'].html.includes('data-step-number="4"'));assert(a.nodes['scheme-lower'].html.includes('data-step-number="3"'));for(const prefix of ['hero-scheme-','dock-scheme-']){assert(a.nodes[prefix+'upper'].html.includes('data-step-number="4"'));assert(a.nodes[prefix+'lower'].html.includes('data-step-number="3"'))}
- console.log('PASS52: explicit parallel-arrow/number notation for66 forms; Е/е ownership regression; 66 source step counts/provenance/font round trips; static paths share demo arrays, labels in bounds/nonoverlapping, cached geometry; source-specific straight/curved/diacritic order and continuous joins; real dialog/bold/navigation; all assessment/storage geometry unchanged');
+ console.log('PASS52: explicit parallel-arrow/number notation for66 forms; Е/е ownership/start-label regression; 66 source step counts/provenance/font round trips; static paths share demo arrays, labels in bounds/nonoverlapping, cached geometry; source-specific straight/curved/diacritic order and continuous joins; real dialog/bold/navigation; all assessment/storage geometry unchanged');
 };
