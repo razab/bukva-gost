@@ -13,6 +13,11 @@ const WritingScheme={
   }
   const result=model.map((line,i)=>{const {length}=this.at(line,0),fractions=length<6?[]:length>140?[.35,.75]:[.65];return {line,label:labels[i],arrows:fractions.map(t=>this.at(line,t))}});this.cache.set(model,result);return result;
  },
+ frame(models,inkBounds,expansion=0){
+  const boxes=inkBounds.map(b=>[b[0]-expansion,b[1]-expansion,b[2]+expansion,b[3]+expansion]);
+  for(const model of models)for(const step of this.layout(model)){const [x,y]=step.label;boxes.push([x-8,y-8,x+8,y+8])}
+  const x=Math.min(...boxes.map(b=>b[0]))-3,y=Math.min(...boxes.map(b=>b[1]))-3;return [x,y,Math.max(...boxes.map(b=>b[2]))+3-x,Math.max(...boxes.map(b=>b[3]))+3-y];
+ },
  markup(model,outline){
   const path=line=>line.map((p,i)=>(i?'L':'M')+p[0]+' '+p[1]).join(' '),n=v=>Number(v.toFixed(3));
   const strokes=this.layout(model).map((s,i)=>{

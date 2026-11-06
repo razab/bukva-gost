@@ -29,10 +29,21 @@ module.exports=function(){
  for(const c of ['Ё','ё'])for(const dot of moves(c).slice(-2))assert(run(`WritingScheme.at(${JSON.stringify(dot)},0).length`)<3);
  assert.notDeepEqual(moves('а')[0][0],moves('а')[0].at(-1),'а body should not retrace the right stem');
  for(const c of ['С','с','г']){const clock=run(`demoClock(DrawingGlyphs[${JSON.stringify(c)}].demonstration)`);assert.equal(clock.segments[0].end,clock.segments[1].start,'Connected directions must keep pencil visible')}
+ // The shared header frame must contain both letter outlines and every number,
+ // including dots/descenders and bold expansion, without changing letter data.
+ for(const c of Object.keys(upper))for(const expansion of [0,2.5]){
+  const pair=[after[c],after[c.toLowerCase()]],box=run(`WritingScheme.frame(${JSON.stringify(pair.map(g=>g.demonstration))},${JSON.stringify(pair.map(g=>g.inkBounds))},${expansion})`),[x,y,w,h]=box;assert(w>0&&h>0);
+  for(const g of pair){const b=g.inkBounds;assert(b[0]-expansion>=x&&b[1]-expansion>=y&&b[2]+expansion<=x+w&&b[3]+expansion<=y+h);const parts=run(`WritingScheme.layout(${JSON.stringify(g.demonstration)})`);for(const p of parts)assert(p.label[0]-7>=x&&p.label[0]+7<=x+w&&p.label[1]-7>=y&&p.label[1]+7<=y+h)}
+ }
+ // Header instructions exist immediately without opening the modal, and the
+ // pinned companion contains the same static paths for scroll.
+ for(const id of ['hero-scheme-upper','dock-scheme-upper']){assert(a.nodes[id].html.includes('data-step-number="3"'));assert(a.nodes[id].attrs['aria-label'].startsWith('Порядок написания А:'))}
+ for(const id of ['hero-scheme-lower','dock-scheme-lower'])assert(a.nodes[id].html.includes('data-step-number="2"'));
+ assert(!a.nodes['sample-panel'].open);assert.equal(a.nodes['hero-scheme-upper'].attrs.viewBox,a.nodes['hero-scheme-lower'].attrs.viewBox);assert.equal(a.nodes['hero-scheme-upper'].attrs.viewBox,a.nodes['dock-scheme-upper'].attrs.viewBox);
  // Opening the actual dialog renders both schemes; animation cannot mutate them.
  a.nodes['open-sample'].onclick();assert(a.nodes['sample-panel'].open);const source=a.nodes['scheme-upper'].html;assert(source.includes('data-step-number="3"'));assert(a.nodes['scheme-upper'].attrs['aria-label'].includes('Левая сторона'));
  for(let i=0;i<20;i++)run(`sequenceClock().at(${i*400})`);assert.equal(a.nodes['scheme-upper'].html,source);
  const ink=run('JSON.stringify(data)'),key=run('worksheetStorageKey()');run('configure({bold:150})');assert.equal(run('JSON.stringify(data)'),ink);assert.equal(run('worksheetStorageKey()'),key);assert(a.nodes['scheme-upper'].html.includes('data-step-number="3"'));
- a.nodes['sample-panel'].close();run("build(0,'Е')");a.nodes['open-sample'].onclick();assert(a.nodes['scheme-upper'].html.includes('data-step-number="4"'));assert(a.nodes['scheme-lower'].html.includes('data-step-number="3"'));
+ a.nodes['sample-panel'].close();run("build(0,'Е')");a.nodes['open-sample'].onclick();assert(a.nodes['scheme-upper'].html.includes('data-step-number="4"'));assert(a.nodes['scheme-lower'].html.includes('data-step-number="3"'));for(const prefix of ['hero-scheme-','dock-scheme-']){assert(a.nodes[prefix+'upper'].html.includes('data-step-number="4"'));assert(a.nodes[prefix+'lower'].html.includes('data-step-number="3"'))}
  console.log('PASS50:66 source step counts/provenance/font round trips; static paths share demo arrays, labels in bounds/nonoverlapping, cached geometry; source-specific straight/curved/diacritic order and continuous joins; real dialog/bold/navigation; all assessment/storage geometry unchanged');
 };

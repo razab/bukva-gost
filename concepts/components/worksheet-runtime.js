@@ -31,7 +31,7 @@ const message=document.querySelector('#message');
 const writingTimes=new WritingTimes(localStorage,()=>{message.textContent='Время письма остаётся в этой вкладке; сохранить его не удалось.'});
 let composition;const compositions=new Map();
 function editComposition(patch){if(activePointer!==null)return;composition.update(variant,patch);const oldHistory=history;build(variant);history=oldHistory;refresh()}
-const worksheetBuild='2026-11-05.50';
+const worksheetBuild='2026-11-06.51';
 const practiceGeometry=size=>({width:size*1.5,height:size*1.8});
 const preferenceDefaults=Object.freeze({size:118,bold:100,tolerance:8,rowGap:22,columnGap:12,letterGap:20,leftInset:15,penWidth:3,smoothing:0});
 const preferenceLimits={size:[30,160],bold:[100,150],tolerance:[.5,16],rowGap:[0,80],columnGap:[0,60],letterGap:[0,50],leftInset:[0,30],penWidth:[.5,8],smoothing:[0,2]};
@@ -218,11 +218,13 @@ function revealMarkup(model,maskId,progress=model.map(()=>0)){
  return fontOutline(model,'fill="#c7d4c8"')+`<defs><mask id="${maskId}" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" x="0" y="0" width="150" height="180">${regions}${model.map((line,i)=>`<path data-line="${i}" d="${path(line)}" fill="none" stroke="white" stroke-width="${10+boldExpansion()}" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="${revealLength(line)}" stroke-dashoffset="${revealLength(line)*(1-progress[i])}" opacity="${progress[i]>0?1:0}"/>`).join('')}</mask></defs><g mask="url(#${maskId})">`+fontOutline(model,'fill="var(--accent)"')+'</g>';
 }
 function renderWritingSchemes(){
- if(!learnerMode||!document.querySelector('#sample-panel')?.open)return;
+ if(!learnerMode)return;
+ const headerFrame=WritingScheme.frame([demonstrationFor(models),demonstrationFor(lowercase)],[DrawingGlyphs[activeLetter].inkBounds,DrawingGlyphs[activeLetter.toLowerCase()].inkBounds],boldExpansion()/2).join(' ');
+ const targets=['hero-scheme-','dock-scheme-',...(document.querySelector('#sample-panel')?.open?['scheme-']:[])];
  for(const [suffix,character] of [['upper',activeLetter],['lower',activeLetter.toLowerCase()]]){
-  const glyph=DrawingGlyphs[character],model=demonstrationFor(glyph.model),svg=document.querySelector('#scheme-'+suffix);
-  svg.innerHTML=WritingScheme.markup(model,fontOutline(model,'fill="#dbe5dc"'));
-  svg.setAttribute('aria-label','Порядок написания '+character+': '+(glyph.instruction?.steps||model.map((_,i)=>'Движение '+(i+1))).map((step,i)=>(i+1)+'. '+step).join('; '));
+  const glyph=DrawingGlyphs[character],model=demonstrationFor(glyph.model),markup=WritingScheme.markup(model,fontOutline(model,'fill="#dbe5dc"'));
+  const label='Порядок написания '+character+': '+glyph.instruction.steps.map((step,i)=>(i+1)+'. '+step).join('; ');
+  for(const target of targets){const svg=document.querySelector('#'+target+suffix);if(!svg)continue;svg.setAttribute('viewBox',target==='scheme-'?'0 0 150 180':headerFrame);if(svg.innerHTML!==markup)svg.innerHTML=markup;if(svg.getAttribute('aria-label')!==label)svg.setAttribute('aria-label',label)}
  }
 }
 function playDemo(){stopDemo();renderWritingSchemes();const demos=[['#demo',demonstrationFor(models)],['#demo-lower',demonstrationFor(lowercase)],...(learnerMode&&typeof WorksheetDock!=='undefined'&&WorksheetDock.ready?[['#dock-demo-upper',demonstrationFor(models)],['#dock-demo-lower',demonstrationFor(lowercase)]]:[]),...(learnerMode&&document.querySelector('#sample-panel')?.open?[['#sample-upper',demonstrationFor(models)],['#sample-lower',demonstrationFor(lowercase)]]:[])].map(([selector,model])=>{const svg=document.querySelector(selector);const maskId='font-mask-'+selector.slice(1);svg.innerHTML=revealMarkup(model,maskId)+`<g id="pencil"><circle r="7" fill="#fff9e6" stroke="#b88b3f"/><g transform="rotate(30)"><path d="M-4 -10V-37Q0 -42 4 -37V-10L0 0Z" fill="#e7b24f" stroke="#936b34" stroke-width="1"/><path d="M-4 -10H4L0 0Z" fill="#fff0c9"/><path d="M-1.5 -4L0 0L1.5 -4" fill="#354b3c"/></g></g>`;return {selector,lines:model.map((line,i)=>({node:svg.querySelector(`[data-line="${i}"]`),length:revealLength(line)})),pencil:svg.querySelector('#pencil'),regions:[...svg.querySelectorAll('[data-demo-region]')].map(node=>({node,stroke:Number(node.dataset.demoRegion),at:Number(node.dataset.revealAt),visible:null}))}});

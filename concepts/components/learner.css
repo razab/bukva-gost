@@ -83,3 +83,11 @@ body.learner[data-variant] .sheet{padding-bottom:max(140px,calc(var(--cell-heigh
 #sample-panel .sample-form+.sample-form{border-top:1px solid #e2e9e1;padding-top:12px}
 @media(max-height:650px){#sample-panel .sample-form svg{height:180px}#sample-panel .sample-pair{gap:8px}}
 @media(max-width:500px){#sample-panel{padding:12px}#sample-panel .sample-form{gap:8px}#sample-panel .sample-form svg{height:190px}}
+
+/* Inline reference beside the existing demo, in the previously empty header.
+   Absolute placement keeps artwork and the full writing mirror frame unchanged. */
+.header-schemes{position:absolute;top:0;bottom:0;left:calc((var(--hero-height) - 16px)*1.375 - 12px);width:calc((var(--hero-height) - 16px)*1.666667);display:flex;align-items:center;min-width:0;pointer-events:none}
+.header-schemes>.writing-scheme{display:block;flex:0 0 auto;height:100%;width:auto;max-width:none;aspect-ratio:5/6;overflow:hidden}
+.header-schemes>.writing-scheme+svg{margin-left:0}
+.hero-demo[data-view=writing]>.header-schemes,.dock-demo-region[data-view=writing]>.header-schemes{visibility:hidden}
+@media(max-width:700px){.learner .sheet .hero-demo>.demo,.dock-demo-region>.dock-demo{width:50%}.header-schemes{left:auto;right:0;width:50%}.header-schemes>.writing-scheme{flex:0 1 50%;max-width:50%}.header-schemes>.writing-scheme+svg{margin-left:0}}
