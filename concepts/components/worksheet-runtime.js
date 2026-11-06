@@ -31,7 +31,7 @@ const message=document.querySelector('#message');
 const writingTimes=new WritingTimes(localStorage,()=>{message.textContent='Время письма остаётся в этой вкладке; сохранить его не удалось.'});
 let composition;const compositions=new Map();
 function editComposition(patch){if(activePointer!==null)return;composition.update(variant,patch);const oldHistory=history;build(variant);history=oldHistory;refresh()}
-const worksheetBuild='2026-11-06.51';
+const worksheetBuild='2026-11-06.52';
 const practiceGeometry=size=>({width:size*1.5,height:size*1.8});
 const preferenceDefaults=Object.freeze({size:118,bold:100,tolerance:8,rowGap:22,columnGap:12,letterGap:20,leftInset:15,penWidth:3,smoothing:0});
 const preferenceLimits={size:[30,160],bold:[100,150],tolerance:[.5,16],rowGap:[0,80],columnGap:[0,60],letterGap:[0,50],leftInset:[0,30],penWidth:[.5,8],smoothing:[0,2]};
@@ -222,7 +222,7 @@ function renderWritingSchemes(){
  const headerFrame=WritingScheme.frame([demonstrationFor(models),demonstrationFor(lowercase)],[DrawingGlyphs[activeLetter].inkBounds,DrawingGlyphs[activeLetter.toLowerCase()].inkBounds],boldExpansion()/2).join(' ');
  const targets=['hero-scheme-','dock-scheme-',...(document.querySelector('#sample-panel')?.open?['scheme-']:[])];
  for(const [suffix,character] of [['upper',activeLetter],['lower',activeLetter.toLowerCase()]]){
-  const glyph=DrawingGlyphs[character],model=demonstrationFor(glyph.model),markup=WritingScheme.markup(model,fontOutline(model,'fill="#dbe5dc"'));
+  const glyph=DrawingGlyphs[character],model=demonstrationFor(glyph.model),markup=WritingScheme.markup(model,fontOutline(model,'fill="#809e8a"'));
   const label='Порядок написания '+character+': '+glyph.instruction.steps.map((step,i)=>(i+1)+'. '+step).join('; ');
   for(const target of targets){const svg=document.querySelector('#'+target+suffix);if(!svg)continue;svg.setAttribute('viewBox',target==='scheme-'?'0 0 150 180':headerFrame);if(svg.innerHTML!==markup)svg.innerHTML=markup;if(svg.getAttribute('aria-label')!==label)svg.setAttribute('aria-label',label)}
  }
