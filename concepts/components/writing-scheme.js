@@ -8,7 +8,7 @@ const WritingScheme={
  parallel(line,note){
   if(note.dot)return [];
   const [start,end]=note.range,length=this.at(line,0).length,count=Math.max(2,Math.ceil(length*(end-start)/3)),epsilon=Math.min(.04,3/(length||1));
-  return Array.from({length:count+1},(_,i)=>{const t=start+(end-start)*i/count,p=this.at(line,t).point,a=this.at(line,t-epsilon).point,b=this.at(line,t+epsilon).point,d=this.distance(a,b)||1,u=[(b[0]-a[0])/d,(b[1]-a[1])/d];return [p[0]-u[1]*note.offset,p[1]+u[0]*note.offset]});
+  return Array.from({length:count+1},(_,i)=>{const t=start+(end-start)*i/count,p=this.at(line,t).point,a=this.at(line,t-epsilon).point,b=this.at(line,t+epsilon).point,d=this.distance(a,b)||1,u=[(b[0]-a[0])/d,(b[1]-a[1])/d];return [p[0]-u[1]*note.offset+(note.shift?.[0]||0),p[1]+u[0]*note.offset+(note.shift?.[1]||0)]});
  },
  layout(model){
   if(this.cache.has(model))return this.cache.get(model);

@@ -17,7 +17,7 @@ const FeedbackJobs=(()=>{
   if(active)return;const job=queue.values().next().value;if(!job)return;queue.delete(job.id);active=job;
   if(!broken&&typeof Worker==='function'){
    try{
-    if(!worker){worker=new Worker(new URL('feedback-worker.js?v=52',scriptURL||new URL('components/feedback-jobs.js',document.baseURI)).href);worker.onmessage=e=>{if(active?.id===e.data.id)finish(active,e.data.markup||'')};worker.onerror=e=>{e.preventDefault?.();worker.terminate();worker=null;broken=true;fallback()}}
+    if(!worker){worker=new Worker(new URL('feedback-worker.js?v=53',scriptURL||new URL('components/feedback-jobs.js',document.baseURI)).href);worker.onmessage=e=>{if(active?.id===e.data.id)finish(active,e.data.markup||'')};worker.onerror=e=>{e.preventDefault?.();worker.terminate();worker=null;broken=true;fallback()}}
     worker.postMessage({id:job.id,mode:job.mode,payload:job.payload});return;
    }catch{worker?.terminate();worker=null;broken=true}
   }

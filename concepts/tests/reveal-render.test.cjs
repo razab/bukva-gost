@@ -23,3 +23,5 @@ try{
  console.log('PASS: joins stay continuous; later strokes never erase prior ink; crossbar appears in order');
  console.log('PASS: rendered ink grows in intermediate frames; >99.5% contour covered; no final-frame fill jump');
 }finally{fs.rmSync(dir,{recursive:true,force:true})}
+
+require('./helpers/writing-scheme-clearance.cjs')();
