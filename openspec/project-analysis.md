@@ -71,6 +71,7 @@ Runtime не использует npm-библиотеки/CDN/API записи.
 | Обычная/закреплённая шапка и read-only копия | worksheet-dock/tablet-workspace; предыдущие browser QA записаны в PROJECT |
 | Автономный whitelist из 66 локальных ресурсов | offline-bundle/offline-client, SHA-256 manifest |
 | Воспроизводимый внутренний ZIP и опись происхождения | `npm run package:internal`; offline-bundle проверяет повреждения/лишние файлы/перезапись; `docs/internal-delivery.md` |
+| Apple Review source preflight | `$apple-preflight` / `npm run check:apple`; pinned safaiyeh1.5.0, факты/AI отдельно; итог INCOMPLETE, native/ASC/iPad не проверены; `docs/apple-review-2026-11-08.md` |
 
 Эти факты не подтверждают читаемость каждой схемы конкретным ребёнком и не
 являются новым аппаратным тестом iPad. Повторные замечания владельца о Е/В/К
