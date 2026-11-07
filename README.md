@@ -64,6 +64,10 @@ manifest, service worker и проверяемые хеши. HTTP LAN-превь
 App Store-бинарного файла нет. Права на ASCON/PNG и аппаратный пилот не закрыты:
 [границы выпуска](docs/release-readiness.md), [протокол iPad](docs/ipad-pilot.md).
 
+`npm run package:internal` пересобирает и проверяет внутренний ZIP с контрольными
+суммами и описью происхождения ресурсов. Требуется Python3; публикации команда
+не выполняет. [Состав, повторяемость и реальная офлайн-проверка56](docs/internal-delivery.md).
+
 ## Материалы
 
 - [Актуальный анализ и вопросы](openspec/project-analysis.md).

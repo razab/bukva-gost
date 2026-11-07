@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "description": "Local test tools; the offline application has no npm runtime dependencies.",
   "scripts": {
+    "package:internal": "node scripts/internal-package.mjs",
     "test": "node scripts/test.mjs quick",
     "test:quick": "node scripts/test.mjs quick",
     "test:medium": "node scripts/test.mjs medium",
