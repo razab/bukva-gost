@@ -1,0 +1,4 @@
+interface:
+  display_name: "Apple Review · Буквы по ГОСТ"
+  short_description: "Аудит проекта перед отправкой в App Store"
+  default_prompt: "Используй $apple-preflight для проверки рисков Apple Review и сохрани отчёт с доказательствами."

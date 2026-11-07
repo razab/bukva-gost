@@ -1,8 +1,9 @@
 import fs from 'node:fs/promises';import path from 'node:path';import crypto from 'node:crypto';import vm from 'node:vm';import {createRequire} from 'node:module';import {fileURLToPath} from 'node:url';
+import {offlineHTML} from './offline-html.mjs';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..'),source=path.join(root,'concepts'),dest=path.join(root,'dist','web');
 const require=createRequire(import.meta.url),{Resvg}=require(process.env.RESVG_MODULE||'@resvg/resvg-js');
 const icon=await fs.readFile(path.join(source,'assets/icons/icon.svg'),'utf8');for(const size of [180,192,512])await fs.writeFile(path.join(source,`assets/icons/icon-${size}.png`),new Resvg(icon,{fitTo:{mode:'width',value:size}}).render().asPng());
-let html=await fs.readFile(path.join(source,'index.html'),'utf8');html=html.replace('<meta name="app-build"','<meta name="offline-bundle" content="true"><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="assets/icons/icon-180.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="app-build"');
+const html=offlineHTML(await fs.readFile(path.join(source,'index.html'),'utf8'));
 const files=new Map([['index.html',Buffer.from(html)]]),assets=[...html.matchAll(/(?:src|href)="([^"]+)"/g)].map(m=>m[1]);const ctx={};vm.createContext(ctx);vm.runInContext(await fs.readFile(path.join(source,'components/letter-references.js'),'utf8'),ctx);assets.push(...vm.runInContext('Object.values(LetterReferences).map(v=>v.src)',ctx),'assets/icons/icon-192.png','assets/icons/icon-512.png');
 const resourceURLs=new Map([['index.html','index.html']]);
 for(const asset of new Set(assets)){

@@ -1,0 +1,28 @@
+{
+  "repository": "https://github.com/safaiyeh/app-store-review-skill",
+  "commit": "7197cff003728b660542b37d6b6d0167fe2ec1ed",
+  "version": "1.5.0",
+  "license": "MIT",
+  "installed": "../app-store-review",
+  "omitted": {
+    "skills/app-store-review/SKILL.md": "Redundant forwarding entrypoint; root SKILL.md is the installed entrypoint."
+  },
+  "files": {
+    ".agents/plugins/marketplace.json": "f2e3bef770d9830afe50a72530ba83c41edcd239dfe4a0cfc5f6ea9f6d2af6da",
+    ".claude-plugin/marketplace.json": "e6b794a6a4b8becd9f81a1afc030511794f209496e16681f775821bb1e29cd88",
+    ".claude-plugin/plugin.json": "4f2049043d5afb7adeac78b9c03eed4d1f9680b0a7ae6b1c7ed9a265ac672e74",
+    ".codex-plugin/plugin.json": "f00c55c4eed437d1cce433f6cd11e520462a6b3c6ad6821579ee30cd76eb519d",
+    ".github/ISSUE_TEMPLATE/skill-feedback.yml": "a7689ef4dcdbe460fb191aa98ce8cd7fdc87413009cf5ed1c681eb78ec305953",
+    ".gitignore": "5293fd1e96f975b5d7f486e809278f19893d5dbc8e9390ba261f8ee7753f613e",
+    "LICENSE": "d73f58068ac36dfadd6ad2c5525e2f2414a3363b4d3b2b113dd94ef0ae2ea733",
+    "README.md": "a1ac7dddfb5e7b071f189f46da5a990f8158203ace29f135fefb28d6a0e01416",
+    "SKILL.md": "6499f09f671ce01c68c0460e3ae4ca5056960b10775a2314bd3775e82f53419b",
+    "agents/openai.yaml": "5b66156df98a52fc7aa57b9bf49dc9ffbf8bbac2c0aa768086c7611013a5953f",
+    "metadata.json": "0032bf85291805d51ca53936b811fbd6da4690387662bee07ce66cff40f7ba25",
+    "rules/1-safety.md": "b9158653f5cf69934a14ffb3af207767d1a10d3444cd151162963303598ed483",
+    "rules/2-performance.md": "06efdc4d9ece53d46bd2f7ede5951391f284ad9f77c03bf905c68753ae7e53f8",
+    "rules/3-business.md": "e5af2e46135d922f73e2307213783cc84f292732e70c29cf867f6bd59c50fbb4",
+    "rules/4-design.md": "d4c3fcc092111c91d5632c3865cb6a415ca3f31d9a3617817b2f493bdbdd8485",
+    "rules/5-legal.md": "61bde27a35cdfdbcfb36beeb0d0419f99ea42bdffad7c4b9c0e2260b085357a6"
+  }
+}

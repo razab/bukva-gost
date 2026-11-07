@@ -56,6 +56,9 @@ npm run test:full
 При описании следующей задачи можно использовать обычный язык. Порядок работы,
 точные Codex skills и CLI-команды — в [руководстве OpenSpec](openspec/README.md).
 
+Аудит перед App Store: `$apple-preflight` в Codex; техническая часть отдельно —
+`npm run check:apple`. [Запуск, отчёты и границы проверки](docs/apple-review.md).
+
 ## Автономная поставка
 
 `scripts/build-offline.mjs` собирает `dist/web/`:66 локальных ресурсов, около 1,5 МБ,
