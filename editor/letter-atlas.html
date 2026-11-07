@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Атлас схем · Буквы по ГОСТ · разработка</title>
+<style>
+*{box-sizing:border-box}body{margin:0;color:#244034;background:#eef2ed;font:15px/1.45 system-ui,sans-serif}
+header{padding:24px 28px 16px}h1{margin:0;font-size:26px}header p{margin:6px 0 0;color:#587063}
+.controls{position:sticky;top:0;z-index:1;display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;padding:12px 28px;background:#eef2edf5;border-block:1px solid #d4dfd6}
+label{display:flex;align-items:center;gap:8px}input,select{font:inherit;color:inherit;background:white;border:1px solid #b9cbbf;border-radius:8px;padding:9px;min-height:44px}input{width:125px}output{color:#587063;margin-left:auto}
+main{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,var(--card-width,300px)),1fr));gap:14px;padding:20px 28px 40px}
+article{min-width:0;background:#fffefa;border:1px solid #d6e0d7;border-radius:14px;padding:14px;scroll-margin-top:90px}article[hidden]{display:none}h2{font-size:17px;margin:0 0 6px;font-weight:600}
+.pair{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}.pair svg{display:block;flex:none;overflow:visible}
+details{border-top:1px solid #e7ece5;margin-top:12px;padding-top:8px;color:#587063;font-size:13px}summary{cursor:pointer;min-height:30px}ol{margin:8px 0;padding-left:22px}h3{font-size:14px;margin:10px 0 2px}
+#empty{padding:28px}a{color:#347356}@media(max-width:600px){header{padding:18px 14px}.controls{padding:10px 14px;gap:8px 12px}main{padding:14px;gap:12px}output{margin-left:0;width:100%}}
+</style>
+</head>
+<body>
+<header><h1>Атлас схем</h1><p>ГОСТ Б · без наклона · действующие контуры, стрелки и номера. Локальный стенд разработки.</p></header>
+<form class="controls" onsubmit="return false">
+<label>Буквы <input id="filter" type="search" placeholder="Все буквы" aria-label="Фильтр букв" autocomplete="off"></label>
+<label>Масштаб <select id="scale"><option value="0.75">75%</option><option value="1" selected>100%</option><option value="1.5">150%</option></select></label>
+<label>Толщина <select id="bold"><option value="100">100%</option><option value="125">125%</option><option value="150">150%</option></select></label>
+<output id="count" aria-live="polite">Загрузка…</output>
+</form>
+<main id="atlas" aria-label="Схемы всех букв"></main>
+<p id="empty" hidden>Нет таких букв.</p>
+<script src="../concepts/components/glyphs.js"></script>
+<script src="../concepts/components/writing-scheme.js"></script>
+<script src="letter-atlas.js"></script>
+</body>
+</html>

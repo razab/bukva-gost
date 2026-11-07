@@ -58,6 +58,7 @@ module.exports=function(){
  for(let i=0;i<20;i++)run(`sequenceClock().at(${i*400})`);assert.equal(a.nodes['scheme-upper'].html,source);
  const ink=run('JSON.stringify(data)'),key=run('worksheetStorageKey()');run('configure({bold:150})');assert.equal(run('JSON.stringify(data)'),ink);assert.equal(run('worksheetStorageKey()'),key);assert(a.nodes['scheme-upper'].html.includes('data-step-number="3"'));
  a.nodes['sample-panel'].close();run("build(0,'Е')");a.nodes['open-sample'].onclick();assert(a.nodes['scheme-upper'].html.includes('data-step-number="4"'));assert(a.nodes['scheme-lower'].html.includes('data-step-number="3"'));for(const prefix of ['hero-scheme-','dock-scheme-']){assert(a.nodes[prefix+'upper'].html.includes('data-step-number="4"'));assert(a.nodes[prefix+'lower'].html.includes('data-step-number="3"'))}
+ require('./letter-atlas.cjs')();
  require('./writing-scheme-clearance.cjs')({letters:'ЕеЁёВдвФжКк',negative:true});
  console.log('PASS55:К/к second arrow above branch with rejected former side; 196 arrow/number associations including rejected old В2;  explicit parallel-arrow/number notation for66 forms; Е/е ownership/start-label regression; 66 source step counts/provenance/font round trips; static paths share demo arrays, labels in bounds/nonoverlapping, cached geometry; source-specific straight/curved/diacritic order and continuous joins; real dialog/bold/navigation; all assessment/storage geometry unchanged');
 };
