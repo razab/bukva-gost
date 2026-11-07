@@ -1,0 +1,1066 @@
+{
+  "date": "2026-11-07",
+  "build": 55,
+  "review": "Визуальная проверка в IAB при масштабе100%, толщине100/150; сопоставление семи сохранённых строк LENSK p36. Не педагогическая/аппаратная сертификация.",
+  "notationSha256": "5c70f1895fa65282ab3923b81cc2ed7af77f6a4473a2325776b712e9347175de",
+  "source": "references/stroke-order/index.json",
+  "childPilot": "not-performed",
+  "rows": [
+    {
+      "character": "А",
+      "sourceBasis": "direct",
+      "sourceFigure": 5,
+      "steps": 3,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-1-100.png",
+        "reports/course-readiness-2026-11-07/schemes-1-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Три движения, обе наклонные вниз; номер перекладины отдельно."
+    },
+    {
+      "character": "а",
+      "sourceBasis": "direct",
+      "sourceFigure": 6,
+      "steps": 2,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-1-100.png",
+        "reports/course-readiness-2026-11-07/schemes-1-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Собственный спрямлённый корпус и стойка, не книжная а."
+    },
+    {
+      "character": "Б",
+      "sourceBasis": "direct",
+      "sourceFigure": 5,
+      "steps": 3,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-1-100.png",
+        "reports/course-readiness-2026-11-07/schemes-1-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "б",
+      "sourceBasis": "direct",
+      "sourceFigure": 6,
+      "steps": 4,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-1-100.png",
+        "reports/course-readiness-2026-11-07/schemes-1-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "В",
+      "sourceBasis": "direct",
+      "sourceFigure": 5,
+      "steps": 3,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-1-100.png",
+        "reports/course-readiness-2026-11-07/schemes-1-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Номер2 у нижней части, номер3 у верхней."
+    },
+    {
+      "character": "в",
+      "sourceBasis": "direct",
+      "sourceFigure": 6,
+      "steps": 3,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-1-100.png",
+        "reports/course-readiness-2026-11-07/schemes-1-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "Г",
+      "sourceBasis": "direct",
+      "sourceFigure": 5,
+      "steps": 2,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-1-100.png",
+        "reports/course-readiness-2026-11-07/schemes-1-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "г",
+      "sourceBasis": "direct",
+      "sourceFigure": 6,
+      "steps": 2,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-1-100.png",
+        "reports/course-readiness-2026-11-07/schemes-1-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "Д",
+      "sourceBasis": "direct",
+      "sourceFigure": 5,
+      "steps": 5,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-1-100.png",
+        "reports/course-readiness-2026-11-07/schemes-1-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "д",
+      "sourceBasis": "direct",
+      "sourceFigure": 6,
+      "steps": 3,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-1-100.png",
+        "reports/course-readiness-2026-11-07/schemes-1-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "Е",
+      "sourceBasis": "direct",
+      "sourceFigure": 5,
+      "steps": 4,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-1-100.png",
+        "reports/course-readiness-2026-11-07/schemes-1-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Стойка1, верх2, низ3, середина4; сохранены зазоры."
+    },
+    {
+      "character": "е",
+      "sourceBasis": "direct",
+      "sourceFigure": 6,
+      "steps": 3,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-1-100.png",
+        "reports/course-readiness-2026-11-07/schemes-1-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Наружная часть1, верхняя дуга2, горизонталь3."
+    },
+    {
+      "character": "Ё",
+      "sourceBasis": "diacritic",
+      "sourceFigure": 5,
+      "steps": 6,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-2-100.png",
+        "reports/course-readiness-2026-11-07/schemes-2-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Е плюс две точки; точкам не требуется стрелка направления."
+    },
+    {
+      "character": "ё",
+      "sourceBasis": "diacritic",
+      "sourceFigure": 6,
+      "steps": 5,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-2-100.png",
+        "reports/course-readiness-2026-11-07/schemes-2-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "е плюс две точки; точкам не требуется стрелка направления."
+    },
+    {
+      "character": "Ж",
+      "sourceBasis": "direct",
+      "sourceFigure": 5,
+      "steps": 5,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-2-100.png",
+        "reports/course-readiness-2026-11-07/schemes-2-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "ж",
+      "sourceBasis": "analogy",
+      "sourceFigure": 5,
+      "steps": 5,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-2-100.png",
+        "reports/course-readiness-2026-11-07/schemes-2-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "З",
+      "sourceBasis": "direct",
+      "sourceFigure": 5,
+      "steps": 2,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-2-100.png",
+        "reports/course-readiness-2026-11-07/schemes-2-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "з",
+      "sourceBasis": "analogy",
+      "sourceFigure": 5,
+      "steps": 2,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-2-100.png",
+        "reports/course-readiness-2026-11-07/schemes-2-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "И",
+      "sourceBasis": "direct",
+      "sourceFigure": 5,
+      "steps": 3,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-2-100.png",
+        "reports/course-readiness-2026-11-07/schemes-2-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Две стойки и диагональ различимы; ломаного старта нет."
+    },
+    {
+      "character": "и",
+      "sourceBasis": "diacritic",
+      "sourceFigure": 6,
+      "steps": 2,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-2-100.png",
+        "reports/course-readiness-2026-11-07/schemes-2-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "Й",
+      "sourceBasis": "direct",
+      "sourceFigure": 5,
+      "steps": 4,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-2-100.png",
+        "reports/course-readiness-2026-11-07/schemes-2-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "И плюс отдельный надстрочный штрих4."
+    },
+    {
+      "character": "й",
+      "sourceBasis": "direct",
+      "sourceFigure": 6,
+      "steps": 3,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-2-100.png",
+        "reports/course-readiness-2026-11-07/schemes-2-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "К",
+      "sourceBasis": "direct",
+      "sourceFigure": 5,
+      "steps": 3,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-2-100.png",
+        "reports/course-readiness-2026-11-07/schemes-2-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Стрелка2 над верхней наклонной."
+    },
+    {
+      "character": "к",
+      "sourceBasis": "analogy",
+      "sourceFigure": 5,
+      "steps": 3,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-2-100.png",
+        "reports/course-readiness-2026-11-07/schemes-2-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Стрелка2 над верхней наклонной."
+    },
+    {
+      "character": "Л",
+      "sourceBasis": "direct",
+      "sourceFigure": 5,
+      "steps": 2,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-3-100.png",
+        "reports/course-readiness-2026-11-07/schemes-3-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "л",
+      "sourceBasis": "analogy",
+      "sourceFigure": 5,
+      "steps": 2,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-3-100.png",
+        "reports/course-readiness-2026-11-07/schemes-3-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "М",
+      "sourceBasis": "direct",
+      "sourceFigure": 5,
+      "steps": 4,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-3-100.png",
+        "reports/course-readiness-2026-11-07/schemes-3-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "м",
+      "sourceBasis": "analogy",
+      "sourceFigure": 5,
+      "steps": 4,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-3-100.png",
+        "reports/course-readiness-2026-11-07/schemes-3-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "Н",
+      "sourceBasis": "direct",
+      "sourceFigure": 5,
+      "steps": 3,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-3-100.png",
+        "reports/course-readiness-2026-11-07/schemes-3-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "н",
+      "sourceBasis": "analogy",
+      "sourceFigure": 5,
+      "steps": 3,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-3-100.png",
+        "reports/course-readiness-2026-11-07/schemes-3-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "О",
+      "sourceBasis": "direct",
+      "sourceFigure": 5,
+      "steps": 2,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-3-100.png",
+        "reports/course-readiness-2026-11-07/schemes-3-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "о",
+      "sourceBasis": "analogy",
+      "sourceFigure": 5,
+      "steps": 2,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-3-100.png",
+        "reports/course-readiness-2026-11-07/schemes-3-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "П",
+      "sourceBasis": "direct",
+      "sourceFigure": 5,
+      "steps": 3,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-3-100.png",
+        "reports/course-readiness-2026-11-07/schemes-3-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "п",
+      "sourceBasis": "direct",
+      "sourceFigure": 6,
+      "steps": 2,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-3-100.png",
+        "reports/course-readiness-2026-11-07/schemes-3-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "Р",
+      "sourceBasis": "direct",
+      "sourceFigure": 5,
+      "steps": 2,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-3-100.png",
+        "reports/course-readiness-2026-11-07/schemes-3-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "р",
+      "sourceBasis": "analogy",
+      "sourceFigure": 5,
+      "steps": 2,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-3-100.png",
+        "reports/course-readiness-2026-11-07/schemes-3-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "С",
+      "sourceBasis": "direct",
+      "sourceFigure": 5,
+      "steps": 2,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-4-100.png",
+        "reports/course-readiness-2026-11-07/schemes-4-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "с",
+      "sourceBasis": "analogy",
+      "sourceFigure": 5,
+      "steps": 2,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-4-100.png",
+        "reports/course-readiness-2026-11-07/schemes-4-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "Т",
+      "sourceBasis": "direct",
+      "sourceFigure": 5,
+      "steps": 2,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-4-100.png",
+        "reports/course-readiness-2026-11-07/schemes-4-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "т",
+      "sourceBasis": "direct",
+      "sourceFigure": 6,
+      "steps": 4,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-4-100.png",
+        "reports/course-readiness-2026-11-07/schemes-4-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "У",
+      "sourceBasis": "direct",
+      "sourceFigure": 5,
+      "steps": 2,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-4-100.png",
+        "reports/course-readiness-2026-11-07/schemes-4-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "у",
+      "sourceBasis": "analogy",
+      "sourceFigure": 5,
+      "steps": 2,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-4-100.png",
+        "reports/course-readiness-2026-11-07/schemes-4-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "Ф",
+      "sourceBasis": "direct",
+      "sourceFigure": 5,
+      "steps": 3,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-4-100.png",
+        "reports/course-readiness-2026-11-07/schemes-4-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "ф",
+      "sourceBasis": "analogy",
+      "sourceFigure": 5,
+      "steps": 3,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-4-100.png",
+        "reports/course-readiness-2026-11-07/schemes-4-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "Х",
+      "sourceBasis": "direct",
+      "sourceFigure": 5,
+      "steps": 2,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-4-100.png",
+        "reports/course-readiness-2026-11-07/schemes-4-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "х",
+      "sourceBasis": "analogy",
+      "sourceFigure": 5,
+      "steps": 2,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-4-100.png",
+        "reports/course-readiness-2026-11-07/schemes-4-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "Ц",
+      "sourceBasis": "direct",
+      "sourceFigure": 5,
+      "steps": 4,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-4-100.png",
+        "reports/course-readiness-2026-11-07/schemes-4-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "ц",
+      "sourceBasis": "direct",
+      "sourceFigure": 6,
+      "steps": 3,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-4-100.png",
+        "reports/course-readiness-2026-11-07/schemes-4-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "Ч",
+      "sourceBasis": "direct",
+      "sourceFigure": 5,
+      "steps": 2,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-5-100.png",
+        "reports/course-readiness-2026-11-07/schemes-5-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "ч",
+      "sourceBasis": "analogy",
+      "sourceFigure": 5,
+      "steps": 2,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-5-100.png",
+        "reports/course-readiness-2026-11-07/schemes-5-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "Ш",
+      "sourceBasis": "direct",
+      "sourceFigure": 5,
+      "steps": 4,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-5-100.png",
+        "reports/course-readiness-2026-11-07/schemes-5-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "ш",
+      "sourceBasis": "direct",
+      "sourceFigure": 6,
+      "steps": 4,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-5-100.png",
+        "reports/course-readiness-2026-11-07/schemes-5-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "Щ",
+      "sourceBasis": "direct",
+      "sourceFigure": 5,
+      "steps": 5,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-5-100.png",
+        "reports/course-readiness-2026-11-07/schemes-5-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "щ",
+      "sourceBasis": "direct",
+      "sourceFigure": 6,
+      "steps": 5,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-5-100.png",
+        "reports/course-readiness-2026-11-07/schemes-5-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "Ъ",
+      "sourceBasis": "direct",
+      "sourceFigure": 5,
+      "steps": 3,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-5-100.png",
+        "reports/course-readiness-2026-11-07/schemes-5-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "ъ",
+      "sourceBasis": "analogy",
+      "sourceFigure": 5,
+      "steps": 3,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-5-100.png",
+        "reports/course-readiness-2026-11-07/schemes-5-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "Ы",
+      "sourceBasis": "direct",
+      "sourceFigure": 5,
+      "steps": 3,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-5-100.png",
+        "reports/course-readiness-2026-11-07/schemes-5-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "ы",
+      "sourceBasis": "analogy",
+      "sourceFigure": 5,
+      "steps": 3,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-5-100.png",
+        "reports/course-readiness-2026-11-07/schemes-5-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "Ь",
+      "sourceBasis": "direct",
+      "sourceFigure": 5,
+      "steps": 2,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-5-100.png",
+        "reports/course-readiness-2026-11-07/schemes-5-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "ь",
+      "sourceBasis": "analogy",
+      "sourceFigure": 5,
+      "steps": 2,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-5-100.png",
+        "reports/course-readiness-2026-11-07/schemes-5-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "Э",
+      "sourceBasis": "direct",
+      "sourceFigure": 5,
+      "steps": 3,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-6-100.png",
+        "reports/course-readiness-2026-11-07/schemes-6-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "э",
+      "sourceBasis": "analogy",
+      "sourceFigure": 5,
+      "steps": 3,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-6-100.png",
+        "reports/course-readiness-2026-11-07/schemes-6-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Порядок, параллельные стрелки, принадлежность номеров и свободные зазоры просмотрены."
+    },
+    {
+      "character": "Ю",
+      "sourceBasis": "direct",
+      "sourceFigure": 5,
+      "steps": 4,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-6-100.png",
+        "reports/course-readiness-2026-11-07/schemes-6-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Стрелка4 сдвинута в свободное место; направление соединения сохранено."
+    },
+    {
+      "character": "ю",
+      "sourceBasis": "analogy",
+      "sourceFigure": 5,
+      "steps": 4,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-6-100.png",
+        "reports/course-readiness-2026-11-07/schemes-6-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Стрелка4 сдвинута в свободное место; направление соединения сохранено."
+    },
+    {
+      "character": "Я",
+      "sourceBasis": "direct",
+      "sourceFigure": 5,
+      "steps": 3,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-6-100.png",
+        "reports/course-readiness-2026-11-07/schemes-6-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Цельная схема сохранена; стрелка2 укорочена до свободного участка, без разбиения."
+    },
+    {
+      "character": "я",
+      "sourceBasis": "analogy",
+      "sourceFigure": 5,
+      "steps": 3,
+      "bold": [
+        100,
+        150
+      ],
+      "evidence": [
+        "reports/course-readiness-2026-11-07/schemes-6-100.png",
+        "reports/course-readiness-2026-11-07/schemes-6-150.png"
+      ],
+      "result": "no-critical-visual-defect",
+      "note": "Цельная схема сохранена по решению владельца."
+    }
+  ]
+}
