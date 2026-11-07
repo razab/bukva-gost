@@ -1,7 +1,8 @@
 const LetterSequence={
- normalizeText(text,{lesson='А',supported=Object.keys(DrawingGlyphs).join('')}={}){if(typeof text!=='string')return null;const value=text.replace(/A/g,'А').replace(/a/g,'а').replace(/\s+/g,' ').trim();return value.length>0&&value.length<=24&&[...value].every(c=>c===' '||supported.includes(c))&&LetterCurriculum.canUseText(lesson,value)?value:null},
+ maxTextLength:120,
+ normalizeText(text,{lesson='А',supported=Object.keys(DrawingGlyphs).join('')}={}){if(typeof text!=='string')return null;const value=text.replace(/A/g,'А').replace(/a/g,'а').replace(/\s+/g,' ').trim();return value.length>0&&value.length<=this.maxTextLength&&[...value].every(c=>c===' '||supported.includes(c))&&LetterCurriculum.canUseText(lesson,value)?value:null},
  compose(text,sources,{gap=null,bold=100,maxWidth=Infinity,lineAdvance=170}={}){
-  if(typeof text!=='string'||!text.trim().length||text.length>24)throw new Error('Invalid sequence text');
+  if(typeof text!=='string'||!text.trim().length||text.length>this.maxTextLength)throw new Error('Invalid sequence text');
   if(gap!==null&&(!Number.isFinite(gap)||gap<0||gap>50))throw new Error('Invalid letter gap');
   let cursor=0,lastOrigin=0,previous=null,wordBreak=false,lineY=0,maxOrigin=0,firstLeft=null;const model=[],glyphs=[],breaks=[];
   for(let at=0;at<text.length;at++){

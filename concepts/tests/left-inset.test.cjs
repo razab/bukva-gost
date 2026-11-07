@@ -11,10 +11,11 @@ console.log('PASS canary: 15% default → real20% control → draw retained at10
 if(process.env.LEFT_INSET_CANARY_ONLY==='1')process.exit(0);
 for(const [input,want] of [[0,0],[10,10],[20,20],[30,30],[-5,0],[90,30],[NaN,15]]){app.run(`configure({leftInset:${Number.isNaN(input)?'NaN':input}})`);assert.equal(app.run('preferences.leftInset'),want)}
 // At an exact width boundary, narrowing content must wrap instead of scaling.
-app=boot();app.nodes.practice.clientWidth=1050;app.run("build(0,'М');configure({leftInset:0})");
-const sentence=()=>app.nodes.practice.children.find(r=>r.attrs['aria-label']==='Мама мыла раму.').children[0].parts;
+app=boot();const text=app.run("LetterCurriculum.lesson('М').examples.sentences[0]"),sequence=app.run(`LetterSequence.compose(${JSON.stringify(text)},sequenceSources,{gap:20,bold:100})`),sources=app.run('sequenceSources'),characters=text.replace(/ /g,'');
+const span=Math.max(...sequence.glyphs.map((g,i)=>g.x+sources[characters[i]].bounds[1]))-Math.min(...sequence.glyphs.map((g,i)=>g.x+sources[characters[i]].bounds[0]));app.nodes.practice.clientWidth=span*.92+32;app.run("build(0,'М');configure({leftInset:0})");
+const sentence=()=>app.nodes.practice.children.find(r=>r.attrs['aria-label']===text).children[0].parts;
 const firstId=sentence().canvas.attrs['data-surface-id'],frame=sentence().canvas.attrs['data-view-box'];assert(!firstId.includes('-wrap'));
-const sequence=app.run("LetterSequence.compose('Мама мыла раму.',sequenceSources,{gap:preferences.letterGap,bold:preferences.bold})");for(const line of sequence.model)draw(sentence().canvas,line);assert.equal(sentence().output.textContent,'100%');const stored=app.run(`JSON.stringify(data[${JSON.stringify(firstId)}])`);
+for(const line of sequence.model)draw(sentence().canvas,line);assert.equal(sentence().output.textContent,'100%');const stored=app.run(`JSON.stringify(data[${JSON.stringify(firstId)}])`);
 app.run('configure({leftInset:20})');const wrappedId=sentence().canvas.attrs['data-surface-id'];assert(wrappedId.includes('-wrap'));assert.equal(app.run(`JSON.stringify(data[${JSON.stringify(firstId)}])`),stored);assert.equal(app.run('preferences.size'),92);assert.equal(app.run('preferences.bold'),100);
 app.run('configure({leftInset:0})');assert.equal(sentence().canvas.attrs['data-surface-id'],firstId);assert.equal(sentence().canvas.attrs['data-view-box'],frame);assert.equal(sentence().output.textContent,'100%');
 app.run('configure({leftInset:20})');const keys=Object.keys(app.saved),adapter={length:keys.length,key:i=>keys[i],getItem:k=>app.saved[k]??null};const exported=app.run('LocalBackup').parse(app.run('LocalBackup').export(adapter));assert.equal(boot({...exported.entries}).run('preferences.leftInset'),20);

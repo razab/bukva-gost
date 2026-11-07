@@ -1,0 +1,1256 @@
+{
+  "date": "2026-11-07",
+  "planVersion": 3,
+  "source": "references/propisi-2019-content.json",
+  "sourceSha256": "a6b6767cb1c54766c416420168a112ba53196b6b33c5de0114625683dc8f3d07",
+  "scope": "33 группы просмотрены по полному сохранённому индексу; исходный PDF повторно не парсился. Тексты оригинальные авторские адаптации, не транскрипции пособия.",
+  "maxTextLength": 120,
+  "rows": [
+    {
+      "letter": "А",
+      "pages": [
+        8
+      ],
+      "sourceStructure": "введение буквы",
+      "sourceFeatures": [
+        "combinations",
+        "continue",
+        "letter",
+        "parts",
+        "trace"
+      ],
+      "parts": "Собственные части обоих ГОСТ-регистров; три пробы в основной практике, остальные в дополнительной.",
+      "wordPractice": [],
+      "capitalPractice": [
+        "ААА"
+      ],
+      "copyText": "А-а-а!",
+      "textKind": "initial-form-or-phrase",
+      "changed": false,
+      "sourceAdaptation": "Сохранено введение формы с короткой практикой; в развитом алфавите добавлена связная фраза.",
+      "excludedLanguageFeatures": [],
+      "exclusionReason": "Чистописание ГОСТ: переносим формы и осмысленное копирование; грамматические пропуски, загадки и свободные ответы не подменяем заранее выбранным ответом и не оцениваем автоматически.",
+      "status": "editorially-reviewed; child-pilot-pending"
+    },
+    {
+      "letter": "О",
+      "pages": [
+        9
+      ],
+      "sourceStructure": "введение буквы",
+      "sourceFeatures": [
+        "combinations",
+        "continue",
+        "letter",
+        "parts",
+        "trace"
+      ],
+      "parts": "Собственные части обоих ГОСТ-регистров; три пробы в основной практике, остальные в дополнительной.",
+      "wordPractice": [],
+      "capitalPractice": [
+        "Ооо"
+      ],
+      "copyText": "О-о-о!",
+      "textKind": "initial-form-or-phrase",
+      "changed": false,
+      "sourceAdaptation": "Сохранено введение формы с короткой практикой; в развитом алфавите добавлена связная фраза.",
+      "excludedLanguageFeatures": [],
+      "exclusionReason": "Чистописание ГОСТ: переносим формы и осмысленное копирование; грамматические пропуски, загадки и свободные ответы не подменяем заранее выбранным ответом и не оцениваем автоматически.",
+      "status": "editorially-reviewed; child-pilot-pending"
+    },
+    {
+      "letter": "И",
+      "pages": [
+        10
+      ],
+      "sourceStructure": "введение буквы",
+      "sourceFeatures": [
+        "combinations",
+        "continue",
+        "letter",
+        "parts",
+        "trace"
+      ],
+      "parts": "Собственные части обоих ГОСТ-регистров; три пробы в основной практике, остальные в дополнительной.",
+      "wordPractice": [],
+      "capitalPractice": [
+        "Иии"
+      ],
+      "copyText": "И-а!",
+      "textKind": "initial-form-or-phrase",
+      "changed": false,
+      "sourceAdaptation": "Сохранено введение формы с короткой практикой; в развитом алфавите добавлена связная фраза.",
+      "excludedLanguageFeatures": [],
+      "exclusionReason": "Чистописание ГОСТ: переносим формы и осмысленное копирование; грамматические пропуски, загадки и свободные ответы не подменяем заранее выбранным ответом и не оцениваем автоматически.",
+      "status": "editorially-reviewed; child-pilot-pending"
+    },
+    {
+      "letter": "У",
+      "pages": [
+        11
+      ],
+      "sourceStructure": "введение буквы",
+      "sourceFeatures": [
+        "combinations",
+        "continue",
+        "exclamation",
+        "letter",
+        "trace"
+      ],
+      "parts": "Собственные части обоих ГОСТ-регистров; три пробы в основной практике, остальные в дополнительной.",
+      "wordPractice": [],
+      "capitalPractice": [
+        "Ууу"
+      ],
+      "copyText": "Ау!",
+      "textKind": "initial-form-or-phrase",
+      "changed": false,
+      "sourceAdaptation": "Сохранено введение формы с короткой практикой; в развитом алфавите добавлена связная фраза.",
+      "excludedLanguageFeatures": [],
+      "exclusionReason": "Чистописание ГОСТ: переносим формы и осмысленное копирование; грамматические пропуски, загадки и свободные ответы не подменяем заранее выбранным ответом и не оцениваем автоматически.",
+      "status": "editorially-reviewed; child-pilot-pending"
+    },
+    {
+      "letter": "Ы",
+      "pages": [
+        12
+      ],
+      "sourceStructure": "введение буквы",
+      "sourceFeatures": [
+        "combinations",
+        "continue",
+        "letter",
+        "parts",
+        "trace"
+      ],
+      "parts": "Собственные части обоих ГОСТ-регистров; три пробы в основной практике, остальные в дополнительной.",
+      "wordPractice": [],
+      "capitalPractice": [
+        "ЫЫЫ"
+      ],
+      "copyText": null,
+      "textKind": "initial-form-or-phrase",
+      "changed": false,
+      "sourceAdaptation": "Сохранено введение формы с короткой практикой; в развитом алфавите добавлена связная фраза.",
+      "excludedLanguageFeatures": [],
+      "exclusionReason": "Чистописание ГОСТ: переносим формы и осмысленное копирование; грамматические пропуски, загадки и свободные ответы не подменяем заранее выбранным ответом и не оцениваем автоматически.",
+      "status": "editorially-reviewed; child-pilot-pending"
+    },
+    {
+      "letter": "Н",
+      "pages": [
+        13
+      ],
+      "sourceStructure": "введение буквы",
+      "sourceFeatures": [
+        "letter",
+        "names",
+        "parts",
+        "picture-word",
+        "sentence",
+        "trace",
+        "words"
+      ],
+      "parts": "Собственные части обоих ГОСТ-регистров; три пробы в основной практике, остальные в дополнительной.",
+      "wordPractice": [
+        "он",
+        "она"
+      ],
+      "capitalPractice": [
+        "Нина",
+        "Инна"
+      ],
+      "copyText": "Она и он.",
+      "textKind": "initial-form-or-phrase",
+      "changed": false,
+      "sourceAdaptation": "Сохранено введение формы с короткой практикой; в развитом алфавите добавлена связная фраза.",
+      "excludedLanguageFeatures": [],
+      "exclusionReason": "Чистописание ГОСТ: переносим формы и осмысленное копирование; грамматические пропуски, загадки и свободные ответы не подменяем заранее выбранным ответом и не оцениваем автоматически.",
+      "status": "editorially-reviewed; child-pilot-pending"
+    },
+    {
+      "letter": "Т",
+      "pages": [
+        14,
+        15,
+        16
+      ],
+      "sourceStructure": "введение буквы → закрепление → закрепление",
+      "sourceFeatures": [
+        "capital",
+        "combinations",
+        "copy",
+        "letter",
+        "missing-letter",
+        "names",
+        "review",
+        "sentences",
+        "stress",
+        "trace",
+        "vowels",
+        "words"
+      ],
+      "parts": "Собственные части обоих ГОСТ-регистров; три пробы в основной практике, остальные в дополнительной.",
+      "wordPractice": [
+        "тут",
+        "нота"
+      ],
+      "capitalPractice": [
+        "Тина",
+        "Антон"
+      ],
+      "copyText": "Антон тут. Тут и Нина.",
+      "textKind": "connected-copy",
+      "changed": true,
+      "sourceAdaptation": "Продолжение группы представлено применением буквы в словах и цельном тексте на одном листе. Количество страниц бумаги не копируется механически.",
+      "excludedLanguageFeatures": [
+        "missing-letter",
+        "stress",
+        "vowels"
+      ],
+      "exclusionReason": "Чистописание ГОСТ: переносим формы и осмысленное копирование; грамматические пропуски, загадки и свободные ответы не подменяем заранее выбранным ответом и не оцениваем автоматически.",
+      "status": "editorially-reviewed; child-pilot-pending"
+    },
+    {
+      "letter": "К",
+      "pages": [
+        17,
+        18
+      ],
+      "sourceStructure": "введение буквы → закрепление",
+      "sourceFeatures": [
+        "capital",
+        "combinations",
+        "copy",
+        "letter",
+        "review",
+        "sentences",
+        "soft-consonants",
+        "trace",
+        "word-change",
+        "words"
+      ],
+      "parts": "Собственные части обоих ГОСТ-регистров; три пробы в основной практике, остальные в дополнительной.",
+      "wordPractice": [
+        "кот",
+        "кит"
+      ],
+      "capitalPractice": [
+        "Никита",
+        "Ника"
+      ],
+      "copyText": "У Ники кот. Кот тут. Ника и кот.",
+      "textKind": "connected-copy",
+      "changed": true,
+      "sourceAdaptation": "Продолжение группы представлено применением буквы в словах и цельном тексте на одном листе. Количество страниц бумаги не копируется механически.",
+      "excludedLanguageFeatures": [
+        "soft-consonants",
+        "word-change"
+      ],
+      "exclusionReason": "Чистописание ГОСТ: переносим формы и осмысленное копирование; грамматические пропуски, загадки и свободные ответы не подменяем заранее выбранным ответом и не оцениваем автоматически.",
+      "status": "editorially-reviewed; child-pilot-pending"
+    },
+    {
+      "letter": "С",
+      "pages": [
+        19,
+        20
+      ],
+      "sourceStructure": "введение буквы → закрепление",
+      "sourceFeatures": [
+        "combinations",
+        "letter",
+        "sentences",
+        "syllables",
+        "trace",
+        "vowels",
+        "word-change",
+        "words"
+      ],
+      "parts": "Собственные части обоих ГОСТ-регистров; три пробы в основной практике, остальные в дополнительной.",
+      "wordPractice": [
+        "нос",
+        "сок"
+      ],
+      "capitalPractice": [
+        "Стас"
+      ],
+      "copyText": "У Стаса сок. Стас и Ника тут. У Ники сок.",
+      "textKind": "connected-copy",
+      "changed": true,
+      "sourceAdaptation": "Продолжение группы представлено применением буквы в словах и цельном тексте на одном листе. Количество страниц бумаги не копируется механически.",
+      "excludedLanguageFeatures": [
+        "vowels",
+        "word-change"
+      ],
+      "exclusionReason": "Чистописание ГОСТ: переносим формы и осмысленное копирование; грамматические пропуски, загадки и свободные ответы не подменяем заранее выбранным ответом и не оцениваем автоматически.",
+      "status": "editorially-reviewed; child-pilot-pending"
+    },
+    {
+      "letter": "Л",
+      "pages": [
+        21
+      ],
+      "sourceStructure": "введение буквы",
+      "sourceFeatures": [
+        "letter",
+        "names",
+        "parts",
+        "sentences",
+        "trace",
+        "words"
+      ],
+      "parts": "Собственные части обоих ГОСТ-регистров; три пробы в основной практике, остальные в дополнительной.",
+      "wordPractice": [
+        "лиса",
+        "луна"
+      ],
+      "capitalPractice": [
+        "Лина",
+        "Алла"
+      ],
+      "copyText": "Лиса у сосны. Слон у осин.",
+      "textKind": "connected-copy",
+      "changed": true,
+      "sourceAdaptation": "Сохранено введение формы с короткой практикой; в развитом алфавите добавлена связная фраза.",
+      "excludedLanguageFeatures": [],
+      "exclusionReason": "Чистописание ГОСТ: переносим формы и осмысленное копирование; грамматические пропуски, загадки и свободные ответы не подменяем заранее выбранным ответом и не оцениваем автоматически.",
+      "status": "editorially-reviewed; child-pilot-pending"
+    },
+    {
+      "letter": "П",
+      "pages": [
+        22
+      ],
+      "sourceStructure": "введение буквы",
+      "sourceFeatures": [
+        "letter",
+        "missing-letter",
+        "sentences",
+        "soft-consonants",
+        "trace",
+        "words"
+      ],
+      "parts": "Собственные части обоих ГОСТ-регистров; три пробы в основной практике, остальные в дополнительной.",
+      "wordPractice": [
+        "папа",
+        "пила"
+      ],
+      "capitalPractice": [
+        "Полина",
+        "Платон"
+      ],
+      "copyText": "У папы пила. Папа пилит липу.",
+      "textKind": "connected-copy",
+      "changed": true,
+      "sourceAdaptation": "Сохранено введение формы с короткой практикой; в развитом алфавите добавлена связная фраза.",
+      "excludedLanguageFeatures": [
+        "missing-letter",
+        "soft-consonants"
+      ],
+      "exclusionReason": "Чистописание ГОСТ: переносим формы и осмысленное копирование; грамматические пропуски, загадки и свободные ответы не подменяем заранее выбранным ответом и не оцениваем автоматически.",
+      "status": "editorially-reviewed; child-pilot-pending"
+    },
+    {
+      "letter": "Р",
+      "pages": [
+        23,
+        24
+      ],
+      "sourceStructure": "введение буквы → закрепление",
+      "sourceFeatures": [
+        "capital",
+        "copy",
+        "letter",
+        "missing-word",
+        "names",
+        "review",
+        "sentences",
+        "trace",
+        "word-change",
+        "words"
+      ],
+      "parts": "Собственные части обоих ГОСТ-регистров; три пробы в основной практике, остальные в дополнительной.",
+      "wordPractice": [
+        "рак",
+        "рис"
+      ],
+      "capitalPractice": [
+        "Рита",
+        "Руслан"
+      ],
+      "copyText": "Рита красит пол. У Риты краски.",
+      "textKind": "connected-copy",
+      "changed": true,
+      "sourceAdaptation": "Продолжение группы представлено применением буквы в словах и цельном тексте на одном листе. Количество страниц бумаги не копируется механически.",
+      "excludedLanguageFeatures": [
+        "missing-word",
+        "word-change"
+      ],
+      "exclusionReason": "Чистописание ГОСТ: переносим формы и осмысленное копирование; грамматические пропуски, загадки и свободные ответы не подменяем заранее выбранным ответом и не оцениваем автоматически.",
+      "status": "editorially-reviewed; child-pilot-pending"
+    },
+    {
+      "letter": "В",
+      "pages": [
+        25,
+        26
+      ],
+      "sourceStructure": "введение буквы → закрепление",
+      "sourceFeatures": [
+        "capital",
+        "letter",
+        "missing-word",
+        "review",
+        "sentences",
+        "stress",
+        "syllables",
+        "trace",
+        "word-change",
+        "words"
+      ],
+      "parts": "Собственные части обоих ГОСТ-регистров; три пробы в основной практике, остальные в дополнительной.",
+      "wordPractice": [
+        "ива",
+        "сова"
+      ],
+      "capitalPractice": [
+        "Иван",
+        "Вика"
+      ],
+      "copyText": "У Ивана сова. Сова у ивы. Иван у ивы.",
+      "textKind": "connected-copy",
+      "changed": true,
+      "sourceAdaptation": "Продолжение группы представлено применением буквы в словах и цельном тексте на одном листе. Количество страниц бумаги не копируется механически.",
+      "excludedLanguageFeatures": [
+        "missing-word",
+        "stress",
+        "word-change"
+      ],
+      "exclusionReason": "Чистописание ГОСТ: переносим формы и осмысленное копирование; грамматические пропуски, загадки и свободные ответы не подменяем заранее выбранным ответом и не оцениваем автоматически.",
+      "status": "editorially-reviewed; child-pilot-pending"
+    },
+    {
+      "letter": "Е",
+      "pages": [
+        27,
+        28,
+        29
+      ],
+      "sourceStructure": "введение буквы → списывание текста → закрепление",
+      "sourceFeatures": [
+        "combinations",
+        "connected-text",
+        "copy",
+        "letter",
+        "letter-order",
+        "sentences",
+        "soft-consonants",
+        "stress",
+        "trace",
+        "vowels",
+        "words"
+      ],
+      "parts": "Собственные части обоих ГОСТ-регистров; три пробы в основной практике, остальные в дополнительной.",
+      "wordPractice": [
+        "лес",
+        "река"
+      ],
+      "capitalPractice": [
+        "Елена",
+        "Вера"
+      ],
+      "copyText": "Вера несла пакет. В пакете лента.",
+      "textKind": "connected-copy",
+      "changed": true,
+      "sourceAdaptation": "Продолжение группы представлено применением буквы в словах и цельном тексте на одном листе. Количество страниц бумаги не копируется механически.",
+      "excludedLanguageFeatures": [
+        "letter-order",
+        "soft-consonants",
+        "stress",
+        "vowels"
+      ],
+      "exclusionReason": "Чистописание ГОСТ: переносим формы и осмысленное копирование; грамматические пропуски, загадки и свободные ответы не подменяем заранее выбранным ответом и не оцениваем автоматически.",
+      "status": "editorially-reviewed; child-pilot-pending"
+    },
+    {
+      "letter": "М",
+      "pages": [
+        30,
+        31
+      ],
+      "sourceStructure": "введение буквы → закрепление",
+      "sourceFeatures": [
+        "combinations",
+        "connected-text",
+        "copy",
+        "letter",
+        "names",
+        "review",
+        "sentences",
+        "soft-consonants",
+        "stress",
+        "trace",
+        "words"
+      ],
+      "parts": "Собственные части обоих ГОСТ-регистров; три пробы в основной практике, остальные в дополнительной.",
+      "wordPractice": [
+        "мама",
+        "мыло"
+      ],
+      "capitalPractice": [
+        "Мила",
+        "Марат"
+      ],
+      "copyText": "Мама мыла раму. Мила мыла пол.",
+      "textKind": "connected-copy",
+      "changed": true,
+      "sourceAdaptation": "Продолжение группы представлено применением буквы в словах и цельном тексте на одном листе. Количество страниц бумаги не копируется механически.",
+      "excludedLanguageFeatures": [
+        "soft-consonants",
+        "stress"
+      ],
+      "exclusionReason": "Чистописание ГОСТ: переносим формы и осмысленное копирование; грамматические пропуски, загадки и свободные ответы не подменяем заранее выбранным ответом и не оцениваем автоматически.",
+      "status": "editorially-reviewed; child-pilot-pending"
+    },
+    {
+      "letter": "З",
+      "pages": [
+        32,
+        33
+      ],
+      "sourceStructure": "введение буквы → закрепление",
+      "sourceFeatures": [
+        "capital",
+        "connected-text",
+        "copy",
+        "letter",
+        "names",
+        "review",
+        "sentences",
+        "stress",
+        "syllables",
+        "trace",
+        "words"
+      ],
+      "parts": "Собственные части обоих ГОСТ-регистров; три пробы в основной практике, остальные в дополнительной.",
+      "wordPractice": [
+        "зима",
+        "роза"
+      ],
+      "capitalPractice": [
+        "Зина",
+        "Злата"
+      ],
+      "copyText": "У Зины коза. Зина пасла козу. Коза ела траву.",
+      "textKind": "connected-copy",
+      "changed": true,
+      "sourceAdaptation": "Продолжение группы представлено применением буквы в словах и цельном тексте на одном листе. Количество страниц бумаги не копируется механически.",
+      "excludedLanguageFeatures": [
+        "stress"
+      ],
+      "exclusionReason": "Чистописание ГОСТ: переносим формы и осмысленное копирование; грамматические пропуски, загадки и свободные ответы не подменяем заранее выбранным ответом и не оцениваем автоматически.",
+      "status": "editorially-reviewed; child-pilot-pending"
+    },
+    {
+      "letter": "Д",
+      "pages": [
+        34,
+        35
+      ],
+      "sourceStructure": "введение буквы → закрепление",
+      "sourceFeatures": [
+        "capital",
+        "copy",
+        "letter",
+        "missing-letter",
+        "names",
+        "question",
+        "response",
+        "sentence",
+        "sentences",
+        "trace",
+        "words"
+      ],
+      "parts": "Собственные части обоих ГОСТ-регистров; три пробы в основной практике, остальные в дополнительной.",
+      "wordPractice": [
+        "дом",
+        "дым"
+      ],
+      "capitalPractice": [
+        "Дина",
+        "Дима"
+      ],
+      "copyText": "Дима поливал розы. У дома розы. Мама рада.",
+      "textKind": "connected-copy",
+      "changed": true,
+      "sourceAdaptation": "Продолжение группы представлено применением буквы в словах и цельном тексте на одном листе. Количество страниц бумаги не копируется механически.",
+      "excludedLanguageFeatures": [
+        "missing-letter",
+        "question",
+        "response"
+      ],
+      "exclusionReason": "Чистописание ГОСТ: переносим формы и осмысленное копирование; грамматические пропуски, загадки и свободные ответы не подменяем заранее выбранным ответом и не оцениваем автоматически.",
+      "status": "editorially-reviewed; child-pilot-pending"
+    },
+    {
+      "letter": "Б",
+      "pages": [
+        36,
+        37
+      ],
+      "sourceStructure": "введение буквы → закрепление",
+      "sourceFeatures": [
+        "capital",
+        "connected-text",
+        "copy",
+        "letter",
+        "missing-letter",
+        "review",
+        "sentences",
+        "stress",
+        "trace",
+        "word-change",
+        "words"
+      ],
+      "parts": "Собственные части обоих ГОСТ-регистров; три пробы в основной практике, остальные в дополнительной.",
+      "wordPractice": [
+        "боб",
+        "бусы"
+      ],
+      "capitalPractice": [
+        "Борис",
+        "Белла"
+      ],
+      "copyText": "У Бориса барабан. Борис бил в барабан. Мы пели.",
+      "textKind": "connected-copy",
+      "changed": true,
+      "sourceAdaptation": "Продолжение группы представлено применением буквы в словах и цельном тексте на одном листе. Количество страниц бумаги не копируется механически.",
+      "excludedLanguageFeatures": [
+        "missing-letter",
+        "stress",
+        "word-change"
+      ],
+      "exclusionReason": "Чистописание ГОСТ: переносим формы и осмысленное копирование; грамматические пропуски, загадки и свободные ответы не подменяем заранее выбранным ответом и не оцениваем автоматически.",
+      "status": "editorially-reviewed; child-pilot-pending"
+    },
+    {
+      "letter": "Г",
+      "pages": [
+        38
+      ],
+      "sourceStructure": "введение буквы",
+      "sourceFeatures": [
+        "combinations",
+        "letter",
+        "missing-word",
+        "sentences",
+        "trace",
+        "word-change"
+      ],
+      "parts": "Собственные части обоих ГОСТ-регистров; три пробы в основной практике, остальные в дополнительной.",
+      "wordPractice": [
+        "гора",
+        "игла"
+      ],
+      "capitalPractice": [
+        "Галина",
+        "Глеб"
+      ],
+      "copyText": "У Глеба грибы. Глеб набрал грибы.",
+      "textKind": "connected-copy",
+      "changed": true,
+      "sourceAdaptation": "Сохранено введение формы с короткой практикой; в развитом алфавите добавлена связная фраза.",
+      "excludedLanguageFeatures": [
+        "missing-word",
+        "word-change"
+      ],
+      "exclusionReason": "Чистописание ГОСТ: переносим формы и осмысленное копирование; грамматические пропуски, загадки и свободные ответы не подменяем заранее выбранным ответом и не оцениваем автоматически.",
+      "status": "editorially-reviewed; child-pilot-pending"
+    },
+    {
+      "letter": "Ь",
+      "pages": [
+        39,
+        40
+      ],
+      "sourceStructure": "введение знака → закрепление",
+      "sourceFeatures": [
+        "connected-text",
+        "copy",
+        "copy-primer",
+        "missing-letter",
+        "question",
+        "sign",
+        "trace",
+        "word-change",
+        "words"
+      ],
+      "parts": "Собственные части обоих ГОСТ-регистров; три пробы в основной практике, остальные в дополнительной.",
+      "wordPractice": [
+        "моль",
+        "конь"
+      ],
+      "capitalPractice": [
+        "СОЛЬ",
+        "КОНЬ"
+      ],
+      "copyText": "У дома конь. Конь ел траву и был сыт.",
+      "textKind": "connected-copy",
+      "changed": true,
+      "sourceAdaptation": "Продолжение группы представлено применением буквы в словах и цельном тексте на одном листе. Количество страниц бумаги не копируется механически.",
+      "excludedLanguageFeatures": [
+        "missing-letter",
+        "question",
+        "word-change"
+      ],
+      "exclusionReason": "Чистописание ГОСТ: переносим формы и осмысленное копирование; грамматические пропуски, загадки и свободные ответы не подменяем заранее выбранным ответом и не оцениваем автоматически.",
+      "status": "editorially-reviewed; child-pilot-pending"
+    },
+    {
+      "letter": "Я",
+      "pages": [
+        41,
+        42
+      ],
+      "sourceStructure": "введение буквы → списывание текста",
+      "sourceFeatures": [
+        "connected-text",
+        "copy",
+        "letter",
+        "missing-word",
+        "names",
+        "sentences",
+        "trace",
+        "vowels",
+        "words"
+      ],
+      "parts": "Собственные части обоих ГОСТ-регистров; три пробы в основной практике, остальные в дополнительной.",
+      "wordPractice": [
+        "яма",
+        "моя"
+      ],
+      "capitalPractice": [
+        "Яна",
+        "Таня"
+      ],
+      "copyText": "Яна мыла пол. Таня поливала розы.",
+      "textKind": "connected-copy",
+      "changed": true,
+      "sourceAdaptation": "Продолжение группы представлено применением буквы в словах и цельном тексте на одном листе. Количество страниц бумаги не копируется механически.",
+      "excludedLanguageFeatures": [
+        "missing-word",
+        "vowels"
+      ],
+      "exclusionReason": "Чистописание ГОСТ: переносим формы и осмысленное копирование; грамматические пропуски, загадки и свободные ответы не подменяем заранее выбранным ответом и не оцениваем автоматически.",
+      "status": "editorially-reviewed; child-pilot-pending"
+    },
+    {
+      "letter": "Ч",
+      "pages": [
+        43,
+        44
+      ],
+      "sourceStructure": "введение буквы → закрепление",
+      "sourceFeatures": [
+        "combinations",
+        "connected-text",
+        "copy",
+        "letter",
+        "missing-letter",
+        "review",
+        "sentence",
+        "spelling",
+        "trace",
+        "words"
+      ],
+      "parts": "Собственные части обоих ГОСТ-регистров; три пробы в основной практике, остальные в дополнительной.",
+      "wordPractice": [
+        "час",
+        "мяч"
+      ],
+      "capitalPractice": [
+        "Часы",
+        "Мяч"
+      ],
+      "copyText": "На столе часы. Часы идут. У Тани мяч.",
+      "textKind": "connected-copy",
+      "changed": true,
+      "sourceAdaptation": "Продолжение группы представлено применением буквы в словах и цельном тексте на одном листе. Количество страниц бумаги не копируется механически.",
+      "excludedLanguageFeatures": [
+        "missing-letter",
+        "spelling"
+      ],
+      "exclusionReason": "Чистописание ГОСТ: переносим формы и осмысленное копирование; грамматические пропуски, загадки и свободные ответы не подменяем заранее выбранным ответом и не оцениваем автоматически.",
+      "status": "editorially-reviewed; child-pilot-pending"
+    },
+    {
+      "letter": "Ш",
+      "pages": [
+        45,
+        46,
+        47
+      ],
+      "sourceStructure": "введение буквы → закрепление → закрепление",
+      "sourceFeatures": [
+        "capital",
+        "connected-text",
+        "copy",
+        "letter",
+        "missing-letter",
+        "names",
+        "sentence-build",
+        "spelling",
+        "trace",
+        "word-change",
+        "words"
+      ],
+      "parts": "Собственные части обоих ГОСТ-регистров; три пробы в основной практике, остальные в дополнительной.",
+      "wordPractice": [
+        "шар",
+        "шина"
+      ],
+      "capitalPractice": [
+        "Шура",
+        "Маша"
+      ],
+      "copyText": "У Маши шары. Маша дала шар Яне. Яна рада.",
+      "textKind": "connected-copy",
+      "changed": true,
+      "sourceAdaptation": "Продолжение группы представлено применением буквы в словах и цельном тексте на одном листе. Количество страниц бумаги не копируется механически.",
+      "excludedLanguageFeatures": [
+        "missing-letter",
+        "sentence-build",
+        "spelling",
+        "word-change"
+      ],
+      "exclusionReason": "Чистописание ГОСТ: переносим формы и осмысленное копирование; грамматические пропуски, загадки и свободные ответы не подменяем заранее выбранным ответом и не оцениваем автоматически.",
+      "status": "editorially-reviewed; child-pilot-pending"
+    },
+    {
+      "letter": "Ж",
+      "pages": [
+        48,
+        49,
+        50
+      ],
+      "sourceStructure": "введение буквы → списывание текста → закрепление",
+      "sourceFeatures": [
+        "capital",
+        "combinations",
+        "connected-text",
+        "copy",
+        "letter",
+        "missing-letter",
+        "missing-word",
+        "question",
+        "sentences",
+        "spelling",
+        "trace",
+        "word-change",
+        "words"
+      ],
+      "parts": "Собственные части обоих ГОСТ-регистров; три пробы в основной практике, остальные в дополнительной.",
+      "wordPractice": [
+        "жук",
+        "нож"
+      ],
+      "capitalPractice": [
+        "Жора",
+        "Жанна"
+      ],
+      "copyText": "Жук жил на лугу. Он жужжал. Жора увидел жука.",
+      "textKind": "connected-copy",
+      "changed": true,
+      "sourceAdaptation": "Продолжение группы представлено применением буквы в словах и цельном тексте на одном листе. Количество страниц бумаги не копируется механически.",
+      "excludedLanguageFeatures": [
+        "missing-letter",
+        "missing-word",
+        "question",
+        "spelling",
+        "word-change"
+      ],
+      "exclusionReason": "Чистописание ГОСТ: переносим формы и осмысленное копирование; грамматические пропуски, загадки и свободные ответы не подменяем заранее выбранным ответом и не оцениваем автоматически.",
+      "status": "editorially-reviewed; child-pilot-pending"
+    },
+    {
+      "letter": "Ё",
+      "pages": [
+        51,
+        52,
+        53
+      ],
+      "sourceStructure": "введение буквы → списывание текста → закрепление",
+      "sourceFeatures": [
+        "capital",
+        "connected-text",
+        "copy",
+        "letter",
+        "missing-letter",
+        "missing-word",
+        "names",
+        "review",
+        "sentence",
+        "sentences",
+        "trace",
+        "word-change",
+        "words"
+      ],
+      "parts": "Собственные части обоих ГОСТ-регистров; три пробы в основной практике, остальные в дополнительной.",
+      "wordPractice": [
+        "ёлка",
+        "мёд"
+      ],
+      "capitalPractice": [
+        "Ёлка",
+        "Алёна"
+      ],
+      "copyText": "Ёлка у дома. На ёлке шары. Алёна рада.",
+      "textKind": "connected-copy",
+      "changed": true,
+      "sourceAdaptation": "Продолжение группы представлено применением буквы в словах и цельном тексте на одном листе. Количество страниц бумаги не копируется механически.",
+      "excludedLanguageFeatures": [
+        "missing-letter",
+        "missing-word",
+        "word-change"
+      ],
+      "exclusionReason": "Чистописание ГОСТ: переносим формы и осмысленное копирование; грамматические пропуски, загадки и свободные ответы не подменяем заранее выбранным ответом и не оцениваем автоматически.",
+      "status": "editorially-reviewed; child-pilot-pending"
+    },
+    {
+      "letter": "Й",
+      "pages": [
+        54,
+        55
+      ],
+      "sourceStructure": "введение буквы → закрепление",
+      "sourceFeatures": [
+        "combinations",
+        "copy",
+        "letter",
+        "missing-letter",
+        "missing-word",
+        "names",
+        "sentences",
+        "trace",
+        "word-change",
+        "words"
+      ],
+      "parts": "Собственные части обоих ГОСТ-регистров; три пробы в основной практике, остальные в дополнительной.",
+      "wordPractice": [
+        "май",
+        "мой"
+      ],
+      "capitalPractice": [
+        "Май",
+        "Андрей"
+      ],
+      "copyText": "Андрей пил чай. Чай тёплый. У Андрея новый чай.",
+      "textKind": "connected-copy",
+      "changed": true,
+      "sourceAdaptation": "Продолжение группы представлено применением буквы в словах и цельном тексте на одном листе. Количество страниц бумаги не копируется механически.",
+      "excludedLanguageFeatures": [
+        "missing-letter",
+        "missing-word",
+        "word-change"
+      ],
+      "exclusionReason": "Чистописание ГОСТ: переносим формы и осмысленное копирование; грамматические пропуски, загадки и свободные ответы не подменяем заранее выбранным ответом и не оцениваем автоматически.",
+      "status": "editorially-reviewed; child-pilot-pending"
+    },
+    {
+      "letter": "Х",
+      "pages": [
+        56,
+        57
+      ],
+      "sourceStructure": "введение буквы → закрепление",
+      "sourceFeatures": [
+        "capital",
+        "combinations",
+        "copy",
+        "letter",
+        "match-meaning",
+        "missing-letter",
+        "missing-word",
+        "question",
+        "trace",
+        "word-family",
+        "words"
+      ],
+      "parts": "Собственные части обоих ГОСТ-регистров; три пробы в основной практике, остальные в дополнительной.",
+      "wordPractice": [
+        "хор",
+        "хлеб"
+      ],
+      "capitalPractice": [
+        "Хлеб",
+        "Михаил"
+      ],
+      "copyText": "Михаил ел хлеб. Хлеб мягкий. Мама дала Михаилу хлеб.",
+      "textKind": "connected-copy",
+      "changed": true,
+      "sourceAdaptation": "Продолжение группы представлено применением буквы в словах и цельном тексте на одном листе. Количество страниц бумаги не копируется механически.",
+      "excludedLanguageFeatures": [
+        "match-meaning",
+        "missing-letter",
+        "missing-word",
+        "question",
+        "word-family"
+      ],
+      "exclusionReason": "Чистописание ГОСТ: переносим формы и осмысленное копирование; грамматические пропуски, загадки и свободные ответы не подменяем заранее выбранным ответом и не оцениваем автоматически.",
+      "status": "editorially-reviewed; child-pilot-pending"
+    },
+    {
+      "letter": "Ю",
+      "pages": [
+        58,
+        59
+      ],
+      "sourceStructure": "введение буквы → закрепление",
+      "sourceFeatures": [
+        "capital",
+        "combinations",
+        "copy",
+        "letter",
+        "missing-letter",
+        "names",
+        "sentences",
+        "trace",
+        "word-change",
+        "word-family",
+        "words"
+      ],
+      "parts": "Собственные части обоих ГОСТ-регистров; три пробы в основной практике, остальные в дополнительной.",
+      "wordPractice": [
+        "юла",
+        "мою"
+      ],
+      "capitalPractice": [
+        "Юля",
+        "Юра"
+      ],
+      "copyText": "Юля моет чашку. Юра налил воду. Чашка чистая.",
+      "textKind": "connected-copy",
+      "changed": true,
+      "sourceAdaptation": "Продолжение группы представлено применением буквы в словах и цельном тексте на одном листе. Количество страниц бумаги не копируется механически.",
+      "excludedLanguageFeatures": [
+        "missing-letter",
+        "word-change",
+        "word-family"
+      ],
+      "exclusionReason": "Чистописание ГОСТ: переносим формы и осмысленное копирование; грамматические пропуски, загадки и свободные ответы не подменяем заранее выбранным ответом и не оцениваем автоматически.",
+      "status": "editorially-reviewed; child-pilot-pending"
+    },
+    {
+      "letter": "Ф",
+      "pages": [
+        60,
+        61
+      ],
+      "sourceStructure": "введение буквы → закрепление",
+      "sourceFeatures": [
+        "combinations",
+        "connected-text",
+        "copy",
+        "letter",
+        "names",
+        "question",
+        "response",
+        "review",
+        "sentences",
+        "trace",
+        "word-change"
+      ],
+      "parts": "Собственные части обоих ГОСТ-регистров; три пробы в основной практике, остальные в дополнительной.",
+      "wordPractice": [
+        "фара",
+        "форма"
+      ],
+      "capitalPractice": [
+        "Фома",
+        "Федя"
+      ],
+      "copyText": "У Феди фонарь. Федя идёт домой. Фонарь горит.",
+      "textKind": "connected-copy",
+      "changed": true,
+      "sourceAdaptation": "Продолжение группы представлено применением буквы в словах и цельном тексте на одном листе. Количество страниц бумаги не копируется механически.",
+      "excludedLanguageFeatures": [
+        "question",
+        "response",
+        "word-change"
+      ],
+      "exclusionReason": "Чистописание ГОСТ: переносим формы и осмысленное копирование; грамматические пропуски, загадки и свободные ответы не подменяем заранее выбранным ответом и не оцениваем автоматически.",
+      "status": "editorially-reviewed; child-pilot-pending"
+    },
+    {
+      "letter": "Ц",
+      "pages": [
+        62,
+        63
+      ],
+      "sourceStructure": "введение буквы → закрепление",
+      "sourceFeatures": [
+        "capital",
+        "combinations",
+        "letter",
+        "missing-word",
+        "question",
+        "sentences",
+        "spelling",
+        "trace",
+        "vowels",
+        "word-change",
+        "words"
+      ],
+      "parts": "Собственные части обоих ГОСТ-регистров; три пробы в основной практике, остальные в дополнительной.",
+      "wordPractice": [
+        "цирк",
+        "цапля"
+      ],
+      "capitalPractice": [
+        "Цирк",
+        "Цапля"
+      ],
+      "copyText": "На улице цветы. У крыльца розы. Отец полил цветы.",
+      "textKind": "connected-copy",
+      "changed": true,
+      "sourceAdaptation": "Продолжение группы представлено применением буквы в словах и цельном тексте на одном листе. Количество страниц бумаги не копируется механически.",
+      "excludedLanguageFeatures": [
+        "missing-word",
+        "question",
+        "spelling",
+        "vowels",
+        "word-change"
+      ],
+      "exclusionReason": "Чистописание ГОСТ: переносим формы и осмысленное копирование; грамматические пропуски, загадки и свободные ответы не подменяем заранее выбранным ответом и не оцениваем автоматически.",
+      "status": "editorially-reviewed; child-pilot-pending"
+    },
+    {
+      "letter": "Э",
+      "pages": [
+        64,
+        65
+      ],
+      "sourceStructure": "введение буквы → закрепление",
+      "sourceFeatures": [
+        "copy-primer",
+        "letter",
+        "question",
+        "review",
+        "sentence",
+        "sentences",
+        "soft-consonants",
+        "stress",
+        "trace",
+        "words"
+      ],
+      "parts": "Собственные части обоих ГОСТ-регистров; три пробы в основной практике, остальные в дополнительной.",
+      "wordPractice": [
+        "эхо",
+        "экран"
+      ],
+      "capitalPractice": [
+        "Эмма",
+        "Эдик"
+      ],
+      "copyText": "У Эммы экран. Эмма рисует дом. Это дом Эммы.",
+      "textKind": "connected-copy",
+      "changed": true,
+      "sourceAdaptation": "Продолжение группы представлено применением буквы в словах и цельном тексте на одном листе. Количество страниц бумаги не копируется механически.",
+      "excludedLanguageFeatures": [
+        "question",
+        "soft-consonants",
+        "stress"
+      ],
+      "exclusionReason": "Чистописание ГОСТ: переносим формы и осмысленное копирование; грамматические пропуски, загадки и свободные ответы не подменяем заранее выбранным ответом и не оцениваем автоматически.",
+      "status": "editorially-reviewed; child-pilot-pending"
+    },
+    {
+      "letter": "Щ",
+      "pages": [
+        66,
+        67,
+        68
+      ],
+      "sourceStructure": "введение буквы → закрепление → обобщение",
+      "sourceFeatures": [
+        "combinations",
+        "letter",
+        "missing-word",
+        "question",
+        "response",
+        "review",
+        "riddle",
+        "sentences",
+        "spelling",
+        "trace",
+        "word-change",
+        "words"
+      ],
+      "parts": "Собственные части обоих ГОСТ-регистров; три пробы в основной практике, остальные в дополнительной.",
+      "wordPractice": [
+        "щи",
+        "щука"
+      ],
+      "capitalPractice": [
+        "Щука",
+        "Роща"
+      ],
+      "copyText": "В реке щука. Щука плыла у камыша. У берега роща.",
+      "textKind": "connected-copy",
+      "changed": true,
+      "sourceAdaptation": "Продолжение группы представлено применением буквы в словах и цельном тексте на одном листе. Количество страниц бумаги не копируется механически.",
+      "excludedLanguageFeatures": [
+        "missing-word",
+        "question",
+        "response",
+        "riddle",
+        "spelling",
+        "word-change"
+      ],
+      "exclusionReason": "Чистописание ГОСТ: переносим формы и осмысленное копирование; грамматические пропуски, загадки и свободные ответы не подменяем заранее выбранным ответом и не оцениваем автоматически.",
+      "status": "editorially-reviewed; child-pilot-pending"
+    },
+    {
+      "letter": "Ъ",
+      "pages": [
+        69,
+        70
+      ],
+      "sourceStructure": "введение знака → закрепление",
+      "sourceFeatures": [
+        "copy",
+        "missing-letter",
+        "question",
+        "review",
+        "sentences",
+        "sign",
+        "soft-consonants",
+        "trace",
+        "word-family",
+        "words"
+      ],
+      "parts": "Собственные части обоих ГОСТ-регистров; три пробы в основной практике, остальные в дополнительной.",
+      "wordPractice": [
+        "объём",
+        "подъезд"
+      ],
+      "capitalPractice": [
+        "ОБЪЁМ",
+        "ПОДЪЕЗД"
+      ],
+      "copyText": "Это подъезд. У подъезда клён. Мы вошли в подъезд.",
+      "textKind": "connected-copy",
+      "changed": true,
+      "sourceAdaptation": "Продолжение группы представлено применением буквы в словах и цельном тексте на одном листе. Количество страниц бумаги не копируется механически.",
+      "excludedLanguageFeatures": [
+        "missing-letter",
+        "question",
+        "soft-consonants",
+        "word-family"
+      ],
+      "exclusionReason": "Чистописание ГОСТ: переносим формы и осмысленное копирование; грамматические пропуски, загадки и свободные ответы не подменяем заранее выбранным ответом и не оцениваем автоматически.",
+      "status": "editorially-reviewed; child-pilot-pending"
+    }
+  ]
+}

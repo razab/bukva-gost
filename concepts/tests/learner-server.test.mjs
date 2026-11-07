@@ -13,7 +13,7 @@ const {default:http}=await import('node:http');
 const atlas=createAtlasServer();await new Promise(resolve=>atlas.listen(0,'127.0.0.1',resolve));
 try{
  const origin='http://127.0.0.1:'+atlas.address().port;
- for(const route of ['/','/letter-atlas.js','/concepts/components/glyphs.js','/concepts/components/writing-scheme.js'])assert.equal((await fetch(origin+route)).status,200,route);
+ for(const route of ['/','/letter-atlas.js','/concepts/components/glyphs.js','/concepts/components/writing-scheme.js','/concepts/components/curriculum.js','/concepts/components/letter-sequence.js'])assert.equal((await fetch(origin+route)).status,200,route);
  assert.deepEqual(await (await fetch(origin+'/healthz')).json(),{app:'gost-letter-atlas',ok:true});
  for(const route of ['/AGENTS.md','/openspec/config.yaml','/.git/config','/editor/index.html','/concepts/index.html','/%2e%2e/README.md'])assert.equal((await fetch(origin+route)).status,404,route);
  assert.equal((await fetch(origin,{method:'POST'})).status,405);

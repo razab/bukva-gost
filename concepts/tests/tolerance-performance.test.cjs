@@ -21,9 +21,9 @@ app.nodes['setting-tolerance'].oninput({target:{value:'1.5'}});assert.equal(app.
 
 // Actual wrap boundary: preview keeps the current layout; release alone may
 // recompose a text that no longer fits. Old wrap-specific ink must survive.
-app=boot();const spec=app.run("LetterSequence.compose('Мама мыла раму.',sequenceSources,{gap:20,bold:100})"),bounds=app.run("sequenceSources"),letters='Мама мыла раму.'.replace(/ /g,'');
+app=boot();const text=app.run("LetterCurriculum.lesson('М').examples.sentences[0]"),spec=app.run(`LetterSequence.compose(${JSON.stringify(text)},sequenceSources,{gap:20,bold:100})`),bounds=app.run("sequenceSources"),letters=text.replace(/ /g,'');
 const span=Math.max(...spec.glyphs.map((g,i)=>g.x+bounds[letters[i]].bounds[1]))-Math.min(...spec.glyphs.map((g,i)=>g.x+bounds[letters[i]].bounds[0]));app.nodes.practice.clientWidth=(span*.92+20)/.85;app.run("configure({tolerance:.5});build(0,'М')");
-const sentence=()=>app.nodes.practice.children.find(r=>r.attrs['aria-label']==='Мама мыла раму.').children[0].parts;
+const sentence=()=>app.nodes.practice.children.find(r=>r.attrs['aria-label']===text).children[0].parts;
 const old=sentence().canvas,id=old.attrs['data-surface-id'];assert(!id.includes('-wrap'));for(const line of spec.model)draw(old,line);const stored=app.run(`JSON.stringify(data[${JSON.stringify(id)}])`);
 app.nodes['setting-tolerance'].oninput({target:{value:'16'}});assert.equal(sentence().canvas,old);app.nodes['setting-tolerance'].onchange({target:{value:'16'}});assert(sentence().canvas.attrs['data-surface-id'].includes('-wrap'));assert.equal(app.run(`JSON.stringify(data[${JSON.stringify(id)}])`),stored);
 app.run('configure({tolerance:.5})');assert.equal(sentence().canvas.attrs['data-surface-id'],id);assert.equal(sentence().output.textContent,'100%');

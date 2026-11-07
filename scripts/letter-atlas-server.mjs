@@ -2,12 +2,14 @@ import http from 'node:http';
 import fs from 'node:fs/promises';
 import {pathToFileURL} from 'node:url';
 
-// Serve only the four atlas resources, never a directory or the lesson origin.
+// Serve only the atlas resources, never a directory or the lesson origin.
 const files=new Map([
  ['/', ['../editor/letter-atlas.html','text/html; charset=utf-8']],
  ['/letter-atlas.js',['../editor/letter-atlas.js','text/javascript; charset=utf-8']],
  ['/concepts/components/glyphs.js',['../concepts/components/glyphs.js','text/javascript; charset=utf-8']],
- ['/concepts/components/writing-scheme.js',['../concepts/components/writing-scheme.js','text/javascript; charset=utf-8']]
+ ['/concepts/components/writing-scheme.js',['../concepts/components/writing-scheme.js','text/javascript; charset=utf-8']],
+ ['/concepts/components/curriculum.js',['../concepts/components/curriculum.js','text/javascript; charset=utf-8']],
+ ['/concepts/components/letter-sequence.js',['../concepts/components/letter-sequence.js','text/javascript; charset=utf-8']]
 ]);
 export function createAtlasServer(){
  return http.createServer(async(req,res)=>{

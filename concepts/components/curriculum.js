@@ -1,6 +1,6 @@
 // Teaching order from the user-supplied 2019 copybook; GOST forms are separate.
 const LetterCurriculum=(()=>{
- const planVersion=2;
+ const planVersion=3;
  const order=Object.freeze([..."АОИУЫНТКСЛПРВЕМЗДБГЬЯЧШЖЁЙХЮФЦЭЩЪ"]);
  const stages=Object.freeze(['lower-elements','lower-letter','lower-practice','upper-elements','upper-letter','upper-practice','consolidation','review']);
  const source=Object.freeze({
@@ -146,7 +146,7 @@ const LetterCurriculum=(()=>{
       "Антон"
     ],
     "sentences": [
-      "Антон тут."
+      "Антон тут. Тут и Нина."
     ],
     "review": []
   },
@@ -166,7 +166,7 @@ const LetterCurriculum=(()=>{
       "Ника"
     ],
     "sentences": [
-      "Никита и кот."
+      "У Ники кот. Кот тут. Ника и кот."
     ],
     "review": []
   },
@@ -185,7 +185,7 @@ const LetterCurriculum=(()=>{
       "Стас"
     ],
     "sentences": [
-      "У нас сок."
+      "У Стаса сок. Стас и Ника тут. У Ники сок."
     ],
     "review": []
   },
@@ -205,7 +205,7 @@ const LetterCurriculum=(()=>{
       "Алла"
     ],
     "sentences": [
-      "Лиса и слон."
+      "Лиса у сосны. Слон у осин."
     ],
     "review": []
   },
@@ -225,7 +225,7 @@ const LetterCurriculum=(()=>{
       "Платон"
     ],
     "sentences": [
-      "У папы пила."
+      "У папы пила. Папа пилит липу."
     ],
     "review": []
   },
@@ -245,7 +245,7 @@ const LetterCurriculum=(()=>{
       "Руслан"
     ],
     "sentences": [
-      "Рита красит пол."
+      "Рита красит пол. У Риты краски."
     ],
     "review": [
       "А К С"
@@ -267,7 +267,7 @@ const LetterCurriculum=(()=>{
       "Вика"
     ],
     "sentences": [
-      "У Ивана сова."
+      "У Ивана сова. Сова у ивы. Иван у ивы."
     ],
     "review": []
   },
@@ -286,7 +286,7 @@ const LetterCurriculum=(()=>{
       "Вера"
     ],
     "sentences": [
-      "Вера несла пакет."
+      "Вера несла пакет. В пакете лента."
     ],
     "review": []
   },
@@ -306,7 +306,7 @@ const LetterCurriculum=(()=>{
       "Марат"
     ],
     "sentences": [
-      "Мама мыла раму."
+      "Мама мыла раму. Мила мыла пол."
     ],
     "review": [
       "Н Т Л"
@@ -328,7 +328,7 @@ const LetterCurriculum=(()=>{
       "Злата"
     ],
     "sentences": [
-      "У Зины роза."
+      "У Зины коза. Зина пасла козу. Коза ела траву."
     ],
     "review": []
   },
@@ -348,7 +348,7 @@ const LetterCurriculum=(()=>{
       "Дима"
     ],
     "sentences": [
-      "Дима поливал розы."
+      "Дима поливал розы. У дома розы. Мама рада."
     ],
     "review": []
   },
@@ -368,7 +368,7 @@ const LetterCurriculum=(()=>{
       "Белла"
     ],
     "sentences": [
-      "У Бориса барабан."
+      "У Бориса барабан. Борис бил в барабан. Мы пели."
     ],
     "review": []
   },
@@ -388,7 +388,7 @@ const LetterCurriculum=(()=>{
       "Глеб"
     ],
     "sentences": [
-      "Глеб играл."
+      "У Глеба грибы. Глеб набрал грибы."
     ],
     "review": []
   },
@@ -408,7 +408,7 @@ const LetterCurriculum=(()=>{
       "КОНЬ"
     ],
     "sentences": [
-      "У дома конь."
+      "У дома конь. Конь ел траву и был сыт."
     ],
     "review": []
   },
@@ -428,7 +428,7 @@ const LetterCurriculum=(()=>{
       "Таня"
     ],
     "sentences": [
-      "Яна мыла пол."
+      "Яна мыла пол. Таня поливала розы."
     ],
     "review": [
       "Р В Ь"
@@ -450,7 +450,7 @@ const LetterCurriculum=(()=>{
       "Мяч"
     ],
     "sentences": [
-      "Часы на столе."
+      "На столе часы. Часы идут. У Тани мяч."
     ],
     "review": [
       "Г Д Б"
@@ -472,7 +472,7 @@ const LetterCurriculum=(()=>{
       "Маша"
     ],
     "sentences": [
-      "У Маши шары."
+      "У Маши шары. Маша дала шар Яне. Яна рада."
     ],
     "review": []
   },
@@ -492,7 +492,7 @@ const LetterCurriculum=(()=>{
       "Жанна"
     ],
     "sentences": [
-      "Жук жил на лугу."
+      "Жук жил на лугу. Он жужжал. Жора увидел жука."
     ],
     "review": []
   },
@@ -512,7 +512,7 @@ const LetterCurriculum=(()=>{
       "Алёна"
     ],
     "sentences": [
-      "У Алёны мёд."
+      "Ёлка у дома. На ёлке шары. Алёна рада."
     ],
     "review": [
       "Ч Ш Ж"
@@ -534,7 +534,7 @@ const LetterCurriculum=(()=>{
       "Андрей"
     ],
     "sentences": [
-      "Андрей пил чай."
+      "Андрей пил чай. Чай тёплый. У Андрея новый чай."
     ],
     "review": []
   },
@@ -554,7 +554,7 @@ const LetterCurriculum=(()=>{
       "Михаил"
     ],
     "sentences": [
-      "Михаил ел хлеб."
+      "Михаил ел хлеб. Хлеб мягкий. Мама дала Михаилу хлеб."
     ],
     "review": []
   },
@@ -573,7 +573,7 @@ const LetterCurriculum=(()=>{
       "Юра"
     ],
     "sentences": [
-      "Юля моет чашку."
+      "Юля моет чашку. Юра налил воду. Чашка чистая."
     ],
     "review": []
   },
@@ -593,7 +593,7 @@ const LetterCurriculum=(()=>{
       "Федя"
     ],
     "sentences": [
-      "У Феди фонарь."
+      "У Феди фонарь. Федя идёт домой. Фонарь горит."
     ],
     "review": []
   },
@@ -613,7 +613,7 @@ const LetterCurriculum=(()=>{
       "Цапля"
     ],
     "sentences": [
-      "На улице цветы."
+      "На улице цветы. У крыльца розы. Отец полил цветы."
     ],
     "review": [
       "Ф Ю Х"
@@ -634,7 +634,7 @@ const LetterCurriculum=(()=>{
       "Эдик"
     ],
     "sentences": [
-      "У Эммы экран."
+      "У Эммы экран. Эмма рисует дом. Это дом Эммы."
     ],
     "review": []
   },
@@ -654,7 +654,7 @@ const LetterCurriculum=(()=>{
       "Роща"
     ],
     "sentences": [
-      "Щука плыла."
+      "В реке щука. Щука плыла у камыша. У берега роща."
     ],
     "review": []
   },
@@ -673,7 +673,7 @@ const LetterCurriculum=(()=>{
       "ПОДЪЕЗД"
     ],
     "sentences": [
-      "У дома подъезд."
+      "Это подъезд. У подъезда клён. Мы вошли в подъезд."
     ],
     "review": [
       "Ь Ы И"

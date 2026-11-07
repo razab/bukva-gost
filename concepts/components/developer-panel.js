@@ -6,7 +6,7 @@ class LearnerComposition extends PageComposition {
   // Migrate only an exact old automatic text set. Preserve explicit author rows,
   // part exclusions, picture choices, and the original composition as an archive.
   const old=LearnerExperience.legacyLayout(super.defaults(index));
-  if(value?.textRowsCustomized===false&&JSON.stringify(value.textRows)===JSON.stringify(old.textRows)){
+  if(this.canMigrate!==false&&value?.textRowsCustomized===false&&JSON.stringify(value.textRows)===JSON.stringify(old.textRows)){
    try{const raw=localStorage.getItem(this.key),archive=this.key+'-before-short-practice-v2';if(raw&&!localStorage.getItem(archive))localStorage.setItem(archive,raw)}catch{this.onSaveError()}
    const next=this.defaults(index);value={...value,textRows:next.textRows,sequence:next.sequence,nextTextRowId:Math.max(value.nextTextRowId||1,next.nextTextRowId)};
   }
@@ -30,6 +30,6 @@ const DeveloperPanel={
   $('composition-legacy').onclick=()=>{if(activePointer!==null)return;const old=new PageComposition({letter:activeLetter});editComposition(old.get(variant))};
   $('clear-all').onclick=()=>{if(activePointer!==null||!Object.values(data).some(s=>s.length))return;snapshot();data={};save();refresh()};this.sync()
  },
- sync(){document.querySelectorAll('.variants button').forEach((button,index)=>button.setAttribute('aria-pressed',String(index===variant)));try{const key=activeLetter==='А'?'letter-page-composition-v1':'letter-page-composition-v2-'+activeLetter.codePointAt(0).toString(16),button=document.querySelector('#composition-legacy');if(button)button.disabled=localStorage.getItem(key)===null}catch{}for(const key of Object.keys(preferenceDefaults)){const control=document.querySelector('#setting-'+key),output=document.querySelector('#value-'+key);if(control)control.value=preferences[key];if(output)output.textContent=preferenceValue(key,preferences[key])}LearnerExperience.syncLevels()},
+ sync(){const badge=document.querySelector('#developer-build');if(badge)badge.textContent='Разработка · '+worksheetBuild;document.querySelectorAll('.variants button').forEach((button,index)=>button.setAttribute('aria-pressed',String(index===variant)));try{const key=activeLetter==='А'?'letter-page-composition-v1':'letter-page-composition-v2-'+activeLetter.codePointAt(0).toString(16),button=document.querySelector('#composition-legacy');if(button)button.disabled=localStorage.getItem(key)===null}catch{}for(const key of Object.keys(preferenceDefaults)){const control=document.querySelector('#setting-'+key),output=document.querySelector('#value-'+key);if(control)control.value=preferences[key];if(output)output.textContent=preferenceValue(key,preferences[key])}LearnerExperience.syncLevels()},
  render(){composition.renderEditor({pictureRoot:document.querySelector('#picture-picker'),elementRoot:document.querySelector('#element-picker'),sequenceRoot:document.querySelector('#sequence-picker'),layout:composition.get(variant),onChange:editComposition})}
 };

@@ -277,7 +277,7 @@ editorRow('row-1').children[4].onclick();assert.equal(run('composition.get(0).te
 app.nodes['sequence-picker'].children.find(n=>n.className==='add-text-row').onclick();assert.equal(run('composition.get(0).textRows[1].id'),'row-2');assert.equal(textSurface('row-2').output.textContent,'—');
 // Two identical texts on different rows must have independent writing surfaces.
 editorRow('row-2').children[2].value='ААА';editorRow('row-2').children[2].onchange();const duplicateSpec=run("LetterSequence.compose('ААА',sequenceSources,{gap:20})");for(const line of duplicateSpec.model)draw(textSurface('row-2').canvas,line);assert.equal(textSurface('row-2').output.textContent,'100%');assert.equal(textSurface('primary').output.textContent,'—');
-assert.equal(run("LetterSequence.normalizeText(' аа   АА ')"),'аа АА');assert.equal(run("LetterSequence.normalizeText('а'.repeat(25))"),null);assert.equal(run("LetterSequence.normalizeText('   ')"),null);
+assert.equal(run("LetterSequence.normalizeText(' аа   АА ')"),'аа АА');assert.equal(run("LetterSequence.normalizeText('а'.repeat(120))").length,120);assert.equal(run("LetterSequence.normalizeText('а'.repeat(121))"),null);assert.equal(run("LetterSequence.normalizeText('   ')"),null);
 const disabledOld=boot({'letter-page-composition-v1':JSON.stringify({version:1,variants:{0:{elementsVersion:2,elements:[],sequence:null}}})});assert.equal(disabledOld.run('composition.get(0).textRows[0].enabled'),false);
 assert.equal(run('composition.validate({textRows:[]},0).textRows.length'),0);
 assert.equal(run('composition.validate({textRows:[{id:"primary",text:"АА",repeats:2},{id:"primary",text:"аа",repeats:3},{id:"bad",text:"АА",repeats:2}]},0).textRows.length'),1);
