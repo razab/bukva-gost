@@ -31,12 +31,12 @@ const message=document.querySelector('#message');
 const writingTimes=new WritingTimes(localStorage,()=>{message.textContent='Время письма остаётся в этой вкладке; сохранить его не удалось.'});
 let composition;const compositions=new Map();
 function editComposition(patch){if(activePointer!==null)return;composition.update(variant,patch);const oldHistory=history;build(variant);history=oldHistory;refresh()}
-const worksheetBuild='2026-11-07.56';
+const worksheetBuild='2026-11-14.57';
 const practiceGeometry=size=>({width:size*1.5,height:size*1.8});
-const preferenceDefaults=Object.freeze({size:118,bold:100,tolerance:8,rowGap:22,columnGap:12,letterGap:20,leftInset:15,penWidth:3,smoothing:0});
-const preferenceLimits={size:[30,160],bold:[100,150],tolerance:[.5,16],rowGap:[0,80],columnGap:[0,60],letterGap:[0,50],leftInset:[0,30],penWidth:[.5,8],smoothing:[0,2]};
+const preferenceDefaults=Object.freeze({size:118,bold:100,tolerance:8,rowGap:22,columnGap:12,letterGap:20,leftInset:15,penWidth:3,smoothing:0,practiceRepeats:0});
+const preferenceLimits={size:[30,160],bold:[100,150],tolerance:[.5,16],rowGap:[0,80],columnGap:[0,60],letterGap:[0,50],leftInset:[0,30],penWidth:[.5,8],smoothing:[0,2],practiceRepeats:[0,10]};
 function preferenceValue(key,value){if(key==='smoothing')return ['Без сглаживания','Мягкое','Сильнее'][value];return (key==='tolerance'?'±':'')+value+(key==='letterGap'?'% высоты заглавной':key==='leftInset'?'% строки':key==='bold'?'%':' px')}
-function validPreferences(value){const out={...preferenceDefaults};if(value&&typeof value==='object')for(const key of Object.keys(out)){const n=value[key];if(typeof n==='number'&&Number.isFinite(n))out[key]=Math.max(preferenceLimits[key][0],Math.min(preferenceLimits[key][1],key==='smoothing'?Math.round(n):n))}return out}
+function validPreferences(value){const out={...preferenceDefaults};if(value&&typeof value==='object')for(const key of Object.keys(out)){const n=value[key];if(typeof n==='number'&&Number.isFinite(n))out[key]=Math.max(preferenceLimits[key][0],Math.min(preferenceLimits[key][1],key==='smoothing'||key==='practiceRepeats'?Math.round(n):n))}return out}
 function readPreferences(){
  try{
   const saved=JSON.parse(localStorage.getItem('letter-preferences-v1')||'null'),result=validPreferences(saved);
@@ -167,12 +167,13 @@ function build(index,letter=activeLetter){if(activePointer!==null)return;stopDem
  try{localStorage.setItem('drawing-active-letter-v1',letter)}catch{}
  const reference=LetterReferences[letter];document.querySelector('#reference').src=reference.src;document.querySelector('#reference').alt=reference.word;document.querySelector('#reference-word').innerHTML=[...reference.word].map(c=>c.toUpperCase()===letter?'<b>'+c+'</b>':c).join('');
  if(changed){[...document.querySelectorAll('.letters button')].find(b=>b.dataset.letter===letter)?.scrollIntoView?.({block:'nearest',inline:'center'});if(typeof window!=='undefined')window.scrollTo({top:0})}
- document.body.dataset.variant=index;document.querySelectorAll('.variants button').forEach((b,i)=>b.setAttribute('aria-pressed',i===index));const root=document.querySelector('#practice');root.replaceChildren();const rows=2,columns=learnerMode?3:5;
+ document.body.dataset.variant=index;document.querySelectorAll('.variants button').forEach((b,i)=>b.setAttribute('aria-pressed',i===index));const root=document.querySelector('#practice');root.replaceChildren();const columns=learnerMode?(preferences.practiceRepeats||3):5;
  const layout=composition.get(index);
  const core=learnerMode?LearnerExperience.core(layout):null,additional=learnerMode?LearnerExperience.additional():null;
- if(!learnerMode||DeveloperPanel.visible)composition.renderEditor({pictureRoot:document.querySelector('#picture-picker'),elementRoot:document.querySelector('#element-picker'),sequenceRoot:document.querySelector('#sequence-picker'),layout,onChange:editComposition});
+ if(learnerMode){if(DeveloperPanel.visible)DeveloperPanel.render(layout)}
+ else composition.renderEditor({pictureRoot:document.querySelector('#picture-picker'),elementRoot:document.querySelector('#element-picker'),sequenceRoot:document.querySelector('#sequence-picker'),layout,onChange:editComposition});
  const addCell=(row,id,model,label)=>{const cell=PracticeElement.createCell({row,id,model,label,guide:learnerMode&&id.startsWith('independent-')?model=>PracticeElement.anchorMarkup(model,preferences):guide,setupSurface,preferences,rulingLevels});surfaces.push(cell.surface);return cell};
- const mountElements=(character,stage)=>{for(const block of layout.elements){const def=WorksheetCatalog.elements.find(d=>d.id===block.component);if(def.letters.includes(character)){const optional=learnerMode&&!core.elements.has(block.component),start=surfaces.length,row=PracticeElement.mount({root:optional?additional.root:root,definition:def,repeats:block.repeats,addCell});row.dataset.lessonStage=stage;for(const surface of surfaces.slice(start))surface.additional=optional}}};
+ const mountElements=(character,stage)=>{for(const block of layout.elements){const def=WorksheetCatalog.elements.find(d=>d.id===block.component);if(def.letters.includes(character)){const optional=learnerMode&&!core.elements.has(block.component),start=surfaces.length,row=PracticeElement.mount({root:optional?additional.root:root,definition:def,repeats:(learnerMode&&preferences.practiceRepeats)||block.repeats,addCell});row.dataset.lessonStage=stage;for(const surface of surfaces.slice(start))surface.additional=optional}}};
  const mountLetters=(character,model,stage,prefix)=>{const row=document.createElement('div');row.className='row';row.dataset.lessonStage=stage;for(let c=0;c<columns;c++)addCell(row,`gost-file-b90-${prefix}-${c}`,model,`Буква ${character}, проба ${c+1}`);root.append(row)};
  const mountTexts=stage=>{for(const configuration of layout.textRows)if(configuration.enabled&&!configuration.deferred&&configuration.stage===stage){const optional=learnerMode&&!core.texts.has(configuration.id);surfaces.push(...LetterSequence.mount({root:optional?additional.root:root,availableWidth:root.clientWidth,configuration,sources:sequenceSources,guide,fontOutline,setupSurface,preferences,rulingLevels}).map(surface=>({...surface,additional:optional})))}};
  mountElements(activeLetter.toLowerCase(),'lower-elements');

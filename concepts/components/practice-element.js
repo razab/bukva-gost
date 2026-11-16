@@ -11,7 +11,7 @@ const PracticeElement={
   return `element-v1-${component}-${index}`;
  },
  mount({root,definition,repeats,addCell}){
-  if(!definition||![3,4,5].includes(repeats))throw new Error('Invalid practice component');
+  if(!definition||!Number.isInteger(repeats)||repeats<1||repeats>10)throw new Error('Invalid practice component');
   const row=document.createElement('div');row.className='row warmup';row.setAttribute('aria-label',definition.name);row.dataset.component=definition.id;
   for(let i=0;i<repeats;i++)addCell(row,this.key(definition.id,i),definition.model,`${definition.name}, проба ${i+1}`);
   root.append(row);return row;

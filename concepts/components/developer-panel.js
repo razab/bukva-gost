@@ -23,7 +23,11 @@ const DeveloperPanel={
   const $=id=>document.querySelector('#'+id);
   $('open-developer').onclick=()=>{if(activePointer!==null)return;$('parent-panel').close();this.visible=true;this.sync();this.render();$('developer-panel').showModal()};
   $('close-developer').onclick=()=>{this.visible=false;$('developer-panel').close()};$('developer-panel').addEventListener('close',()=>{this.visible=false});
-  for(const key of Object.keys(preferenceDefaults))bindPreferenceControl(key,$('setting-'+key));
+  for(const key of Object.keys(preferenceDefaults)){
+   if(key!=='practiceRepeats')bindPreferenceControl(key,$('setting-'+key));
+  }
+  const repeats=$('setting-practiceRepeats');
+  repeats.onchange=()=>configure({practiceRepeats:Number(repeats.value)});
   names.forEach((name,index)=>{const button=document.createElement('button');button.type='button';button.textContent=name;button.onclick=()=>{if(activePointer!==null)return;try{localStorage.setItem('gost-developer-style-v1',JSON.stringify(index))}catch{}build(index)};document.querySelector('.variants').append(button)});
   $('settings-defaults').onclick=()=>{if(activePointer!==null)return;try{localStorage.removeItem(this.key)}catch{}configure({...LearnerExperience.preferences,tolerance:LearnerExperience.levels[LearnerExperience.level].tolerance},{persist:false})};
   $('settings-legacy').onclick=()=>{if(activePointer!==null)return;try{const old=JSON.parse(localStorage.getItem('letter-preferences-v1')||'null');if(old&&typeof old==='object')configure(validPreferences(old));else message.textContent='Прежних технических настроек здесь нет.'}catch{message.textContent='Не удалось прочитать прежние настройки.'}};
@@ -31,5 +35,5 @@ const DeveloperPanel={
   $('clear-all').onclick=()=>{if(activePointer!==null||!Object.values(data).some(s=>s.length))return;snapshot();data={};save();refresh()};this.sync()
  },
  sync(){const badge=document.querySelector('#developer-build');if(badge)badge.textContent='Разработка · '+worksheetBuild;document.querySelectorAll('.variants button').forEach((button,index)=>button.setAttribute('aria-pressed',String(index===variant)));try{const key=activeLetter==='А'?'letter-page-composition-v1':'letter-page-composition-v2-'+activeLetter.codePointAt(0).toString(16),button=document.querySelector('#composition-legacy');if(button)button.disabled=localStorage.getItem(key)===null}catch{}for(const key of Object.keys(preferenceDefaults)){const control=document.querySelector('#setting-'+key),output=document.querySelector('#value-'+key);if(control)control.value=preferences[key];if(output)output.textContent=preferenceValue(key,preferences[key])}LearnerExperience.syncLevels()},
- render(){composition.renderEditor({pictureRoot:document.querySelector('#picture-picker'),elementRoot:document.querySelector('#element-picker'),sequenceRoot:document.querySelector('#sequence-picker'),layout:composition.get(variant),onChange:editComposition})}
+ render(layout=composition.get(variant)){composition.renderEditor({pictureRoot:document.querySelector('#picture-picker'),elementRoot:document.querySelector('#element-picker'),sequenceRoot:document.querySelector('#sequence-picker'),layout,practiceRepeats:preferences.practiceRepeats,onChange:editComposition})}
 };

@@ -1,6 +1,6 @@
 const LearnerExperience={
  // Default teaching profile. Difficulty and explicit developer overrides are global.
- preferences:Object.freeze({size:92,bold:100,tolerance:8,rowGap:16,columnGap:16,letterGap:20,leftInset:15,penWidth:3,smoothing:0}),
+ preferences:Object.freeze({size:92,bold:100,tolerance:8,rowGap:16,columnGap:16,letterGap:20,leftInset:15,penWidth:3,smoothing:0,practiceRepeats:0}),
  independent:false,ready:false,fullGuide:true,level:'standard',
  levels:Object.freeze({easy:{tolerance:12},standard:{tolerance:8},precise:{tolerance:4},ideal:{tolerance:2},impossible:{tolerance:1}}),
  readUI(){try{const saved=JSON.parse(localStorage.getItem('gost-learner-ui-preferences-v1')||'null');if(Object.hasOwn(this.levels,saved?.level))this.level=saved.level}catch{}this.fullGuide=true},

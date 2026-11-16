@@ -6,6 +6,57 @@ let app=boot(saved),run=s=>app.run(s);assert.equal(run('learnerMode'),true);asse
 const row=stage=>app.nodes.practice.children.find(r=>r.dataset.lessonStage===stage);
 function fire(canvas,type,p){const frame=JSON.parse(canvas.attrs['data-view-box']),r=canvas.getBoundingClientRect();canvas.emit(type,[(p[0]-frame.x)/frame.width*r.width,(p[1]-frame.y)/frame.height*r.height])}
 function draw(canvas,stroke){fire(canvas,'pointerdown',stroke[0]);for(const p of stroke.slice(1))fire(canvas,'pointermove',p);fire(canvas,'pointerup',stroke.at(-1))}
+// The actual developer control changes only guided letters and enabled parts.
+{
+ const practiceRows=(root=app.nodes.practice)=>root.children.flatMap(n=>[
+  ...(/^(upper|lower)-(letter|elements)$/.test(n.dataset.lessonStage)?[n]:[]),
+  ...practiceRows(n)
+ ]);
+ const otherFields=()=>run('JSON.stringify(surfaces.map(s=>s.id).filter(id=>!/^(gost-file-b90-|element-v1-)/.test(id)))');
+ const setRepeats=value=>{const select=app.nodes['setting-practiceRepeats'];select.value=String(value);select.onchange()};
+ app=boot({});
+ run('editComposition({elements:composition.get(0).elements.slice(1).map(e=>({...e,repeats:4}))})');
+ app.nodes['try-independent'].onclick();
+ app.nodes['open-developer'].onclick();
+ const expectedRows=practiceRows().map(r=>[r.dataset.lessonStage,r.dataset.component]);
+ const expectedCounts=practiceRows().map(r=>r.children.length),originalOther=otherFields();
+ const composition=app.saved['gost-learner-composition-v1-410'];
+ const originalCell=row('upper-letter').children[0].parts;
+ for(const line of run('models'))draw(originalCell.canvas,line);
+ setRepeats(6);
+ assert.deepEqual(practiceRows().map(r=>[r.dataset.lessonStage,r.dataset.component]),expectedRows);
+ assert(practiceRows().every(r=>r.children.length===6));
+ assert(app.nodes['element-picker'].children.every(r=>r.children[3].disabled));
+ assert.equal(otherFields(),originalOther);
+ assert.equal(row('upper-letter').children[0].parts.output.textContent,'100%');
+ const lastCell=row('upper-letter').children[5].parts;
+ for(const line of run('models'))draw(lastCell.canvas,line);
+ setRepeats(2);
+ assert(practiceRows().every(r=>r.children.length===2));
+ assert.equal(otherFields(),originalOther);
+ assert.equal(row('upper-letter').children[0].parts.output.textContent,'100%');
+ setRepeats(6);
+ assert.equal(row('upper-letter').children[5].parts.output.textContent,'100%');
+ setRepeats(0);
+ assert.deepEqual(practiceRows().map(r=>r.children.length),expectedCounts);
+ assert(app.nodes['element-picker'].children.some(r=>!r.children[3].disabled));
+ assert.equal(app.saved['gost-learner-composition-v1-410'],composition);
+ for(const boundary of [1,10]){
+  setRepeats(boundary);
+  assert(practiceRows().every(r=>r.children.length===boundary));
+ }
+ run("build(0,'О')");
+ assert(practiceRows().every(r=>r.children.length===10));
+ app=boot(app.saved);
+ assert.equal(run('activeLetter'),'О');
+ assert.equal(Number(app.nodes['setting-practiceRepeats'].value),10);
+ assert(practiceRows().every(r=>r.children.length===10));
+ app.nodes['settings-defaults'].onclick();
+ assert(practiceRows().every(r=>r.children.length===3));
+ console.log('PASS: global practice repeats on letters and parts, unchanged composition/text/independent, hidden ink returns, bounds, other lesson, reload and defaults');
+ if(process.env.PRACTICE_REPEATS_CANARY==='1')process.exit(0);
+ app=boot(saved);
+}
 let cell=row('upper-letter').children[0].parts,model=run('models');draw(cell.canvas,model[0]);assert.equal(cell.output.dataset.band,'pending');assert.equal(app.nodes['finish-session'].disabled,false);draw(cell.canvas,model[1]);assert.equal(cell.output.textContent,'100%');assert.equal(cell.output.dataset.band,'green');
 cell.output.onclick();assert.equal(cell.button.hidden,false);cell.button.onclick();assert.equal(cell.output.textContent,'—');app.nodes.undo.onclick();assert.equal(cell.output.textContent,'100%');
 const tracing=run('JSON.stringify(data)');app.nodes['try-independent'].onclick();let block=app.nodes.practice.children.find(r=>r.id==='independent-practice');assert(block);let independent=block.children[1].children[1].parts;assert(!independent.canvas.attrs['data-surface-id'].includes('upper-0'));assert(!block.children[1].children[1].html.includes('class="corridor"'));assert.equal(independent.output.textContent,'—');
