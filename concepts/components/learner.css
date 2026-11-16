@@ -18,7 +18,7 @@
 @media(max-width:430px){.learner .appbar button{font-size:13px;padding-inline:6px}}
 .learner .manual-tolerance{margin:0 0 16px;padding:0;display:block}
 .learner .manual-tolerance label{min-width:0}
-.learner .manual-tolerance input{touch-action:pan-y;min-height:44px}
+.learner .manual-tolerance input{touch-action:pan-y;min-height:48px}
 .level-options small{font-size:13px;font-weight:400;color:#516e5d}
 .level-current{font-size:15px;font-weight:650;padding:10px 12px;margin:0 0 16px;background:#edf4ec;border-radius:10px;color:#294e3b}
 .learner .level-options button{position:relative}
@@ -64,8 +64,7 @@
 
 .live-loupe .loupe-feedback path{fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:calc(var(--ink-width,3px)*var(--loupe-zoom));vector-effect:non-scaling-stroke}
 .live-loupe .loupe-feedback .missing-ink{stroke-dasharray:4 4}
-.level-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.level-options span{font-size:13px;line-height:1.25;overflow-wrap:anywhere}
-@media(min-width:560px){.level-options{grid-template-columns:repeat(5,minmax(0,1fr))}}
+.level-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}.technical-difficulty>summary{min-height:48px;box-sizing:border-box;line-height:28px}.technical-difficulty .level-options{grid-template-columns:repeat(2,minmax(0,1fr))}.level-options span{font-size:13px;line-height:1.25;overflow-wrap:anywhere}.learner .level-options button{min-height:48px}
 
 /* One empty row of scroll room after all work and footer controls. */
 body.learner[data-variant] .sheet{padding-bottom:max(140px,calc(var(--cell-height,165.6px) + 44px + var(--practice-row-gap,16px) + env(safe-area-inset-bottom,0px)))}
@@ -73,7 +72,7 @@ body.learner[data-variant] .sheet{padding-bottom:max(140px,calc(var(--cell-heigh
 .session-statistics{margin:16px 0}.session-stat{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr);gap:12px;align-items:center;padding:12px 0;border-top:1px solid #dce7dd}.session-stat dt{font-size:15px;font-weight:600}.session-stat dd{margin:0;text-align:right;font-size:17px;font-variant-numeric:tabular-nums}.session-stat small{display:block;margin-top:4px;font-size:12px;color:#6a8071}.session-stat svg{display:block;width:32px;height:38px}.session-stat-total dd{font-weight:650}#result-statistics-note{font-size:12px;line-height:1.5}
 
 /* Only completed guided work supplies a rate; blank tiles keep the same size. */
-.learner button.lesson-tile{position:relative}.lesson-tile .lesson-rate{min-height:16px;line-height:16px;font-variant-numeric:tabular-nums}.lesson-tile .lesson-rate-track{position:absolute;left:10px;right:10px;bottom:5px;height:5px;border-radius:4px;overflow:hidden;pointer-events:none}.lesson-rate-track[data-band=green]{background:#dcebdd;--rate-color:#347356}.lesson-rate-track[data-band=yellow]{background:#efdda2;--rate-color:#b58620}.lesson-rate-fill{display:block;height:100%;width:var(--lesson-rate);background:var(--rate-color)}
+.learner button.lesson-tile{position:relative}.lesson-tile .lesson-rate{min-height:32px;line-height:16px;color:#426052;font-variant-numeric:tabular-nums}.lesson-tile .lesson-rate-track{position:absolute;left:10px;right:10px;bottom:5px;height:5px;border-radius:4px;overflow:hidden;pointer-events:none}.lesson-rate-track[data-band=green]{background:#dcebdd;--rate-color:#347356}.lesson-rate-track[data-band=yellow]{background:#efdda2;--rate-color:#b58620}.lesson-rate-fill{display:block;height:100%;width:var(--lesson-rate);background:var(--rate-color)}
 
 /* Each form keeps its moving example left and a stable writing scheme right. */
 #sample-panel{width:min(760px,calc(100% - 24px));max-width:760px}
