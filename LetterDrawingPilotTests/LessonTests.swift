@@ -1,9 +1,62 @@
 import UIKit
 import WebKit
 import XCTest
+import SQLite3
 
 final class LessonTests: XCTestCase {
     private let field = "document.querySelector('canvas[aria-label=\"Буква А, проба 1\"]')"
+
+    @MainActor
+    func testCourseNavigationAndBackupData() async throws {
+        let web = try await loadedLesson()
+        let valid = try await web.evaluateJavaScript("""
+            (() => {
+                for (const letter of ['А', 'О']) {
+                    build(0, letter);
+                    data['gost-file-b90-upper-0'] = models.map(line => line.map(([x,y]) => [x/150,y/180]));
+                    save(); refresh();
+                    document.querySelector('#finish-session').click();
+                    document.querySelector('#session-result').close();
+                }
+                const backup = LocalBackup.parse(LocalBackup.export(localStorage));
+                const good = backup.fields >= 2 && ['А','О'].every(letter => LearnerExperience.store().sessions(letter).length > 0);
+                build(0, 'А');
+                document.querySelector('#choose-letter').click();
+                const tiles = document.querySelectorAll('#lesson-grid button').length;
+                document.querySelector('#lesson-picker').close();
+                return good && tiles === 33 && document.querySelector('#show-progress').offsetWidth > 0;
+            })();
+            """) as? Bool
+        XCTAssertEqual(valid, true)
+        try await assertDurableEntries(in: web)
+    }
+
+    @MainActor
+    func testFullCourseResources() async throws {
+        let web = try await loadedLesson()
+        let failures = try await web.callAsyncJavaScript("""
+            const original = preferences.practiceRepeats;
+            configure({practiceRepeats: 6});
+            const failures = [];
+            for (const letter of LetterCurriculum.order) {
+                build(0, letter);
+                await document.querySelector('#reference').decode();
+                document.querySelector('#open-sample').click();
+                const rows = [...document.querySelectorAll('[data-lesson-stage]')]
+                    .filter(row => /^(upper|lower)-(letter|elements)$/.test(row.dataset.lessonStage));
+                if (!rows.length || !rows.every(row => row.querySelectorAll('canvas').length === 6) ||
+                    !document.querySelector('#scheme-upper path') || !document.querySelector('#scheme-lower path') ||
+                    !document.querySelector('#art-guide path')) failures.push(letter);
+                document.querySelector('#sample-panel').close();
+                await new Promise(requestAnimationFrame);
+            }
+            if (LetterCurriculum.order.length !== 33) failures.push('count');
+            build(0, 'А');
+            configure({practiceRepeats: original});
+            return failures;
+            """, arguments: [:], in: nil, contentWorld: .page) as? [String]
+        XCTAssertEqual(failures, [])
+    }
 
     @MainActor
     func testPracticeRepeatsPersist() async throws {
@@ -132,6 +185,38 @@ final class LessonTests: XCTestCase {
             Number.parseInt(\(field).closest('.cell').querySelector('.score').textContent, 10);
             """) as? Int
         XCTAssertGreaterThanOrEqual(score ?? 0, 90)
+    }
+
+    @MainActor
+    private func assertDurableEntries(in web: WKWebView) async throws {
+        let json = try await web.evaluateJavaScript("JSON.stringify(JSON.parse(LocalBackup.export(localStorage)).entries)") as! String
+        let expected = try JSONSerialization.jsonObject(with: Data(json.utf8)) as! [String: String]
+        let library = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask)[0].appendingPathComponent("WebKit")
+        for _ in 0..<100 {
+            if let files = FileManager.default.enumerator(at: library, includingPropertiesForKeys: nil) {
+                for case let file as URL in files where file.lastPathComponent == "localstorage.sqlite3" {
+                    var database: OpaquePointer?
+                    guard sqlite3_open_v2(file.path, &database, SQLITE_OPEN_READONLY, nil) == SQLITE_OK else {
+                        sqlite3_close(database)
+                        continue
+                    }
+                    var statement: OpaquePointer?
+                    var stored: [String: String] = [:]
+                    if sqlite3_prepare_v2(database, "SELECT key,value FROM ItemTable", -1, &statement, nil) == SQLITE_OK {
+                        while sqlite3_step(statement) == SQLITE_ROW {
+                            guard let key = sqlite3_column_text(statement, 0), let bytes = sqlite3_column_blob(statement, 1) else { continue }
+                            let value = Data(bytes: bytes, count: Int(sqlite3_column_bytes(statement, 1)))
+                            stored[String(cString: key)] = String(data: value, encoding: .utf16LittleEndian)
+                        }
+                    }
+                    sqlite3_finalize(statement)
+                    sqlite3_close(database)
+                    if !expected.isEmpty && expected.allSatisfy({ stored[$0.key] == $0.value }) { return }
+                }
+            }
+            try await Task.sleep(for: .milliseconds(100))
+        }
+        XCTFail("WebKit did not flush the backup entries to durable local storage before test handoff")
     }
 
     @MainActor

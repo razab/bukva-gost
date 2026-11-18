@@ -7,7 +7,9 @@ targets:
     type: application
     platform: iOS
     sources:
-      - LetterDrawingPilot
+      - path: LetterDrawingPilot
+        excludes: [Info.plist]
+      - path: dist/ipad-pilot/Assets.xcassets
       - path: dist/ipad-pilot/Web
         type: folder
         buildPhase: resources
@@ -16,7 +18,9 @@ targets:
         PILOT_BUNDLE_IDENTIFIER: md.dcor.bukvygost.pilot
         PRODUCT_BUNDLE_IDENTIFIER: $(PILOT_BUNDLE_IDENTIFIER)
         GENERATE_INFOPLIST_FILE: YES
-        INFOPLIST_KEY_CFBundleDisplayName: Буквы по ГОСТ · Пилот
+        INFOPLIST_FILE: LetterDrawingPilot/Info.plist
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        INFOPLIST_KEY_CFBundleDisplayName: Буквы по ГОСТ
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: >-
           UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown
@@ -24,7 +28,7 @@ targets:
         TARGETED_DEVICE_FAMILY: '2'
         SWIFT_VERSION: '5.0'
         MARKETING_VERSION: '0.1'
-        CURRENT_PROJECT_VERSION: '3'
+        CURRENT_PROJECT_VERSION: '4'
   LetterDrawingPilotTests:
     type: bundle.unit-test
     platform: iOS

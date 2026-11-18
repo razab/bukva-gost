@@ -27,7 +27,9 @@ struct PilotLesson: UIViewRepresentable {
         Coordinator()
     }
 
-    final class Coordinator: NSObject, WKNavigationDelegate {
+    final class Coordinator: NSObject, WKNavigationDelegate, WKDownloadDelegate, UIDocumentPickerDelegate {
+        private var activeDownload: WKDownload?
+        private var backupURL: URL?
         private let lessonURL = Bundle.main.url(
             forResource: "index", withExtension: "html", subdirectory: "Web"
         )
@@ -46,14 +48,77 @@ struct PilotLesson: UIViewRepresentable {
             decisionHandler: @escaping (WKNavigationActionPolicy) -> Void
         ) {
             let url = navigationAction.request.url
+            if navigationAction.shouldPerformDownload && url?.scheme == "blob" {
+                decisionHandler(.download)
+                return
+            }
             decisionHandler(url == lessonURL || url?.absoluteString == "about:blank" ? .allow : .cancel)
         }
 
+        func webView(_ webView: WKWebView, navigationAction: WKNavigationAction, didBecome download: WKDownload) {
+            guard activeDownload == nil, backupURL == nil else {
+                download.cancel { _ in }
+                return
+            }
+            activeDownload = download
+            download.delegate = self
+        }
+
+        func download(_ download: WKDownload, decideDestinationUsing response: URLResponse,
+                      suggestedFilename: String, completionHandler: @escaping (URL?) -> Void) {
+            let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+            do {
+                try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+                let name = (suggestedFilename as NSString).lastPathComponent
+                let file = directory.appendingPathComponent(name.hasSuffix(".json") ? name : "bukvy-po-gost.json")
+                backupURL = file
+                completionHandler(file)
+            } catch {
+                completionHandler(nil)
+                exportFailed(in: download.webView)
+            }
+        }
+
+        func downloadDidFinish(_ download: WKDownload) {
+            guard activeDownload === download, let backupURL,
+                  let root = download.webView?.window?.rootViewController else {
+                exportFailed(in: download.webView)
+                return
+            }
+            activeDownload = nil
+            let picker = UIDocumentPickerViewController(forExporting: [backupURL], asCopy: true)
+            picker.directoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+            picker.delegate = self
+            root.present(picker, animated: true)
+        }
+
+        func download(_ download: WKDownload, didFailWithError error: Error, resumeData: Data?) {
+            guard activeDownload === download else { return }
+            exportFailed(in: download.webView)
+        }
+
+        func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) { clearExport() }
+
+        func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) { clearExport() }
+
+        private func clearExport() {
+            if let backupURL { try? FileManager.default.removeItem(at: backupURL.deletingLastPathComponent()) }
+            backupURL = nil
+            activeDownload = nil
+        }
+
+        private func exportFailed(in webView: WKWebView?) {
+            clearExport()
+            webView?.evaluateJavaScript("document.querySelector('#backup-summary').textContent='Не удалось сохранить копию. Работы остались на устройстве.';")
+        }
+
         func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+            guard (error as NSError).code != NSURLErrorCancelled else { return }
             showError(in: webView)
         }
 
         func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+            guard (error as NSError).code != NSURLErrorCancelled else { return }
             showError(in: webView)
         }
 
