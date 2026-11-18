@@ -8,7 +8,7 @@ targets:
     platform: iOS
     sources:
       - path: LetterDrawingPilot
-        excludes: [Info.plist]
+        excludes: [Info.plist, Web]
       - path: dist/ipad-pilot/Assets.xcassets
       - path: dist/ipad-pilot/Web
         type: folder
@@ -28,7 +28,7 @@ targets:
         TARGETED_DEVICE_FAMILY: '2'
         SWIFT_VERSION: '5.0'
         MARKETING_VERSION: '0.1'
-        CURRENT_PROJECT_VERSION: '4'
+        CURRENT_PROJECT_VERSION: '5'
   LetterDrawingPilotTests:
     type: bundle.unit-test
     platform: iOS

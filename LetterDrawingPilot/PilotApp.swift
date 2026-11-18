@@ -5,34 +5,110 @@ import WebKit
 struct PilotApp: App {
     var body: some Scene {
         WindowGroup {
-            PilotLesson()
-                .ignoresSafeArea(.container, edges: .bottom)
+            NativeWorkspace()
         }
     }
 }
 
 struct PilotLesson: UIViewRepresentable {
+    let controller: Coordinator
     func makeUIView(context: Context) -> WKWebView {
-        let webView = WKWebView(frame: .zero)
-        webView.navigationDelegate = context.coordinator
-        webView.scrollView.contentInsetAdjustmentBehavior = .never
-        webView.allowsLinkPreview = false
-        context.coordinator.load(in: webView)
-        return webView
+        controller.webView
     }
 
     func updateUIView(_ webView: WKWebView, context: Context) {}
 
     func makeCoordinator() -> Coordinator {
-        Coordinator()
+        controller
     }
 
-    final class Coordinator: NSObject, WKNavigationDelegate, WKDownloadDelegate, UIDocumentPickerDelegate {
+    @MainActor final class Coordinator: NSObject, ObservableObject, WKNavigationDelegate, WKDownloadDelegate, UIDocumentPickerDelegate, WKScriptMessageHandler {
+        let webView = WKWebView(frame: .zero)
+        @Published var state = NativeSnapshot.empty
+        @Published var lessons: [LessonItem] = []
+        @Published var sheet: NativeSheet?
+        @Published var result: NativeResult?
+        @Published var error: String?
+        var controlsUnavailable: Bool { state.preferences.isEmpty || state.writing }
+        private var pending: (() -> Void)?
+        private var lastSheet: NativeSheet?
         private var activeDownload: WKDownload?
         private var backupURL: URL?
         private let lessonURL = Bundle.main.url(
             forResource: "index", withExtension: "html", subdirectory: "Web"
         )
+
+        override init() {
+            super.init()
+            webView.navigationDelegate = self
+            webView.scrollView.contentInsetAdjustmentBehavior = .never
+            webView.allowsLinkPreview = false
+            webView.isOpaque = false
+            webView.backgroundColor = UIColor(red: 1, green: 0.996, blue: 0.98, alpha: 1)
+            webView.scrollView.pinchGestureRecognizer?.isEnabled = false
+            webView.configuration.userContentController.add(WeakLessonHandler(self), name: "nativeLesson")
+            load(in: webView)
+        }
+
+        func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+            guard message.frameInfo.isMainFrame, message.webView === webView,
+                  let body = message.body as? [String: Any],
+                  let data = try? JSONSerialization.data(withJSONObject: body) else { return }
+            do {
+                if body["kind"] as? String == "result" {
+                    result = try JSONDecoder().decode(NativeResult.self, from: data)
+                    present(.result)
+                } else {
+                    let snapshot = try JSONDecoder().decode(NativeSnapshot.self, from: data)
+                    if let catalog = snapshot.lessons { lessons = catalog }
+                    state = snapshot
+                }
+            } catch { self.error = "Не удалось обновить интерфейс: " + error.localizedDescription }
+        }
+
+        func command(_ action: String, _ payload: [String: Any] = [:]) {
+            guard !state.preferences.isEmpty else { return }
+            Task {
+                do { _ = try await webView.callAsyncJavaScript("return await NativeApp.command(action, payload)", arguments: ["action": action, "payload": payload], in: nil, contentWorld: .page) }
+                catch { self.error = "Не удалось выполнить действие: " + error.localizedDescription }
+            }
+        }
+
+        func present(_ destination: NativeSheet) {
+            guard !state.writing, !state.preferences.isEmpty else { return }
+            command("sync")
+            lastSheet = destination
+            sheet = destination
+        }
+
+        func afterDismiss(_ action: @escaping () -> Void) {
+            if sheet == nil { action() } else { pending = action; sheet = nil }
+        }
+
+        func didDismiss() {
+            if lastSheet == .editor { command("editorClosed") }
+            lastSheet = nil
+            let action = pending
+            pending = nil
+            action?()
+        }
+
+        func importBackup(_ url: URL) {
+            Task {
+                let access = url.startAccessingSecurityScopedResource()
+                defer { if access { url.stopAccessingSecurityScopedResource() } }
+                do {
+                    let text = try await Task.detached { () throws -> String in
+                        let maximum = 12 * 1024 * 1024
+                        if (try url.resourceValues(forKeys: [.fileSizeKey]).fileSize ?? 0) > maximum { throw CocoaError(.fileReadTooLarge) }
+                        let data = try Data(contentsOf: url)
+                        guard data.count <= maximum, let text = String(data: data, encoding: .utf8) else { throw CocoaError(.fileReadCorruptFile) }
+                        return text
+                    }.value
+                    command("import", ["text": text, "name": url.lastPathComponent])
+                } catch { self.error = "Не удалось открыть копию: " + error.localizedDescription }
+            }
+        }
 
         func load(in webView: WKWebView) {
             guard let lessonURL else {
@@ -81,7 +157,7 @@ struct PilotLesson: UIViewRepresentable {
 
         func downloadDidFinish(_ download: WKDownload) {
             guard activeDownload === download, let backupURL,
-                  let root = download.webView?.window?.rootViewController else {
+                  var root = download.webView?.window?.rootViewController else {
                 exportFailed(in: download.webView)
                 return
             }
@@ -89,6 +165,7 @@ struct PilotLesson: UIViewRepresentable {
             let picker = UIDocumentPickerViewController(forExporting: [backupURL], asCopy: true)
             picker.directoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
             picker.delegate = self
+            while let presented = root.presentedViewController { root = presented }
             root.present(picker, animated: true)
         }
 
@@ -109,6 +186,7 @@ struct PilotLesson: UIViewRepresentable {
 
         private func exportFailed(in webView: WKWebView?) {
             clearExport()
+            error = "Не удалось сохранить копию. Работы остались на устройстве."
             webView?.evaluateJavaScript("document.querySelector('#backup-summary').textContent='Не удалось сохранить копию. Работы остались на устройстве.';")
         }
 
@@ -127,6 +205,7 @@ struct PilotLesson: UIViewRepresentable {
         }
 
         private func showError(in webView: WKWebView) {
+            error = "Урок не загрузился. Закройте приложение и откройте его снова."
             webView.loadHTMLString("""
                 <!doctype html><html lang="ru"><meta charset="utf-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -134,5 +213,13 @@ struct PilotLesson: UIViewRepresentable {
                 <p>Закройте приложение и откройте его снова.</p></main></html>
                 """, baseURL: nil)
         }
+    }
+}
+
+@MainActor private final class WeakLessonHandler: NSObject, WKScriptMessageHandler {
+    weak var target: PilotLesson.Coordinator?
+    init(_ target: PilotLesson.Coordinator) { self.target = target }
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        target?.userContentController(userContentController, didReceive: message)
     }
 }

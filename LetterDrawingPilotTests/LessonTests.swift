@@ -7,6 +7,37 @@ final class LessonTests: XCTestCase {
     private let field = "document.querySelector('canvas[aria-label=\"Буква А, проба 1\"]')"
 
     @MainActor
+    func testNativeLayoutSizes() async throws {
+        let web = try await loadedLesson()
+        let window = try XCTUnwrap(web.window)
+        let original = window.bounds
+        defer { window.bounds = original; window.rootViewController?.view.frame = original }
+        let ink = try await web.evaluateJavaScript("JSON.stringify(data)") as? String
+        // Windowed iPadOS rejects orientation requests; this is a component size test.
+        for size in [CGSize(width: 1210, height: 834), CGSize(width: 834, height: 1210)] {
+            window.bounds = CGRect(origin: .zero, size: size)
+            window.rootViewController?.view.frame = window.bounds
+            window.layoutIfNeeded()
+            for _ in 0..<40 {
+                let viewport = try await web.evaluateJavaScript("innerWidth") as? Double ?? 0
+                if abs(web.bounds.width - size.width) < 1 && abs(viewport - size.width) < 1 { break }
+                try await Task.sleep(for: .milliseconds(100))
+            }
+            XCTAssertEqual(web.bounds.width, size.width, accuracy: 1)
+            let afterInk = try await web.evaluateJavaScript("JSON.stringify(data)") as? String
+            XCTAssertEqual(afterInk, ink)
+            let viewport = try await web.evaluateJavaScript("innerWidth") as? Double ?? 0
+            XCTAssertEqual(viewport, size.width, accuracy: 1)
+            let fits = try await web.evaluateJavaScript("document.body.scrollWidth <= innerWidth + 1") as? Bool
+            XCTAssertEqual(fits, true)
+            let picture = UIGraphicsImageRenderer(bounds: window.bounds).image { _ in window.drawHierarchy(in: window.bounds, afterScreenUpdates: true) }
+            let attachment = XCTAttachment(image: picture)
+            attachment.name = size.width > size.height ? "native-wide-layout" : "native-tall-layout"
+            attachment.lifetime = .keepAlways; add(attachment)
+        }
+    }
+
+    @MainActor
     func testCourseNavigationAndBackupData() async throws {
         let web = try await loadedLesson()
         let valid = try await web.evaluateJavaScript("""
@@ -24,7 +55,7 @@ final class LessonTests: XCTestCase {
                 document.querySelector('#choose-letter').click();
                 const tiles = document.querySelectorAll('#lesson-grid button').length;
                 document.querySelector('#lesson-picker').close();
-                return good && tiles === 33 && document.querySelector('#show-progress').offsetWidth > 0;
+                return good && tiles === 33 && typeof NativeApp?.command === 'function';
             })();
             """) as? Bool
         XCTAssertEqual(valid, true)
