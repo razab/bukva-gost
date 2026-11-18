@@ -1,5 +1,67 @@
 # Проверка на iPad и с детьми
 
+## Внутренний установленный пилот А/а · 18.11.2026
+
+Пилот использует урок из сборки 58 и загружает его в WKWebView из ресурсов
+приложения. Для локальной сборки нужны Xcode и XcodeGen. Из корня проекта:
+
+```sh
+npm run package:internal
+node scripts/build-ipad-pilot.mjs
+xcodegen generate --spec ipad-pilot.yml
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcodebuild \
+  -project LetterDrawingPilot.xcodeproj -scheme LetterDrawingPilot \
+  -destination 'platform=iOS Simulator,name=iPad Pro 11-inch (M5)' \
+  -derivedDataPath dist/ipad-pilot/DerivedData CODE_SIGNING_ALLOWED=NO build
+```
+
+Опись — `dist/ipad-pilot/resources.json`. Симуляторные результаты и состояние
+проверки устройства — в [OpenSpec](../openspec/changes/ipad-offline-lesson-pilot/tasks.md).
+Снимки и отчёты Xcode — в `reports/ipad-offline-lesson-pilot/`.
+
+Во внутренней сборке 3 вход **Настройки → Для разработки → Общие настройки**
+доступен и на iPad. Здесь «Повторы букв и элементов» меняет количество от 1 до 10.
+«По составу» — стандартный режим с тремя одиночными буквами. Настройки Safari,
+основного пилота и отдельного QA-приложения хранятся независимо; автоматического
+копирования между ними нет. Изменение числа не удаляет сохранённые чернила.
+
+Сборка 0.1 (3) установлена на физический iPad поверх сборки 2. Данные локального
+хранилища до и после установки совпали. Новый полный прогон — 5/5
+(`physical-build-3.xcresult`): добавлены повторы 6 → перезагрузка → прежнее число
+с сохранением raw ink и открытие дев-попапа через экранные кнопки.
+
+### Проверено на физическом iPad 18.11.2026
+
+iPad Pro 11-inch M1, iPadOS 26.6.1, пилот 0.1 (2).
+Отдельная QA-копия (`md.dcor.bukvygost.pilot.qa`) имеет своё хранилище;
+автотесты не сбрасывают работы в основном приложении.
+
+Прогон `physical-tests-2.xcresult`: 4/4 теста прошли. Проверены образец,
+переключение сложности, прокрутка пальцем, поворот и повторный запуск.
+Синтетические pen-события внутри настоящего WKWebView проверили оценку 100%,
+подсказку, сброс, undo и сохранение; портретный снимок подтверждает результат
+после повторного запуска. Дополнительная альбомная проверка прошла (1/1),
+полные снимки обеих ориентаций просмотрены.
+
+Для воспроизведения подключить разблокированный iPad; Xcode должен иметь
+доступ к подписи. Сгенерировать проект командой выше, затем:
+
+```sh
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcodebuild test \
+  -project LetterDrawingPilot.xcodeproj -scheme LetterDrawingPilot \
+  -destination 'platform=iOS,id=<UDID подключённого iPad>' \
+  -derivedDataPath dist/ipad-pilot/PhysicalQADerivedData \
+  -parallel-testing-enabled NO \
+  -allowProvisioningUpdates -allowProvisioningDeviceRegistration \
+  DEVELOPMENT_TEAM=<ваша команда Xcode> CODE_SIGN_STYLE=Automatic \
+  PILOT_BUNDLE_IDENTIFIER=md.dcor.bukvygost.pilot.qa
+```
+
+Настоящее письмо Pencil, ладонь, задержка следа и поворот с активным пером
+остаются ручной аппаратной проверкой. Wi-Fi в автоматическом прогоне включён:
+проверена загрузка из пакета без сервера и сетевых подключений самого урока,
+но не системный авиарежим. Профиль установленного пилота действует до 25.11.2026.
+
 ## Задачи приёмки сборки 56 · 07.11.2026
 
 Программные проверки и физическая приёмка имеют разные результаты. Ни одна

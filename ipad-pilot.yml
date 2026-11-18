@@ -1,0 +1,61 @@
+name: LetterDrawingPilot
+options:
+  deploymentTarget:
+    iOS: '17.0'
+targets:
+  LetterDrawingPilot:
+    type: application
+    platform: iOS
+    sources:
+      - LetterDrawingPilot
+      - path: dist/ipad-pilot/Web
+        type: folder
+        buildPhase: resources
+    settings:
+      base:
+        PILOT_BUNDLE_IDENTIFIER: md.dcor.bukvygost.pilot
+        PRODUCT_BUNDLE_IDENTIFIER: $(PILOT_BUNDLE_IDENTIFIER)
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Буквы по ГОСТ · Пилот
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: >-
+          UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown
+          UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight
+        TARGETED_DEVICE_FAMILY: '2'
+        SWIFT_VERSION: '5.0'
+        MARKETING_VERSION: '0.1'
+        CURRENT_PROJECT_VERSION: '3'
+  LetterDrawingPilotTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources: [LetterDrawingPilotTests]
+    dependencies:
+      - target: LetterDrawingPilot
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: md.dcor.bukvygost.pilot.tests
+        SWIFT_VERSION: '5.0'
+        TEST_HOST: $(BUILT_PRODUCTS_DIR)/LetterDrawingPilot.app/LetterDrawingPilot
+        BUNDLE_LOADER: $(TEST_HOST)
+  LetterDrawingPilotUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [LetterDrawingPilotUITests]
+    dependencies:
+      - target: LetterDrawingPilot
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: md.dcor.bukvygost.pilot.uitests
+        TEST_TARGET_NAME: LetterDrawingPilot
+        SWIFT_VERSION: '5.0'
+schemes:
+  LetterDrawingPilot:
+    build:
+      targets:
+        LetterDrawingPilot: all
+    test:
+      targets:
+        - LetterDrawingPilotTests
+        - LetterDrawingPilotUITests
