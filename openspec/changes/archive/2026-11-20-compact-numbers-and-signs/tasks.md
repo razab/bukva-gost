@@ -7,4 +7,6 @@
 
 ## 3. Verification and delivery
 - [x] 3.1 Run symbol/backup regressions and appropriate existing tests, verify tablet portrait/landscape and native navigation; capture the finished screen.
-- [ ] 3.2 Package, document evidence and limits, synchronize/archive OpenSpec, commit and push.
+- [x] 3.2 Package, document evidence and limits, synchronize/archive OpenSpec, commit and push.
+
+Delivery: implementation `d444b39` pushed to origin/main; iPad build6 installed, three existing records preserved. Device launch/test remains unverified while locked; details in docs/numbers-and-signs.md.
