@@ -9,7 +9,7 @@ assert.deepEqual(mainRows(app).filter(r=>r.dataset.component==='letter-sequence'
 const parts=mainRows(app).filter(r=>/-elements$/.test(r.dataset.lessonStage));assert.equal(parts.length,2);assert(parts.every(r=>r.children.length===3));
 let details=app.nodes.practice.children.find(r=>r.id==='additional-practice');assert(details&&!details.open);assert(descendants(details).some(r=>r.attrs['aria-label']==='она'));
 const word=mainRows(app).find(r=>r.attrs['aria-label']==='он').children[0].parts;
-const spec=app.run("LetterSequence.compose('он',sequenceSources,{gap:preferences.letterGap,bold:preferences.bold})");for(const line of spec.model)draw(word.canvas,line);
+const spec=app.run("LetterSequence.compose('он',sequenceSources,{gap:preferences.letterGap,bold:preferences.bold})");for(const line of app.run(`StrokeDirection.route(LetterSequence.compose('он',sequenceSources,{gap:preferences.letterGap,bold:preferences.bold}).model)`))draw(word.canvas,line);
 assert.equal(word.output.textContent,'100%');const ink=app.run('JSON.stringify(data)');app.nodes['finish-session'].onclick();assert.equal(app.run('LearnerExperience.store().summary().sessions'),1);
 details.open=true;details.handlers.toggle[0]();app.run('configure({size:100})');assert.equal(app.nodes.practice.children.find(r=>r.id==='additional-practice').open,true);
 app=boot(app.saved);assert.equal(app.run('activeLetter'),'Н');assert.equal(app.run('JSON.stringify(data)'),ink);assert.equal(app.run('LearnerExperience.store().summary().sessions'),1);assert.equal(mainRows(app).find(r=>r.attrs['aria-label']==='он').children[0].parts.output.textContent,'100%');

@@ -7,7 +7,7 @@ export const areas={
  sliders:['sliders','manual-tolerance','left-inset','ipad-controls','tolerance-performance'],
  ink:['ink-storage','worksheet','backup'],
  input:['palm-guard','input-policy','tablet-workspace'],
- scoring:['worksheet','manual-tolerance','feedback'],
+ scoring:['direction','worksheet','manual-tolerance','feedback'],
  layout:['worksheet','left-inset','field-render'],
  composition:['worksheet','propisi-flow','short-practice'],
  lessons:['numbers','learner','short-practice','alphabet','lesson-pictures'],

@@ -4,7 +4,7 @@ const boot=saved=>new Function('require','__dirname',h+"return boot(arguments[2]
 function draw(canvas,line){const f=JSON.parse(canvas.attrs['data-view-box']),r=canvas.getBoundingClientRect(),points=line.map(([x,y])=>[(x-f.x)/f.width*r.width,(y-f.y)/f.height*r.height]);canvas.emit('pointerdown',points[0]);for(const p of points.slice(1))canvas.emit('pointermove',p);canvas.emit('pointerup',points.at(-1))}
 let app=boot();const upper=()=>app.nodes.practice.children.find(r=>r.dataset.lessonStage==='upper-letter').children[0].parts;
 assert.equal(app.nodes['level-current'].textContent,'Выбрано: Обычно');
-for(const line of app.run('models'))draw(upper().canvas,line);
+for(const line of app.run('demonstrationFor(models)'))draw(upper().canvas,line);
 const canvas=upper().canvas,rows=[...app.nodes.practice.children],ink=app.run('JSON.stringify(data)'),history=app.run('history.length'),oldFrame=canvas.attrs['data-view-box'],demo=app.nodes.demo.html;
 let writes=0,paints=0;const write=app.context.localStorage.setItem;app.context.localStorage.setItem=(...args)=>{writes++;write(...args)};canvas.context.setTransform=()=>paints++;
 app.run("stopDemo=()=>{throw Error('Tolerance must not restart the demonstration')}");
@@ -24,7 +24,7 @@ app.nodes['setting-tolerance'].oninput({target:{value:'1.5'}});assert.equal(app.
 app=boot();const text=app.run("LetterCurriculum.lesson('М').examples.sentences[0]"),spec=app.run(`LetterSequence.compose(${JSON.stringify(text)},sequenceSources,{gap:20,bold:100})`),bounds=app.run("sequenceSources"),letters=text.replace(/ /g,'');
 const span=Math.max(...spec.glyphs.map((g,i)=>g.x+bounds[letters[i]].bounds[1]))-Math.min(...spec.glyphs.map((g,i)=>g.x+bounds[letters[i]].bounds[0]));app.nodes.practice.clientWidth=(span*.92+20)/.85;app.run("configure({tolerance:.5});build(0,'М')");
 const sentence=()=>app.nodes.practice.children.find(r=>r.attrs['aria-label']===text).children[0].parts;
-const old=sentence().canvas,id=old.attrs['data-surface-id'];assert(!id.includes('-wrap'));for(const line of spec.model)draw(old,line);const stored=app.run(`JSON.stringify(data[${JSON.stringify(id)}])`);
+const old=sentence().canvas,id=old.attrs['data-surface-id'];assert(!id.includes('-wrap'));for(const line of app.run(`StrokeDirection.route(LetterSequence.compose(${JSON.stringify(text)},sequenceSources,{gap:20,bold:100}).model)`))draw(old,line);const stored=app.run(`JSON.stringify(data[${JSON.stringify(id)}])`);
 app.nodes['setting-tolerance'].oninput({target:{value:'16'}});assert.equal(sentence().canvas,old);app.nodes['setting-tolerance'].onchange({target:{value:'16'}});assert(sentence().canvas.attrs['data-surface-id'].includes('-wrap'));assert.equal(app.run(`JSON.stringify(data[${JSON.stringify(id)}])`),stored);
 app.run('configure({tolerance:.5})');assert.equal(sentence().canvas.attrs['data-surface-id'],id);assert.equal(sentence().output.textContent,'100%');
 console.log('PASS: clear preset/custom selection; preset commit preserves canvas; keyboard/blur persistence; real wrap boundary only recomposes on commit and restores old ink when returning');

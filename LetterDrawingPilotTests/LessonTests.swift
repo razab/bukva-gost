@@ -7,6 +7,59 @@ final class LessonTests: XCTestCase {
     private let field = "document.querySelector('canvas[aria-label=\"Буква А, проба 1\"]')"
 
     @MainActor
+    func testLetterSwitchPerformance() async throws {
+        let web = try await loadedLesson()
+        let report = try await web.evaluateJavaScript("""
+            (()=>{
+                const timings=[],original=activeLetter,phases={};
+                const wrap=(object,key)=>{const fn=object[key];object[key]=function(...args){const start=performance.now();try{return fn.apply(this,args)}finally{phases[key]=(phases[key]||0)+performance.now()-start}};return ()=>object[key]=fn};
+                const restore=[wrap(LearnerExperience,'renderOverview'),wrap(WritingScheme,'markup'),wrap(LetterSequence,'mount')];
+                for(const letter of ['Я','М','И','А','Я','М','И','А']){
+                    Object.keys(phases).forEach(k=>phases[k]=0);const start=performance.now();build(variant,letter);
+                    timings.push({letter,ms:performance.now()-start,...phases});
+                }
+                restore.forEach(fn=>fn());build(variant,original);return JSON.stringify(timings);
+            })()
+            """) as? String
+        let attachment = XCTAttachment(string: report ?? "missing")
+        attachment.name = "letter-switch-timings"; attachment.lifetime = .keepAlways; add(attachment)
+        print("LETTER_SWITCH_TIMINGS: " + (report ?? "missing"))
+        let samples = try JSONSerialization.jsonObject(with: Data(try XCTUnwrap(report).utf8)) as? [[String: Any]]
+        XCTAssertLessThanOrEqual(samples?.compactMap { $0["ms"] as? Double }.max() ?? .infinity, 150)
+    }
+
+    @MainActor
+    func testDirectionFeedback() async throws {
+        let web = try await loadedLesson()
+        let result = try await web.evaluateJavaScript("""
+            (()=>{
+                build(variant,'А');
+                const outcomes=[];
+                for(const [index,reverse] of [false,true].entries()){
+                    const canvas=document.querySelector(`[data-surface-id="gost-file-b90-upper-${index}"]`),cell=canvas.closest('.cell'),score=cell.querySelector('.score');
+                    if(!score.disabled){score.click();cell.querySelector('.reset').click()}
+                    canvas.scrollIntoView({block:'center'});canvas.setPointerCapture=()=>{};
+                    const frame=JSON.parse(canvas.dataset.viewBox),rect=canvas.getBoundingClientRect();
+                    for(const line of demonstrationFor(models)){
+                        const route=reverse?[...line].reverse():line;
+                        for(let i=0;i<route.length;i++){
+                            const [x,y]=route[i];canvas.dispatchEvent(new PointerEvent(i===0?'pointerdown':i===route.length-1?'pointerup':'pointermove',{bubbles:true,cancelable:true,pointerType:'pen',pointerId:1,isPrimary:true,clientX:rect.left+(x-frame.x)/frame.width*rect.width,clientY:rect.top+(y-frame.y)/frame.height*rect.height}));
+                        }
+                    }
+                    outcomes.push({score:parseInt(score.textContent),backward:score.dataset.direction==='backward'});
+                }
+                return outcomes;
+            })()
+            """) as? [[String: Any]]
+        XCTAssertEqual(result?.first?["score"] as? Int, 100)
+        XCTAssertEqual(result?.last?["backward"] as? Bool, true)
+        XCTAssertLessThan(result?.last?["score"] as? Int ?? 100, 90)
+        let attachment = XCTAttachment(image: try await web.takeSnapshot(configuration: nil))
+        attachment.name = "direction-correct-and-backward"; attachment.lifetime = .keepAlways; add(attachment)
+        _ = try await web.evaluateJavaScript("reset('gost-file-b90-upper-1');refresh()")
+    }
+
+    @MainActor
     func testNumbersWorksheet() async throws {
         let web = try await loadedLesson()
         let before = try await web.evaluateJavaScript("JSON.stringify(Object.fromEntries(Object.keys(localStorage).filter(k=>k.startsWith('letter-worksheet-')&&k!=='letter-worksheet-numbers-v1').sort().map(k=>[k,localStorage.getItem(k)])))") as? String
@@ -214,16 +267,14 @@ final class LessonTests: XCTestCase {
                 // Pointer capture is provided by the OS for real pointer streams.
                 canvas.setPointerCapture = () => {};
                 canvas.releasePointerCapture = () => {};
-                const guides = [...cell.querySelectorAll('.writing > svg:first-child path')].slice(0, 2);
-                for (const guide of guides) {
-                    const matrix = guide.getScreenCTM();
-                    const length = guide.getTotalLength();
-                    for (let step = 0; step <= 40; step++) {
-                        const point = guide.getPointAtLength(length * step / 40).matrixTransform(matrix);
-                        const event = step === 0 ? 'pointerdown' : step === 40 ? 'pointerup' : 'pointermove';
+                const frame=JSON.parse(canvas.dataset.viewBox),rect=canvas.getBoundingClientRect();
+                for (const line of demonstrationFor(models)) {
+                    for (let i=0;i<line.length;i++) {
+                        const [x,y]=line[i],event=i===0?'pointerdown':i===line.length-1?'pointerup':'pointermove';
                         canvas.dispatchEvent(new PointerEvent(event, {
-                            bubbles: true, cancelable: true, pointerType: 'pen', pointerId: 1,
-                            isPrimary: true, clientX: point.x, clientY: point.y
+                            bubbles:true,cancelable:true,pointerType:'pen',pointerId:1,isPrimary:true,
+                            clientX:rect.left+(x-frame.x)/frame.width*rect.width,
+                            clientY:rect.top+(y-frame.y)/frame.height*rect.height
                         }));
                     }
                 }

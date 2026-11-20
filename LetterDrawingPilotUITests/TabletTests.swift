@@ -63,6 +63,24 @@ final class TabletTests: XCTestCase {
         app.buttons["close-sheet"].tap()
     }
 
+    func testNumbersFromMainPicker() {
+        app.buttons["show-letters"].tap()
+        let numbers = app.buttons["choose-numbers"]
+        XCTAssertTrue(numbers.waitForExistence(timeout: 5))
+        XCTAssertTrue(numbers.isHittable, "Numbers must be visible without scrolling the alphabet")
+        XCTAssertGreaterThanOrEqual(numbers.frame.height, 44)
+        numbers.tap()
+        XCTAssertTrue(app.navigationBars["Цифры и знаки"].waitForExistence(timeout: 5))
+        app.navigationBars["Цифры и знаки"].buttons.element(boundBy: 0).tap()
+        app.buttons["show-letters"].tap()
+        attach("native-picker-with-numbers")
+        app.buttons["letter-42f"].tap()
+        XCTAssertTrue(app.buttons["close-sheet"].waitForNonExistence(timeout: 3))
+        let letter = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "Буква Я, проба 1")).firstMatch
+        XCTAssertTrue(letter.waitForExistence(timeout: 3))
+        select("410")
+    }
+
     func testNativeCanary() {
         app.buttons["show-letters"].tap()
         XCTAssertTrue(app.buttons["letter-41e"].waitForExistence(timeout: 5))

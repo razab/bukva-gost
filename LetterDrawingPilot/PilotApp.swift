@@ -87,6 +87,12 @@ struct PilotLesson: UIViewRepresentable {
             if sheet == nil { action() } else { pending = action; sheet = nil }
         }
 
+        func dismissLessonPicker() {
+            var transaction = Transaction()
+            transaction.disablesAnimations = true
+            withTransaction(transaction) { sheet = nil }
+        }
+
         func didDismiss() {
             if lastSheet == .editor { command("editorClosed") }
             lastSheet = nil

@@ -90,3 +90,8 @@ body.learner[data-variant] .sheet{padding-bottom:max(140px,calc(var(--cell-heigh
 .header-schemes>.writing-scheme+svg{margin-left:0}
 .hero-demo[data-view=writing]>.header-schemes,.dock-demo-region[data-view=writing]>.header-schemes{visibility:hidden}
 @media(max-width:700px){.learner .sheet .hero-demo>.demo,.dock-demo-region>.dock-demo{width:50%}.header-schemes{left:auto;right:0;width:50%}.header-schemes>.writing-scheme{flex:0 1 50%;max-width:50%}.header-schemes>.writing-scheme+svg{margin-left:0}}
+
+/* Keep the percentage anchored; the error explains why a matching shape is not green. */
+.learner .cell-foot{height:48px}
+.learner .cell-foot .score{position:relative;min-width:48px;min-height:48px}
+.learner .score[data-direction=backward]::after{content:"Обратно";position:absolute;bottom:0;left:0;right:0;font:10px/12px system-ui,sans-serif;color:#b66255;pointer-events:none}

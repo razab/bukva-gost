@@ -8,7 +8,7 @@ window.NativeApp={
   const state={kind:'state',letter:activeLetter,preferences,variant,stylusOnly,
    canUndo:history.length>0,hasWork:work.written.length>0,writing:activePointer!==null,
    hasAnyInk:Object.values(data).some(strokes=>strokes.length>0),
-   independent:LearnerExperience.independent,canNext:!!LetterCurriculum.lesson(activeLetter).next,
+   independent:LearnerExperience.independent,canNext:!!LetterCurriculum.lesson(activeLetter).next&&!LearnerExperience.hasBackwardWork(work),
    count:document.querySelector('#session-count').textContent,
    backupSummary:document.querySelector('#backup-summary').textContent,
    notice:document.querySelector('#message').textContent,

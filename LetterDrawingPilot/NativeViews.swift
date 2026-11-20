@@ -68,7 +68,7 @@ struct NativeWorkspace: View {
 
     @ViewBuilder private func sheetContent(_ destination: NativeSheet) -> some View {
         switch destination {
-        case .letters: NativeLetters(controller: controller)
+        case .letters: NativeLetters(controller: controller) { controller.dismissLessonPicker(); numbers = true }
         case .settings: NativeSettings(controller: controller)
         case .progress: NativeProgress(controller: controller)
         case .result: if let result = controller.result { NativeSessionResult(controller: controller, result: result) }
@@ -111,12 +111,14 @@ private struct LetterImage: View {
 
 private struct NativeLetters: View {
     @ObservedObject var controller: PilotLesson.Coordinator
+    let openNumbers: () -> Void
     var body: some View {
         ScrollView {
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 76), spacing: 12)], spacing: 12) {
                 ForEach(controller.lessons) { item in
                     Button {
-                        controller.afterDismiss { controller.command("select", ["letter": item.letter]) }
+                        controller.command("select", ["letter": item.letter])
+                        controller.dismissLessonPicker()
                     } label: {
                         VStack(spacing: 8) {
                             LetterImage(letter: item.letter).frame(height: 38)
@@ -137,6 +139,13 @@ private struct NativeLetters: View {
                     .accessibilityIdentifier("letter-" + String(item.letter.unicodeScalars.first!.value, radix: 16))
                 }
             }.padding(20)
+        }
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            Button(action: openNumbers) {
+                Label("Цифры и знаки", systemImage: "number").frame(maxWidth: .infinity, minHeight: 44)
+            }.buttonStyle(.bordered).accessibilityIdentifier("choose-numbers")
+                .padding(.horizontal, 20).padding(.vertical, 12)
+                .background(Color(uiColor: .systemGroupedBackground))
         }.background(Color(uiColor: .systemGroupedBackground))
     }
 }

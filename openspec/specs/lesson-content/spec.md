@@ -98,6 +98,12 @@ The application SHALL provide one supplementary worksheet for 0–9 and + − = 
 - **WHEN** the supplementary worksheet opens in the iPad application
 - **THEN** it uses the full available writing width with native Back navigation and undo, horizontal ruling and no separate course completion flow
 
+### Requirement: Supplementary worksheet in the main picker
+The native main letter picker SHALL also offer «Цифры и знаки» as one supplementary worksheet, without adding symbols to the33-letter course.
+#### Scenario: Choose numbers alongside letters
+- **WHEN** the learner opens the main picker and chooses «Цифры и знаки»
+- **THEN** the single worksheet opens with native Back navigation and preserved letter work
+
 ## Evidence
 
 - `references/propisi-2019-order.json`
