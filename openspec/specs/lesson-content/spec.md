@@ -84,7 +84,7 @@
 - **THEN** доступны новые тексты, исходный состав архивирован, старые raw ink остаются; ручные строки не заменены и повторное открытие не меняет результат миграции.
 
 ### Requirement: Compact numbers and signs worksheet
-The application SHALL provide one supplementary worksheet for 0–9 and + − = . , :, using upright type Б outlines from the same source as the letters. Each symbol SHALL have a selectable reference, animated writing with a pencil, a parallel-arrow numbered scheme and two practice fields by default; an explicit global repeat setting SHALL override that default.
+The application SHALL provide one supplementary worksheet for 0–9 and + − = . , :, using upright type Б outlines from the same source as the letters. The worksheet SHALL show two sequential labelled sections: «Цифры» with 0–9, then «Знаки» with + − = . , :, without tabs or separate pages. Each symbol SHALL have a selectable reference, animated writing with a pencil, a parallel-arrow numbered scheme and two practice fields by default; an explicit global repeat setting SHALL override that default.
 
 #### Scenario: Open and select a symbol
 - **WHEN** the learner opens «Цифры и знаки» and selects a reference or starts a practice field

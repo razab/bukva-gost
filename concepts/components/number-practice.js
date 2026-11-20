@@ -8,6 +8,12 @@ const NumberPractice={
   document.body.classList.add('number-practice');document.body.dataset.variant=index;
   document.title='Цифры и знаки · Буквы по ГОСТ';
   const root=document.querySelector('#practice');root.replaceChildren();
+  const sections=['Цифры','Знаки'].map((title,i)=>{
+   const section=document.createElement('section');section.className='number-section';
+   const heading=document.createElement('h2');heading.id='number-section-'+i;heading.textContent=title;
+   section.setAttribute('aria-labelledby',heading.id);
+   const grid=document.createElement('div');grid.className='number-grid';section.append(heading,grid);root.append(section);return grid;
+  });
   for(const [character,glyph] of Object.entries(NumberGlyphs)){
    const group=document.createElement('div');group.className='row number-group';group.dataset.symbol=character;
    const reference=document.createElement('button');reference.type='button';reference.className='number-reference';reference.setAttribute('aria-label','Образец '+character);
@@ -21,7 +27,7 @@ const NumberPractice={
     cell.element.querySelector('canvas').addEventListener('pointerdown',()=>this.select(character),true);
     surfaces.push(cell.surface);
    }
-   root.append(group);
+   sections[/^[0-9]$/.test(character)?0:1].append(group);
   }
   if(learnerMode){LearnerExperience.initialize();document.querySelector('#choose-letter').textContent='← Буквы';document.querySelector('#choose-letter').onclick=()=>{location.hash='';location.reload()}}
   refresh();this.select(this.selected);

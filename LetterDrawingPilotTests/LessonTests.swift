@@ -22,6 +22,8 @@ final class LessonTests: XCTestCase {
                 const oldRepeats=preferences.practiceRepeats;
                 configure({practiceRepeats:0});
                 if(surfaces.length!==Object.keys(NumberGlyphs).length*2)failures.push('field count');
+                const sections=[...document.querySelectorAll('.number-section')];
+                if(sections.length!==2||sections[0].querySelector('h2').textContent!=='Цифры'||sections[1].querySelector('h2').textContent!=='Знаки'||sections[0].querySelectorAll('.number-group').length!==10||sections[1].querySelectorAll('.number-group').length!==6)failures.push('sections');
                 for(const character of Object.keys(NumberGlyphs)){
                     const canvas=[...document.querySelectorAll('canvas[data-surface-id]')].find(c=>c.getAttribute('aria-label')===`Символ ${character}, проба 1`);
                     const cell=canvas.closest('.cell'),score=cell.querySelector('.score'),reset=cell.querySelector('.reset');

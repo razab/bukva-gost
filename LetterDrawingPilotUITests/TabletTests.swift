@@ -278,6 +278,30 @@ final class TabletTests: XCTestCase {
         attach("installed-native-workspace")
     }
 
+    func testInstalledNumbersPresentation() {
+        let installed = XCUIApplication(bundleIdentifier: "md.dcor.bukvygost.pilot")
+        installed.launch()
+        if installed.navigationBars["Цифры и знаки"].exists {
+            installed.navigationBars["Цифры и знаки"].buttons.element(boundBy: 0).tap()
+        }
+        XCTAssertTrue(installed.buttons["lesson-menu"].waitForExistence(timeout: 15))
+        installed.buttons["lesson-menu"].tap()
+        installed.buttons["Цифры и знаки"].tap()
+        XCTAssertTrue(installed.navigationBars["Цифры и знаки"].waitForExistence(timeout: 10))
+        XCTAssertTrue(installed.staticTexts["Цифры"].waitForExistence(timeout: 10))
+        for orientation in [UIDeviceOrientation.landscapeLeft, .portrait] {
+            XCUIDevice.shared.orientation = orientation
+            let correct = NSPredicate { _, _ in (installed.frame.width > installed.frame.height) == orientation.isLandscape }
+            XCTAssertTrue(XCTWaiter.wait(for: [XCTNSPredicateExpectation(predicate: correct, object: nil)], timeout: 8) == .completed)
+            let sample = installed.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "Образец 0")).firstMatch
+            XCTAssertTrue(sample.waitForExistence(timeout: 5))
+            XCTAssertGreaterThanOrEqual(sample.frame.width, 44)
+            XCTAssertGreaterThanOrEqual(sample.frame.height, 44)
+            XCTAssertLessThanOrEqual(sample.frame.maxX, installed.frame.maxX)
+            attach(orientation.isLandscape ? "installed-numbers-wide" : "installed-numbers-sheet")
+        }
+    }
+
     private func attach(_ name: String) {
         let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
         attachment.name = name; attachment.lifetime = .keepAlways; add(attachment)
