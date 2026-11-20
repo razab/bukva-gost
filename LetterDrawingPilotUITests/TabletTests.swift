@@ -46,6 +46,23 @@ final class TabletTests: XCTestCase {
         XCTAssertTrue(element.isHittable)
     }
 
+    func testNumbersNavigation() {
+        app.buttons["lesson-menu"].tap()
+        app.buttons["Цифры и знаки"].tap()
+        XCTAssertTrue(app.navigationBars["Цифры и знаки"].waitForExistence(timeout: 10))
+        let reference = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "Образец 3")).firstMatch
+        XCTAssertTrue(reference.waitForExistence(timeout: 10))
+        reference.tap()
+        XCTAssertFalse(app.buttons["Завершить занятие"].exists)
+        XCTAssertFalse(app.buttons["independent-toggle"].exists)
+        attach("native-numbers")
+        app.navigationBars["Цифры и знаки"].buttons.element(boundBy: 0).tap()
+        XCTAssertTrue(app.buttons["show-letters"].waitForExistence(timeout: 5))
+        app.buttons["show-letters"].tap()
+        XCTAssertTrue(app.buttons["letter-410"].waitForExistence(timeout: 5))
+        app.buttons["close-sheet"].tap()
+    }
+
     func testNativeCanary() {
         app.buttons["show-letters"].tap()
         XCTAssertTrue(app.buttons["letter-41e"].waitForExistence(timeout: 5))

@@ -1,0 +1,22 @@
+.number-practice #demo-lower,.number-practice #hero-scheme-lower,.number-practice #hero-visual,
+.number-practice #writing-dock,.number-practice #open-sample,.number-practice #show-progress,
+.number-practice #try-independent,.number-practice #finish-session,.number-practice #next-letter,
+.number-practice #developer-panel .page-editor{display:none!important}
+.learner.number-practice .sheet .hero{display:block;position:sticky;top:64px;z-index:8;background:var(--paper);height:140px;border-bottom:1px solid var(--ruling)}
+.native-ipad.number-practice .sheet .hero{top:0}
+.number-practice .hero-demo{width:280px;max-width:100%}
+.learner.number-practice .hero-demo>.demo{width:120px;max-width:45%}
+.learner.number-practice .hero-demo #demo{max-width:100%;height:100%;width:auto}
+.number-practice .header-schemes{left:140px;right:0;width:auto}
+.number-practice .header-schemes>.writing-scheme{max-width:100%;flex:1;height:100%}
+body.number-practice .practice{grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));align-items:start;column-gap:24px;padding-top:20px}
+body.number-practice .practice .number-group{display:flex;flex-wrap:wrap;align-items:flex-end;align-content:flex-end;gap:var(--practice-column-gap);padding:0 0 8px;min-height:180px}
+.learner .number-reference{display:flex;align-items:center;justify-content:center;flex:0 0 auto;width:max(48px,var(--reference-width));height:max(48px,var(--reference-height));margin:0 0 48px;padding:0;border:0!important;background:transparent!important;border-radius:8px;position:relative;z-index:2}
+.number-reference svg{width:var(--reference-width);height:var(--reference-height);max-width:none}
+.number-reference[aria-pressed=true]{box-shadow:0 0 0 2px var(--accent)}
+.number-practice .number-group .cell-foot{height:48px}
+.number-practice .number-group .cell-foot .score{min-width:48px;min-height:48px}
+.number-practice .number-group .cell-foot .reset{width:48px;height:48px;top:calc(100% + 8px)}
+.number-practice #session-count{margin:0}
+#open-numbers{display:block;width:100%;min-height:48px;margin-top:20px}
+@media(max-width:650px){.learner.number-practice .sheet .hero{top:80px}}

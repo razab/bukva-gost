@@ -21,7 +21,7 @@ const DeveloperPanel={
  initialVariant(){try{const value=JSON.parse(localStorage.getItem('gost-developer-style-v1')||'0');return Number.isInteger(value)&&value>=0&&value<5?value:0}catch{return 0}},
  initialize(){
   const $=id=>document.querySelector('#'+id);
-  $('open-developer').onclick=()=>{if(activePointer!==null)return;$('parent-panel').close();this.visible=true;this.sync();this.render();$('developer-panel').showModal()};
+  $('open-developer').onclick=()=>{if(activePointer!==null)return;$('parent-panel').close();this.visible=true;this.sync();if(!(typeof NumberPractice!=='undefined'&&NumberPractice.active))this.render();$('developer-panel').showModal()};
   $('close-developer').onclick=()=>{this.visible=false;$('developer-panel').close()};$('developer-panel').addEventListener('close',()=>{this.visible=false});
   for(const key of Object.keys(preferenceDefaults)){
    if(key!=='practiceRepeats')bindPreferenceControl(key,$('setting-'+key));

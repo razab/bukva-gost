@@ -7,6 +7,62 @@ final class LessonTests: XCTestCase {
     private let field = "document.querySelector('canvas[aria-label=\"Буква А, проба 1\"]')"
 
     @MainActor
+    func testNumbersWorksheet() async throws {
+        let web = try await loadedLesson()
+        let before = try await web.evaluateJavaScript("JSON.stringify(Object.fromEntries(Object.keys(localStorage).filter(k=>k.startsWith('letter-worksheet-')&&k!=='letter-worksheet-numbers-v1').sort().map(k=>[k,localStorage.getItem(k)])))") as? String
+        _ = try await web.evaluateJavaScript("location.hash='#numbers';location.reload()")
+        for _ in 0..<100 {
+            if !web.isLoading, (try? await web.evaluateJavaScript("typeof NumberPractice!=='undefined'&&NumberPractice.active&&surfaces.length>0")) as? Bool == true { break }
+            try await Task.sleep(for: .milliseconds(100))
+        }
+        let result = try await web.evaluateJavaScript("""
+            (()=>{
+                const failures=[];
+                if(!NumberPractice.active)return ['numbers did not reload'];
+                const oldRepeats=preferences.practiceRepeats;
+                configure({practiceRepeats:0});
+                if(surfaces.length!==Object.keys(NumberGlyphs).length*2)failures.push('field count');
+                for(const character of Object.keys(NumberGlyphs)){
+                    const canvas=[...document.querySelectorAll('canvas[data-surface-id]')].find(c=>c.getAttribute('aria-label')===`Символ ${character}, проба 1`);
+                    const cell=canvas.closest('.cell'),score=cell.querySelector('.score'),reset=cell.querySelector('.reset');
+                    if(!score.disabled){score.click();reset.click()}
+                    canvas.scrollIntoView({block:'center'});canvas.setPointerCapture=()=>{};
+                    const box=canvas.getBoundingClientRect(),frame=JSON.parse(canvas.dataset.viewBox),model=NumberGlyphs[character].model;
+                    for(const line of model)for(let i=0;i<line.length;i++){
+                        const [x,y]=line[i];canvas.dispatchEvent(new PointerEvent(i===0?'pointerdown':i===line.length-1?'pointerup':'pointermove',{bubbles:true,cancelable:true,pointerType:'pen',pointerId:1,isPrimary:true,clientX:box.left+(x-frame.x)/frame.width*box.width,clientY:box.top+(y-frame.y)/frame.height*box.height}));
+                    }
+                    if(parseInt(score.textContent)<90||score.disabled)failures.push(character+' score '+score.textContent);
+                    if(NumberPractice.selected!==character||!document.querySelector('#number-pencil'))failures.push(character+' demo');
+                    const ink=JSON.stringify(data[canvas.dataset.surfaceId]);
+                    score.click();reset.click();if(!score.disabled)failures.push(character+' reset');
+                    undo();if(JSON.stringify(data[canvas.dataset.surfaceId])!==ink)failures.push(character+' undo');
+                }
+                const ink=JSON.stringify(data),backup=LocalBackup.parse(LocalBackup.export(localStorage));
+                if(!backup.entries[NumberPractice.key])failures.push('backup');
+                reflowPage();if(JSON.stringify(data)!==ink)failures.push('reload');
+                configure({practiceRepeats:5});if(surfaces.length!==Object.keys(NumberGlyphs).length*5)failures.push('repeat setting');
+                configure({practiceRepeats:oldRepeats});
+                window.scrollTo({top:0});return failures;
+            })()
+            """) as? [String]
+        XCTAssertEqual(result, [])
+        let numericInk = try await web.evaluateJavaScript("JSON.stringify(data)") as? String
+        web.reload()
+        for _ in 0..<100 {
+            if !web.isLoading, (try? await web.evaluateJavaScript("typeof NumberPractice!=='undefined'&&NumberPractice.active&&surfaces.length>0")) as? Bool == true { break }
+            try await Task.sleep(for: .milliseconds(100))
+        }
+        let reopenedInk = try await web.evaluateJavaScript("JSON.stringify(data)") as? String
+        XCTAssertEqual(numericInk, reopenedInk)
+        let after = try await web.evaluateJavaScript("JSON.stringify(Object.fromEntries(Object.keys(localStorage).filter(k=>k.startsWith('letter-worksheet-')&&k!=='letter-worksheet-numbers-v1').sort().map(k=>[k,localStorage.getItem(k)])))") as? String
+        XCTAssertEqual(before, after)
+        let attachment = XCTAttachment(image: try await web.takeSnapshot(configuration: nil))
+        attachment.name = "numbers-worksheet"; attachment.lifetime = .keepAlways; add(attachment)
+        _ = try await web.evaluateJavaScript("location.hash='';location.reload()")
+        _ = try await loadedLesson()
+    }
+
+    @MainActor
     func testNativeLayoutSizes() async throws {
         let web = try await loadedLesson()
         let window = try XCTUnwrap(web.window)

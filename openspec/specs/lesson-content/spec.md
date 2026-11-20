@@ -83,6 +83,21 @@
 - **WHEN** сохранённый стандартный состав старой редакции открыт в новой
 - **THEN** доступны новые тексты, исходный состав архивирован, старые raw ink остаются; ручные строки не заменены и повторное открытие не меняет результат миграции.
 
+### Requirement: Compact numbers and signs worksheet
+The application SHALL provide one supplementary worksheet for 0–9 and + − = . , :, using upright type Б outlines from the same source as the letters. Each symbol SHALL have a selectable reference, animated writing with a pencil, a parallel-arrow numbered scheme and two practice fields by default; an explicit global repeat setting SHALL override that default.
+
+#### Scenario: Open and select a symbol
+- **WHEN** the learner opens «Цифры и знаки» and selects a reference or starts a practice field
+- **THEN** the worksheet shows that symbol's animation and scheme, without rebuilding or clearing other fields
+
+#### Scenario: Practice and return
+- **WHEN** the learner writes, resets, undoes or reopens the supplementary worksheet
+- **THEN** the existing geometric feedback and autosave apply, backup includes its ink, and previous letter ink, course order and letter results remain unchanged
+
+#### Scenario: Tablet layout
+- **WHEN** the supplementary worksheet opens in the iPad application
+- **THEN** it uses the full available writing width with native Back navigation and undo, horizontal ruling and no separate course completion flow
+
 ## Evidence
 
 - `references/propisi-2019-order.json`

@@ -4,6 +4,7 @@ import UniformTypeIdentifiers
 
 struct NativeWorkspace: View {
     @StateObject private var controller = PilotLesson.Coordinator()
+    @State private var numbers = false
     var body: some View {
         NavigationStack {
             PilotLesson(controller: controller)
@@ -22,6 +23,7 @@ struct NativeWorkspace: View {
                         Button { controller.present(.sample) } label: { Label("Образец", systemImage: "pencil.tip").frame(minWidth: 44, minHeight: 44).contentShape(Rectangle()) }
                             .labelStyle(.titleAndIcon).buttonStyle(.plain).disabled(controller.controlsUnavailable)
                         Menu {
+                            Button("Цифры и знаки", systemImage: "number") { numbers = true }
                             Button("Настройки", systemImage: "gearshape") { controller.present(.settings) }
                             Button("Моя практика", systemImage: "chart.bar") { controller.present(.progress) }
                             Divider()
@@ -42,6 +44,7 @@ struct NativeWorkspace: View {
                             .labelStyle(.iconOnly).buttonStyle(.plain)
                     }
                 }
+                .navigationDestination(isPresented: $numbers) { NativeNumbers() }
         }
         .tint(Color(uiColor: .systemGreen))
         .sheet(item: $controller.sheet, onDismiss: controller.didDismiss) { destination in
@@ -72,6 +75,28 @@ struct NativeWorkspace: View {
         case .sample: NativeDocument(name: "sample", fragment: controller.state.letter)
         case .editor: NativeDocument(name: "index", fragment: "author-" + String(controller.state.letter.unicodeScalars.first!.value, radix: 16))
         }
+    }
+}
+
+private struct NativeNumbers: View {
+    @StateObject private var controller = PilotLesson.Coordinator(fragment: "numbers")
+    var body: some View {
+        PilotLesson(controller: controller)
+            .navigationTitle("Цифры и знаки")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button { controller.command("undo") } label: {
+                        Label("Отменить последнее действие", systemImage: "arrow.uturn.backward")
+                            .frame(minWidth: 44, minHeight: 44).contentShape(Rectangle())
+                    }.labelStyle(.iconOnly).buttonStyle(.plain)
+                        .disabled(!controller.state.canUndo || controller.controlsUnavailable)
+                }
+                ToolbarItem(placement: .bottomBar) {
+                    Text(controller.state.count).font(.footnote).foregroundStyle(.secondary).monospacedDigit()
+                        .fixedSize(horizontal: true, vertical: false)
+                }
+            }
     }
 }
 

@@ -14,9 +14,10 @@ let fontOutlines=[DrawingGlyphs['А'].outline,DrawingGlyphs['а'].outline];
 const sequenceSources=DrawingGlyphs;
 const fontModels=models.map(line=>line.map(([x,y])=>[(x-30)/fontScale,(140-y)/fontScale]));
 const oval=lowercase[0],roundedWarmup=[oval],arcWarmup=[oval];
-const modelGlyph=new WeakMap(Object.values(DrawingGlyphs).flatMap(g=>[[g.model,g],...(g.demonstration?[[g.demonstration,g]]:[])]));
+const extraGlyphs=typeof NumberGlyphs==='undefined'?[]:Object.values(NumberGlyphs);
+const modelGlyph=new WeakMap([...Object.values(DrawingGlyphs),...extraGlyphs].flatMap(g=>[[g.model,g],...(g.demonstration?[[g.demonstration,g]]:[])]));
 const demonstrationFor=model=>modelGlyph.get(model)?.demonstration||model;
-for(const g of Object.values(DrawingGlyphs))PracticeElement.inkBounds.set(g.model,g.inkBounds);
+for(const g of [...Object.values(DrawingGlyphs),...extraGlyphs])PracticeElement.inkBounds.set(g.model,g.inkBounds);
 WorksheetCatalog.setLetterSources(sequenceSources,activeLetter);
 function fontOutline(model,extra=''){const glyph=modelGlyph.get(model);return !glyph?'':`<path d="${glyph.outline}" transform="translate(30 140) scale(${fontScale} ${-fontScale})" stroke="${(extra.match(/fill="([^"]+)"/)||[])[1]||'none'}" stroke-width="${boldExpansion()/fontScale}" stroke-linejoin="round" ${extra}/>`}
 const svgNS='http://www.w3.org/2000/svg';
@@ -31,7 +32,7 @@ const message=document.querySelector('#message');
 const writingTimes=new WritingTimes(localStorage,()=>{message.textContent='Время письма остаётся в этой вкладке; сохранить его не удалось.'});
 let composition;const compositions=new Map();
 function editComposition(patch){if(activePointer!==null)return;composition.update(variant,patch);const oldHistory=history;build(variant);history=oldHistory;refresh()}
-const worksheetBuild='2026-11-16.58';
+const worksheetBuild='2026-11-20.59';
 const practiceGeometry=size=>({width:size*1.5,height:size*1.8});
 const preferenceDefaults=Object.freeze({size:118,bold:100,tolerance:8,rowGap:22,columnGap:12,letterGap:20,leftInset:15,penWidth:3,smoothing:0,practiceRepeats:0});
 const preferenceLimits={size:[30,160],bold:[100,150],tolerance:[.5,16],rowGap:[0,80],columnGap:[0,60],letterGap:[0,50],leftInset:[0,30],penWidth:[.5,8],smoothing:[0,2],practiceRepeats:[0,10]};
@@ -73,12 +74,13 @@ function configure(patch,{persist=true}={}){if(activePointer!==null){applyPrefer
 
 // Version the entire registry: text can contain glyphs from earlier lessons.
 const drawingGeometryRevision=Object.values(DrawingGlyphs).map(g=>g.revision).join('').split('').reduce((h,c)=>Math.imul(h^c.charCodeAt(0),16777619)>>>0,2166136261).toString(16);
-function worksheetStorageKey(){return activeLetter==='А'?'letter-worksheet-v3-'+variant:'letter-worksheet-gost-'+activeLetter.codePointAt(0).toString(16)+'-'+drawingGeometryRevision+'-'+variant}
+function worksheetStorageKey(){if(typeof NumberPractice!=='undefined'&&NumberPractice.active)return NumberPractice.key;return activeLetter==='А'?'letter-worksheet-v3-'+variant:'letter-worksheet-gost-'+activeLetter.codePointAt(0).toString(16)+'-'+drawingGeometryRevision+'-'+variant}
 function readInk(key){try{const v=JSON.parse(localStorage.getItem(key)||'{}'),out={};for(const [id,ss] of Object.entries(v||{}))if(Array.isArray(ss))out[id]=ss.filter(stroke=>Array.isArray(stroke)&&stroke.length&&stroke.every(p=>Array.isArray(p)&&p.length===2&&p.every(n=>Number.isFinite(n)&&Math.abs(n)<10)));return out}catch{return null}}
 function mergeInk(base,local,remote){const out=structuredClone(remote);for(const id of new Set([...Object.keys(base),...Object.keys(local)]))if(JSON.stringify(local[id])!==JSON.stringify(base[id])){if(Object.hasOwn(local,id))out[id]=structuredClone(local[id]);else delete out[id]}return out}
 // Carry unchanged fields from the newest available pre-correction book.
 // Keep the source book intact; an existing destination (even {}) always wins.
 function migrateContourInk(key){
+ if(typeof NumberPractice!=='undefined'&&NumberPractice.active)return;
  if(activeLetter==='А'||drawingGeometryRevision!=='4633c1e3'||pendingInk.has(key))return;
  const candidates=[{from:'bf2986c8',changed:['Й']},{from:'1f0081e5',changed:['И','Й']}];let migration,previousKey;
  try{
@@ -159,7 +161,7 @@ function setupSurface(canvas,id,width,height,scoreNode,resetButton,model=models,
  listen('pointerup',e=>finish(e));listen('pointercancel',e=>finish(e,true));listen('lostpointercapture',e=>finish(e,true));
  unbindActions.push(bindSurfaceAction(resetButton,()=>{reset(id);if(scoreNode)scoreNode.focus?.();closeReset()}));const observer=new ResizeObserver(render);observer.observe(canvas);return {id,label:canvas.getAttribute?.('aria-label')||id,assessment:()=>lastAssessment,render,closeReset,destroy(){destroyed=true;for(const unbind of unbindActions)unbind();manualVersion++;manualJob?.cancel();feedbackCache?.cancel?.();if(renderFrame!==null)cancelAnimationFrame(renderFrame);observer.disconnect();for(const [type,fn] of listeners)canvas.removeEventListener(type,fn)}};
 }
-function build(index,letter=activeLetter){if(activePointer!==null)return;stopDemo();surfaces.forEach(s=>s.destroy());surfaces=[];const changed=activeLetter!==letter;if(learnerMode&&changed)LearnerExperience.independent=false;activeLetter=letter;models=sequenceSources[letter].model;lowercase=sequenceSources[letter.toLowerCase()].model;fontOutlines=[sequenceSources[letter].outline,sequenceSources[letter.toLowerCase()].outline];WorksheetCatalog.setLetterSources(sequenceSources,letter);
+function build(index,letter=activeLetter){if(activePointer!==null)return;if(typeof NumberPractice!=='undefined'&&NumberPractice.active)return NumberPractice.build(index);stopDemo();surfaces.forEach(s=>s.destroy());surfaces=[];const changed=activeLetter!==letter;if(learnerMode&&changed)LearnerExperience.independent=false;activeLetter=letter;models=sequenceSources[letter].model;lowercase=sequenceSources[letter.toLowerCase()].model;fontOutlines=[sequenceSources[letter].outline,sequenceSources[letter.toLowerCase()].outline];WorksheetCatalog.setLetterSources(sequenceSources,letter);
  if(!compositions.has(letter))compositions.set(letter,new (learnerMode?LearnerComposition:PageComposition)({letter,onSaveError:()=>{message.textContent='Состав страницы остаётся в этой вкладке; сохранить его не удалось.'}}));composition=compositions.get(letter);if(changed)composition.editorSignature=null;
  variant=index;history=[];data=load();
  document.title=letter+' '+letter.toLowerCase()+' · чертёжные буквы';document.querySelector('#demo').setAttribute('aria-label','Показ написания '+letter);document.querySelector('#demo-lower').setAttribute('aria-label','Показ написания '+letter.toLowerCase());
@@ -229,7 +231,7 @@ function renderWritingSchemes(){
   for(const target of targets){const svg=document.querySelector('#'+target+suffix);if(!svg)continue;svg.setAttribute('viewBox',target==='scheme-'?'0 0 150 180':headerFrame);if(svg.innerHTML!==markup)svg.innerHTML=markup;if(svg.getAttribute('aria-label')!==label)svg.setAttribute('aria-label',label)}
  }
 }
-function playDemo(){stopDemo();renderWritingSchemes();const demos=[['#demo',demonstrationFor(models)],['#demo-lower',demonstrationFor(lowercase)],...(learnerMode&&typeof WorksheetDock!=='undefined'&&WorksheetDock.ready?[['#dock-demo-upper',demonstrationFor(models)],['#dock-demo-lower',demonstrationFor(lowercase)]]:[]),...(learnerMode&&document.querySelector('#sample-panel')?.open?[['#sample-upper',demonstrationFor(models)],['#sample-lower',demonstrationFor(lowercase)]]:[])].map(([selector,model])=>{const svg=document.querySelector(selector);const maskId='font-mask-'+selector.slice(1);svg.innerHTML=revealMarkup(model,maskId)+`<g id="pencil"><circle r="7" fill="#fff9e6" stroke="#b88b3f"/><g transform="rotate(30)"><path d="M-4 -10V-37Q0 -42 4 -37V-10L0 0Z" fill="#e7b24f" stroke="#936b34" stroke-width="1"/><path d="M-4 -10H4L0 0Z" fill="#fff0c9"/><path d="M-1.5 -4L0 0L1.5 -4" fill="#354b3c"/></g></g>`;return {selector,lines:model.map((line,i)=>({node:svg.querySelector(`[data-line="${i}"]`),length:revealLength(line)})),pencil:svg.querySelector('#pencil'),regions:[...svg.querySelectorAll('[data-demo-region]')].map(node=>({node,stroke:Number(node.dataset.demoRegion),at:Number(node.dataset.revealAt),visible:null}))}});
+function playDemo(){if(typeof NumberPractice!=='undefined'&&NumberPractice.active)return NumberPractice.playDemo();stopDemo();renderWritingSchemes();const demos=[['#demo',demonstrationFor(models)],['#demo-lower',demonstrationFor(lowercase)],...(learnerMode&&typeof WorksheetDock!=='undefined'&&WorksheetDock.ready?[['#dock-demo-upper',demonstrationFor(models)],['#dock-demo-lower',demonstrationFor(lowercase)]]:[]),...(learnerMode&&document.querySelector('#sample-panel')?.open?[['#sample-upper',demonstrationFor(models)],['#sample-lower',demonstrationFor(lowercase)]]:[])].map(([selector,model])=>{const svg=document.querySelector(selector);const maskId='font-mask-'+selector.slice(1);svg.innerHTML=revealMarkup(model,maskId)+`<g id="pencil"><circle r="7" fill="#fff9e6" stroke="#b88b3f"/><g transform="rotate(30)"><path d="M-4 -10V-37Q0 -42 4 -37V-10L0 0Z" fill="#e7b24f" stroke="#936b34" stroke-width="1"/><path d="M-4 -10H4L0 0Z" fill="#fff0c9"/><path d="M-1.5 -4L0 0L1.5 -4" fill="#354b3c"/></g></g>`;return {selector,lines:model.map((line,i)=>({node:svg.querySelector(`[data-line="${i}"]`),length:revealLength(line)})),pencil:svg.querySelector('#pencil'),regions:[...svg.querySelectorAll('[data-demo-region]')].map(node=>({node,stroke:Number(node.dataset.demoRegion),at:Number(node.dataset.revealAt),visible:null}))}});
  const start=performance.now(),clock=sequenceClock();function tick(now){const pair=clock.at(now-start);demos.forEach(({selector,lines,pencil,regions},index)=>{if(selector.startsWith('#dock-')&&(document.querySelector('#writing-dock').hidden||WorksheetDock.selected))return;if((selector==='#demo'||selector==='#demo-lower')&&typeof WorksheetDock!=='undefined'&&(WorksheetDock.compact||WorksheetDock.selected))return;const state=index%2===0?pair.upper:pair.lower;for(const r of regions){const visible=state.progress[r.stroke]>0&&state.progress[r.stroke]>=r.at;if(visible!==r.visible){r.node.setAttribute('opacity',visible?'1':'0');r.visible=visible}}lines.forEach(({node,length},i)=>{node.setAttribute('stroke-dashoffset',length*(1-state.progress[i]));node.setAttribute('opacity',state.progress[i]>0?'1':'0')});pencil.setAttribute('visibility',state.pen?'visible':'hidden');if(state.pen)pencil.setAttribute('transform',`translate(${state.pen[0]} ${state.pen[1]})`)});animation=requestAnimationFrame(tick)}tick(start)
 }
 // Geometric tracing similarity, not OCR or a calibrated handwriting grade.
@@ -292,7 +294,7 @@ applyInputControls();
 applyPreferenceControls();
 // Existing v1 drawings remain available in previous-v1.html under their original keys.
 let initialLetter='А';try{const savedLetter=localStorage.getItem('drawing-active-letter-v1');if(LetterCurriculum.order.includes(savedLetter)&&sequenceSources[savedLetter])initialLetter=savedLetter}catch{}
-if(learnerMode){LearnerExperience.readUI();if(typeof WorksheetDock!=='undefined')WorksheetDock.mount({isWriting:()=>activePointer!==null})}
+if(learnerMode){LearnerExperience.readUI();if(typeof WorksheetDock!=='undefined'&&!(typeof NumberPractice!=='undefined'&&NumberPractice.active))WorksheetDock.mount({isWriting:()=>activePointer!==null})}
 build(learnerMode?DeveloperPanel.initialVariant():0,initialLetter);
 function reflowPage(){const previousHistory=history;build(variant);history=previousHistory;refresh()}
 let lastPracticeWidth=document.querySelector('#practice').clientWidth||0;

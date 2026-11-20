@@ -34,11 +34,13 @@ struct PilotLesson: UIViewRepresentable {
         private var lastSheet: NativeSheet?
         private var activeDownload: WKDownload?
         private var backupURL: URL?
+        private let fragment: String?
         private let lessonURL = Bundle.main.url(
             forResource: "index", withExtension: "html", subdirectory: "Web"
         )
 
-        override init() {
+        init(fragment: String? = nil) {
+            self.fragment = fragment
             super.init()
             webView.navigationDelegate = self
             webView.scrollView.contentInsetAdjustmentBehavior = .never
@@ -115,7 +117,9 @@ struct PilotLesson: UIViewRepresentable {
                 showError(in: webView)
                 return
             }
-            webView.loadFileURL(lessonURL, allowingReadAccessTo: lessonURL.deletingLastPathComponent())
+            var destination = URLComponents(url: lessonURL, resolvingAgainstBaseURL: false)!
+            destination.fragment = fragment
+            webView.loadFileURL(destination.url!, allowingReadAccessTo: lessonURL.deletingLastPathComponent())
         }
 
         func webView(
@@ -128,7 +132,9 @@ struct PilotLesson: UIViewRepresentable {
                 decisionHandler(.download)
                 return
             }
-            decisionHandler(url == lessonURL || url?.absoluteString == "about:blank" ? .allow : .cancel)
+            var document = url.flatMap { URLComponents(url: $0, resolvingAgainstBaseURL: false) }
+            document?.fragment = nil
+            decisionHandler(document?.url == lessonURL || url?.absoluteString == "about:blank" ? .allow : .cancel)
         }
 
         func webView(_ webView: WKWebView, navigationAction: WKNavigationAction, didBecome download: WKDownload) {
