@@ -78,7 +78,17 @@ final class TabletTests: XCTestCase {
         XCTAssertTrue(app.buttons["close-sheet"].waitForNonExistence(timeout: 3))
         let letter = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "Буква Я, проба 1")).firstMatch
         XCTAssertTrue(letter.waitForExistence(timeout: 3))
+        attach("selected-letter-with-picker-closed")
+        app.buttons["show-letters"].tap()
+        let closeButton = app.buttons["close-sheet"]
+        XCTAssertTrue(closeButton.waitForExistence(timeout: 3))
+        closeButton.tap()
+        XCTAssertTrue(closeButton.waitForNonExistence(timeout: 3))
+        XCTAssertTrue(letter.exists)
+
         select("410")
+        let firstLetter = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "Буква А, проба 1")).firstMatch
+        XCTAssertTrue(firstLetter.waitForExistence(timeout: 3))
     }
 
     func testNativeCanary() {

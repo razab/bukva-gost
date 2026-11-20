@@ -70,10 +70,15 @@
 - **THEN** он не расширяет весь лист и не уменьшает отдельные буквы для помещения в строку.
 
 ### Requirement: Responsive lesson selection
-Letter selection SHALL initiate the new lesson immediately on selection, without waiting for a modal dismissal callback or doing unrelated repeated lesson work before the new worksheet is visible.
+При выборе буквы или листа цифр система SHALL сразу закрыть список без анимации и запустить переход после снятия панели. Новый лист SHALL появляться после исчезновения списка, без искусственной задержки.
+
 #### Scenario: Cold and repeated transitions
-- **WHEN** the learner changes between simple and complex letters on M1, including a first visit
-- **THEN** the tap starts the update immediately, no extra one-second delay is introduced, and measured worksheet build timings are reported separately from platform animation
+- **WHEN** ученик выбирает простые и сложные буквы на M1 впервые и повторно
+- **THEN** выбор сразу снимает список и открывает выбранный лист. Время перестройки листа измеряется отдельно от системного перехода.
+
+#### Scenario: Close or choose numbers
+- **WHEN** ученик закрывает список крестиком либо выбирает «Цифры и знаки»
+- **THEN** обычное закрытие оставляет прежний лист, а выбор цифр снимает панель и сразу открывает лист цифр.
 
 ## Evidence
 

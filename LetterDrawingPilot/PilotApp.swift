@@ -30,6 +30,7 @@ struct PilotLesson: UIViewRepresentable {
         @Published var result: NativeResult?
         @Published var error: String?
         var controlsUnavailable: Bool { state.preferences.isEmpty || state.writing }
+        weak var letterPickerAnchor: UIViewController?
         private var pending: (() -> Void)?
         private var lastSheet: NativeSheet?
         private var activeDownload: WKDownload?
@@ -87,10 +88,24 @@ struct PilotLesson: UIViewRepresentable {
             if sheet == nil { action() } else { pending = action; sheet = nil }
         }
 
-        func dismissLessonPicker() {
-            var transaction = Transaction()
-            transaction.disablesAnimations = true
-            withTransaction(transaction) { sheet = nil }
+        func chooseFromLetterPicker(_ action: @escaping () -> Void) {
+            guard sheet == .letters else { return }
+            // Find the presented container without depending on SwiftUI's hosting controller type.
+            var container = letterPickerAnchor
+            while let viewController = container,
+                  viewController.presentingViewController?.presentedViewController !== viewController {
+                container = viewController.parent
+            }
+            guard let container else {
+                afterDismiss(action)
+                return
+            }
+            guard !container.isBeingDismissed else { return }
+            container.dismiss(animated: false) { [weak self] in
+                guard let self else { return }
+                if self.sheet == .letters { self.sheet = nil }
+                action()
+            }
         }
 
         func didDismiss() {

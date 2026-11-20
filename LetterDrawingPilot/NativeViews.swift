@@ -68,7 +68,11 @@ struct NativeWorkspace: View {
 
     @ViewBuilder private func sheetContent(_ destination: NativeSheet) -> some View {
         switch destination {
-        case .letters: NativeLetters(controller: controller) { controller.dismissLessonPicker(); numbers = true }
+        case .letters:
+            NativeLetters(controller: controller) {
+                controller.chooseFromLetterPicker { numbers = true }
+            }
+            .background(LetterPickerAnchor(controller: controller).frame(width: 0, height: 0))
         case .settings: NativeSettings(controller: controller)
         case .progress: NativeProgress(controller: controller)
         case .result: if let result = controller.result { NativeSessionResult(controller: controller, result: result) }
@@ -109,6 +113,18 @@ private struct LetterImage: View {
     }
 }
 
+private struct LetterPickerAnchor: UIViewControllerRepresentable {
+    let controller: PilotLesson.Coordinator
+
+    func makeUIViewController(context: Context) -> UIViewController {
+        let anchor = UIViewController()
+        controller.letterPickerAnchor = anchor
+        return anchor
+    }
+
+    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
+}
+
 private struct NativeLetters: View {
     @ObservedObject var controller: PilotLesson.Coordinator
     let openNumbers: () -> Void
@@ -117,8 +133,9 @@ private struct NativeLetters: View {
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 76), spacing: 12)], spacing: 12) {
                 ForEach(controller.lessons) { item in
                     Button {
-                        controller.command("select", ["letter": item.letter])
-                        controller.dismissLessonPicker()
+                        controller.chooseFromLetterPicker {
+                            controller.command("select", ["letter": item.letter])
+                        }
                     } label: {
                         VStack(spacing: 8) {
                             LetterImage(letter: item.letter).frame(height: 38)

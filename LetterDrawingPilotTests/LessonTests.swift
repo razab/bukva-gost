@@ -8,7 +8,7 @@ final class LessonTests: XCTestCase {
 
     @MainActor
     func testLetterSwitchPerformance() async throws {
-        let web = try await loadedLesson()
+        let web = try await loadedLesson(requireA: false)
         let report = try await web.evaluateJavaScript("""
             (()=>{
                 const timings=[],original=activeLetter,phases={};
@@ -360,7 +360,8 @@ final class LessonTests: XCTestCase {
     }
 
     @MainActor
-    private func loadedLesson() async throws -> WKWebView {
+    private func loadedLesson(requireA: Bool = true) async throws -> WKWebView {
+        let readyField = requireA ? field : "document.querySelector('canvas[data-surface-id]')"
         for _ in 0..<80 {
             let windows = UIApplication.shared.connectedScenes
                 .compactMap { $0 as? UIWindowScene }
@@ -369,7 +370,7 @@ final class LessonTests: XCTestCase {
                 guard let web = webView(in: window),
                       web.url?.isFileURL == true, !web.isLoading,
                       let ready = try? await web.evaluateJavaScript("""
-                        !!\(field) && document.querySelector('#demo').innerHTML.length > 0
+                        !!\(readyField) && document.querySelector('#demo').innerHTML.length > 0
                         """) as? Bool, ready else { continue }
                 return web
             }
