@@ -1,6 +1,44 @@
-body.native-ipad .appbar,body.native-ipad .session-footer,
+body.native-ipad .appbar,body.native-ipad.number-practice .session-footer,
 body.native-ipad>.learner-dialog {display:none!important}
 body.native-ipad .sheet{padding-top:8px!important}
+body.native-ipad .session-footer {
+  gap: 12px;
+  margin-top: 18px;
+  padding-top: 14px;
+}
+body.native-ipad .session-footer button { min-height: 48px; }
+body.native-ipad .session-footer #try-independent {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border-color: transparent;
+  padding-inline: 0 10px;
+  font-weight: 600;
+}
+body.native-ipad .session-footer #try-independent::after {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border: solid currentColor;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg) translateY(-2px);
+}
+body.native-ipad .session-footer #try-independent[aria-expanded="true"]::after {
+  transform: rotate(225deg);
+}
+body.native-ipad .session-footer #session-count { display: none; }
+body.native-ipad .independent-block { scroll-margin-top: 155px; }
+body.native-ipad .sheet .hero .reference-figure,
+body.native-ipad .dock-reference { grid-template-rows: minmax(0,1fr) minmax(30px,auto); }
+body.native-ipad .sheet .hero .reference-figure span,
+body.native-ipad .dock-reference span {
+  font-size: clamp(16px, 2.5vw, 20px);
+  line-height: 1.12;
+  font-weight: 550;
+  color: #284a3a;
+  text-transform: capitalize;
+}
+body.native-ipad .dock-reference b { color: var(--accent); }
 body.native-author .sheet,body.native-author #writing-dock,body.native-author #message{display:none!important}
 body.native-author #developer-panel{display:block!important;position:fixed;inset:0;width:100%;height:100%;max-height:100%;box-sizing:border-box;border:0;border-radius:0;margin:0;padding:16px;background:#f2f2f7}
 body.native-author #developer-panel>.configuration-header,

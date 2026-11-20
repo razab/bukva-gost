@@ -47,14 +47,14 @@ final class TabletTests: XCTestCase {
     }
 
     func testNumbersNavigation() {
-        app.buttons["lesson-menu"].tap()
-        app.buttons["Цифры и знаки"].tap()
+        app.buttons["show-letters"].tap()
+        app.buttons["choose-numbers"].tap()
         XCTAssertTrue(app.navigationBars["Цифры и знаки"].waitForExistence(timeout: 10))
         let reference = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "Образец 3")).firstMatch
         XCTAssertTrue(reference.waitForExistence(timeout: 10))
         reference.tap()
         XCTAssertFalse(app.buttons["Завершить занятие"].exists)
-        XCTAssertFalse(app.buttons["independent-toggle"].exists)
+        XCTAssertFalse(app.buttons["Самостоятельная проба"].exists)
         attach("native-numbers")
         app.navigationBars["Цифры и знаки"].buttons.element(boundBy: 0).tap()
         XCTAssertTrue(app.buttons["show-letters"].waitForExistence(timeout: 5))
@@ -64,7 +64,10 @@ final class TabletTests: XCTestCase {
     }
 
     func testNumbersFromMainPicker() {
-        app.buttons["show-letters"].tap()
+        let lettersButton = app.buttons["show-letters"]
+        XCTAssertEqual(lettersButton.label, "Буквы")
+        attach("worksheet-toolbar")
+        lettersButton.tap()
         let numbers = app.buttons["choose-numbers"]
         XCTAssertTrue(numbers.waitForExistence(timeout: 5))
         XCTAssertTrue(numbers.isHittable, "Numbers must be visible without scrolling the alphabet")
@@ -89,6 +92,25 @@ final class TabletTests: XCTestCase {
         select("410")
         let firstLetter = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "Буква А, проба 1")).firstMatch
         XCTAssertTrue(firstLetter.waitForExistence(timeout: 3))
+    }
+
+    func testCompletePickerFitsInBothOrientations() {
+        for orientation in [UIDeviceOrientation.portrait, .landscapeLeft] {
+            orient(orientation)
+            app.buttons["show-letters"].tap()
+            let numbers = app.buttons["choose-numbers"]
+            XCTAssertTrue(numbers.waitForExistence(timeout: 5))
+            let letterTiles = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "letter-"))
+                .allElementsBoundByIndex
+            XCTAssertEqual(letterTiles.count, 33)
+            for tile in letterTiles + [numbers] {
+                XCTAssertTrue(tile.isHittable, "\(tile.identifier) needs scrolling")
+                XCTAssertGreaterThanOrEqual(min(tile.frame.height, tile.frame.width), 44)
+            }
+            XCTAssertEqual(app.frame.width > app.frame.height, orientation.isLandscape)
+            attach(orientation.isLandscape ? "whole-picker-landscape" : "whole-picker-portrait")
+            close()
+        }
     }
 
     func testNativeCanary() {
@@ -192,7 +214,8 @@ final class TabletTests: XCTestCase {
 
     func testNativeDeveloperProgressAndResult() {
         select("410")
-        app.buttons["Завершить занятие"].tap()
+        let finish = app.webViews.firstMatch.buttons["Завершить занятие"]
+        scrollTo(finish); finish.tap()
         XCTAssertTrue(app.navigationBars["Занятие сохранено"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["Сложность"].exists)
         attach("native-result")
@@ -220,10 +243,11 @@ final class TabletTests: XCTestCase {
         settings(); scrollTo(developer); developer.tap()
         let defaults = app.buttons["Сбросить технические настройки"]
         scrollTo(defaults); defaults.tap(); close()
-        app.buttons["independent-toggle"].tap()
+        let independentAction = app.webViews.firstMatch.buttons["Самостоятельная проба"]
+        scrollTo(independentAction); independentAction.tap()
         let independent = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "Самостоятельно: а")).firstMatch
         XCTAssertTrue(independent.waitForExistence(timeout: 5))
-        app.buttons["independent-toggle"].tap()
+        scrollTo(independentAction); independentAction.tap()
     }
 
     func testNativeDrawingAndUndo() {
@@ -312,9 +336,9 @@ final class TabletTests: XCTestCase {
         if installed.navigationBars["Цифры и знаки"].exists {
             installed.navigationBars["Цифры и знаки"].buttons.element(boundBy: 0).tap()
         }
-        XCTAssertTrue(installed.buttons["lesson-menu"].waitForExistence(timeout: 15))
-        installed.buttons["lesson-menu"].tap()
-        installed.buttons["Цифры и знаки"].tap()
+        XCTAssertTrue(installed.buttons["show-letters"].waitForExistence(timeout: 15))
+        installed.buttons["show-letters"].tap()
+        installed.buttons["choose-numbers"].tap()
         XCTAssertTrue(installed.navigationBars["Цифры и знаки"].waitForExistence(timeout: 10))
         XCTAssertTrue(installed.staticTexts["Цифры"].waitForExistence(timeout: 10))
         for orientation in [UIDeviceOrientation.landscapeLeft, .portrait] {

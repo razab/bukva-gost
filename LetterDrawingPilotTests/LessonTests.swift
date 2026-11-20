@@ -149,6 +149,59 @@ final class LessonTests: XCTestCase {
     }
 
     @MainActor
+    func testWorksheetActionsAreInline() async throws {
+        let web = try await loadedLesson(requireA: false)
+        let issues = try await web.callAsyncJavaScript("""
+            await NativeApp.command('select',{letter:'А'});
+            const issues=[];
+            const footer=document.querySelector('.session-footer');
+            const independent=document.querySelector('#try-independent');
+            const finish=document.querySelector('#finish-session');
+            const next=document.querySelector('#next-letter');
+            const frame=()=>new Promise(resolve=>requestAnimationFrame(resolve));
+            const check=(condition,label)=>{if(!condition)issues.push(label)};
+            check(getComputedStyle(footer).position==='static','footer is not inline');
+            check(footer.getBoundingClientRect().top>=document.querySelector('#practice').getBoundingClientRect().bottom,'footer overlaps the practice');
+            check(document.querySelector('#reference').alt==='арбуз','wrong reference for А');
+            for(const selector of ['#reference-word','#dock-word']){
+                check(parseFloat(getComputedStyle(document.querySelector(selector)).fontSize)>=18,selector);
+            }
+            check(independent.textContent==='Самостоятельная проба','independent action label');
+            footer.scrollIntoView({block:'center'});
+            await frame();
+            for(const control of [independent,finish,next]){
+                const r=control.getBoundingClientRect();
+                check(r.width>=48&&r.height>=48,control.id+' touch target');
+                for(const x of [r.left+6,r.left+r.width/2,r.right-6]){
+                    check(control.contains(document.elementFromPoint(x,r.top+r.height/2)),control.id+' hit area');
+                }
+            }
+            const neighboring=[...footer.querySelectorAll('button')].map(button=>button.getBoundingClientRect());
+            for(let i=1;i<neighboring.length;i++){
+                const a=neighboring[i-1],b=neighboring[i];
+                check(b.left-a.right>=8||b.top-a.bottom>=8,'touch targets too close');
+            }
+            const ink=JSON.stringify(data);
+            independent.click();
+            await frame();
+            check(independent.getAttribute('aria-expanded')==='true'&&!!document.querySelector('#independent-practice canvas'),'independent trial did not open');
+            independent.click();
+            await frame();
+            check(independent.getAttribute('aria-expanded')==='false'&&!document.querySelector('#independent-practice'),'independent trial did not close');
+            check(ink===JSON.stringify(data),'ink changed');
+            footer.scrollIntoView({block:'center'});
+            await frame();
+            return issues;
+            """, arguments: [:], in: nil, contentWorld: .page) as? [String]
+        XCTAssertEqual(issues, [])
+        let attachment = XCTAttachment(image: try await web.takeSnapshot(configuration: nil))
+        attachment.name = "worksheet-inline-actions"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+        _ = try await web.evaluateJavaScript("window.scrollTo({top:0});true")
+    }
+
+    @MainActor
     func testCourseNavigationAndBackupData() async throws {
         let web = try await loadedLesson()
         let valid = try await web.evaluateJavaScript("""

@@ -8,14 +8,19 @@ struct NativeWorkspace: View {
     var body: some View {
         NavigationStack {
             PilotLesson(controller: controller)
-                .navigationTitle("Буквы по ГОСТ")
+                .navigationTitle("")
                 .navigationBarTitleDisplayMode(.inline)
-                .toolbarRole(.editor)
                 .toolbar {
                     ToolbarItem(placement: .topBarLeading) {
-                        Button { controller.present(.letters) } label: { Label("Буквы", systemImage: "square.grid.2x2").frame(minWidth: 44, minHeight: 44).contentShape(Rectangle()) }
-                            .labelStyle(.iconOnly).buttonStyle(.plain).accessibilityIdentifier("show-letters")
-                            .disabled(controller.controlsUnavailable)
+                        Button { controller.present(.letters) } label: {
+                            Text("Буквы")
+                                .font(.body.weight(.semibold))
+                                .frame(minWidth: 68, minHeight: 44)
+                                .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityIdentifier("show-letters")
+                        .disabled(controller.controlsUnavailable)
                     }
                     ToolbarItemGroup(placement: .topBarTrailing) {
                         Button { controller.command("undo") } label: { Label("Отменить последнее действие", systemImage: "arrow.uturn.backward").frame(minWidth: 44, minHeight: 44).contentShape(Rectangle()) }
@@ -23,7 +28,6 @@ struct NativeWorkspace: View {
                         Button { controller.present(.sample) } label: { Label("Образец", systemImage: "pencil.tip").frame(minWidth: 44, minHeight: 44).contentShape(Rectangle()) }
                             .labelStyle(.titleAndIcon).buttonStyle(.plain).disabled(controller.controlsUnavailable)
                         Menu {
-                            Button("Цифры и знаки", systemImage: "number") { numbers = true }
                             Button("Настройки", systemImage: "gearshape") { controller.present(.settings) }
                             Button("Моя практика", systemImage: "chart.bar") { controller.present(.progress) }
                             Divider()
@@ -33,37 +37,39 @@ struct NativeWorkspace: View {
                         .accessibilityIdentifier("lesson-menu")
                         .disabled(controller.controlsUnavailable)
                     }
-                    ToolbarItemGroup(placement: .bottomBar) {
-                        Button { controller.command("independent") } label: { Label(controller.state.independent ? "Скрыть пробу" : "Без контура", systemImage: "pencil.line").fixedSize(horizontal: true, vertical: false).frame(minHeight: 44).contentShape(Rectangle()) }
-                            .labelStyle(.titleAndIcon).buttonStyle(.plain).disabled(controller.controlsUnavailable).accessibilityIdentifier("independent-toggle")
-                        Spacer()
-                        Text(controller.state.count).font(.footnote).foregroundStyle(.secondary).monospacedDigit()
-                        Spacer()
-                        Button { controller.command("finish") } label: { Text("Завершить занятие").fixedSize(horizontal: true, vertical: false).frame(minHeight: 44).contentShape(Rectangle()) }.buttonStyle(.plain).disabled(!controller.state.hasWork || controller.controlsUnavailable)
-                        Button { controller.command("next") } label: { Label("Следующая буква", systemImage: "chevron.forward").frame(minWidth: 44, minHeight: 44).contentShape(Rectangle()) }.disabled(!controller.state.canNext || controller.controlsUnavailable)
-                            .labelStyle(.iconOnly).buttonStyle(.plain)
-                    }
                 }
                 .navigationDestination(isPresented: $numbers) { NativeNumbers() }
         }
         .tint(Color(uiColor: .systemGreen))
         .sheet(item: $controller.sheet, onDismiss: controller.didDismiss) { destination in
-            NavigationStack {
-                sheetContent(destination)
-                    .navigationTitle(destination == .result && controller.result?.saved == false ? "Занятие завершено" : destination.title)
-                    .navigationBarTitleDisplayMode(.inline)
-                    .toolbar {
-                        ToolbarItem(placement: .confirmationAction) {
-                            Button { controller.sheet = nil } label: { Label("Закрыть", systemImage: "xmark").frame(minWidth: 44, minHeight: 44).contentShape(Rectangle()) }
-                                .labelStyle(.iconOnly).buttonStyle(.plain).accessibilityIdentifier("close-sheet")
-                        }
-                    }
+            if #available(iOS 18.0, *), destination == .letters {
+                sheetNavigation(destination)
+                    .presentationSizing(LetterPickerSizing())
+            } else {
+                sheetNavigation(destination)
             }
-            .presentationDragIndicator(.visible)
         }
         .alert("Не удалось выполнить действие", isPresented: Binding(get: { controller.error != nil }, set: { if !$0 { controller.error = nil } })) {
             Button("Закрыть", role: .cancel) { controller.error = nil }
         } message: { Text(controller.error ?? "") }
+    }
+
+    private func sheetNavigation(_ destination: NativeSheet) -> some View {
+        NavigationStack {
+            sheetContent(destination)
+                .navigationTitle(destination == .result && controller.result?.saved == false ? "Занятие завершено" : destination.title)
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button { controller.sheet = nil } label: {
+                            Label("Закрыть", systemImage: "xmark")
+                                .frame(minWidth: 44, minHeight: 44).contentShape(Rectangle())
+                        }
+                        .labelStyle(.iconOnly).buttonStyle(.plain).accessibilityIdentifier("close-sheet")
+                    }
+                }
+        }
+        .presentationDragIndicator(.visible)
     }
 
     @ViewBuilder private func sheetContent(_ destination: NativeSheet) -> some View {
@@ -82,6 +88,14 @@ struct NativeWorkspace: View {
     }
 }
 
+@available(iOS 18.0, *)
+private struct LetterPickerSizing: PresentationSizing {
+    func proposedSize(for root: PresentationSizingRoot, context: PresentationSizingContext) -> ProposedViewSize {
+        // Seven columns and five rows, with room for the system sheet header.
+        ProposedViewSize(width: 660, height: 444)
+    }
+}
+
 private struct NativeNumbers: View {
     @StateObject private var controller = PilotLesson.Coordinator(fragment: "numbers")
     var body: some View {
@@ -95,10 +109,6 @@ private struct NativeNumbers: View {
                             .frame(minWidth: 44, minHeight: 44).contentShape(Rectangle())
                     }.labelStyle(.iconOnly).buttonStyle(.plain)
                         .disabled(!controller.state.canUndo || controller.controlsUnavailable)
-                }
-                ToolbarItem(placement: .bottomBar) {
-                    Text(controller.state.count).font(.footnote).foregroundStyle(.secondary).monospacedDigit()
-                        .fixedSize(horizontal: true, vertical: false)
                 }
             }
     }
@@ -128,42 +138,73 @@ private struct LetterPickerAnchor: UIViewControllerRepresentable {
 private struct NativeLetters: View {
     @ObservedObject var controller: PilotLesson.Coordinator
     let openNumbers: () -> Void
+
     var body: some View {
-        ScrollView {
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 76), spacing: 12)], spacing: 12) {
-                ForEach(controller.lessons) { item in
-                    Button {
-                        controller.chooseFromLetterPicker {
-                            controller.command("select", ["letter": item.letter])
-                        }
-                    } label: {
-                        VStack(spacing: 8) {
-                            LetterImage(letter: item.letter).frame(height: 38)
-                            if let score = item.score {
-                                ProgressView(value: Double(score), total: 100).tint(score >= 90 ? .green : .orange)
-                            }
-                        }
-                        .frame(maxWidth: .infinity).frame(height: 76)
-                        .padding(8)
-                        .background(item.letter == controller.state.letter ? Color.green.opacity(0.13) : Color(uiColor: .secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 14))
-                        .overlay(alignment: .topTrailing) {
-                            if item.letter == controller.state.letter { Image(systemName: "checkmark.circle.fill").foregroundStyle(.green).padding(5) }
-                        }
-                    }
-                    .buttonStyle(.plain)
-                    .accessibilityLabel(item.letter + " " + item.letter.lowercased())
-                    .accessibilityValue(item.score.map { "Последний результат \($0) процентов" } ?? "Нет результата")
-                    .accessibilityIdentifier("letter-" + String(item.letter.unicodeScalars.first!.value, radix: 16))
-                }
-            }.padding(20)
+        ViewThatFits(in: .vertical) {
+            grid.fixedSize(horizontal: false, vertical: true)
+            ScrollView { grid }
         }
-        .safeAreaInset(edge: .bottom, spacing: 0) {
+        .background(Color(uiColor: .systemGroupedBackground))
+    }
+
+    private var grid: some View {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 74), spacing: 8)], spacing: 8) {
+            ForEach(controller.lessons) { item in
+                let selected = item.letter == controller.state.letter
+                Button {
+                    controller.chooseFromLetterPicker {
+                        controller.command("select", ["letter": item.letter])
+                    }
+                } label: {
+                    tile(selected: selected, score: item.score) { LetterImage(letter: item.letter) }
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(item.letter + " " + item.letter.lowercased())
+                .accessibilityValue(item.score.map { "Последний результат \($0) процентов" } ?? "Нет результата")
+                .accessibilityAddTraits(selected ? .isSelected : [])
+                .accessibilityIdentifier("letter-" + String(item.letter.unicodeScalars.first!.value, radix: 16))
+            }
             Button(action: openNumbers) {
-                Label("Цифры и знаки", systemImage: "number").frame(maxWidth: .infinity, minHeight: 44)
-            }.buttonStyle(.bordered).accessibilityIdentifier("choose-numbers")
-                .padding(.horizontal, 20).padding(.vertical, 12)
-                .background(Color(uiColor: .systemGroupedBackground))
-        }.background(Color(uiColor: .systemGroupedBackground))
+                tile {
+                    Image("PickerNumbers").renderingMode(.template).resizable().scaledToFit()
+                }
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Цифры и знаки")
+            .accessibilityIdentifier("choose-numbers")
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 14)
+    }
+
+    private func tile<Artwork: View>(
+        selected: Bool = false, score: Int? = nil, @ViewBuilder artwork: () -> Artwork
+    ) -> some View {
+        artwork()
+            .foregroundStyle(.primary)
+            .frame(height: 38)
+            .padding(.horizontal, 9)
+            .frame(maxWidth: .infinity)
+            .frame(height: 64)
+            .background(
+                selected ? Color.green.opacity(0.15) : Color(uiColor: .secondarySystemGroupedBackground),
+                in: RoundedRectangle(cornerRadius: 10)
+            )
+            .overlay {
+                if selected {
+                    RoundedRectangle(cornerRadius: 10).strokeBorder(.green.opacity(0.65), lineWidth: 1.5)
+                }
+            }
+            .overlay(alignment: .bottom) {
+                if let score {
+                    ProgressView(value: Double(score), total: 100)
+                        .tint(score >= 90 ? .green : .orange)
+                        .padding(.horizontal, 12)
+                        .padding(.bottom, 6)
+                        .accessibilityHidden(true)
+                }
+            }
+            .contentShape(Rectangle())
     }
 }
 

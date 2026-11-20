@@ -3,6 +3,8 @@ document.body.classList.add('native-ipad');
 window.NativeApp={
  frame:null,
  publish(catalog=false){
+  const independent=document.querySelector('#try-independent');
+  if(independent.textContent!=='Самостоятельная проба')independent.textContent='Самостоятельная проба';
   if(!window.webkit?.messageHandlers?.nativeLesson)return;
   const work=LearnerExperience.work();
   const state={kind:'state',letter:activeLetter,preferences,variant,stylusOnly,
@@ -46,7 +48,7 @@ window.NativeApp={
    case 'import':await document.querySelector('#import-backup').onchange({target:{files:[new File([payload.text],payload.name,{type:'application/json'})],value:''}});break;
    case 'restore':document.querySelector('#restore-backup').click();break;
    case 'finish':{
-    document.querySelector('#finish-session').click();
+    LearnerExperience.finish();
     const dialog=document.querySelector('#session-result');
     if(dialog.open){const session=LearnerExperience.store().sessions(activeLetter).at(-1);
      window.webkit?.messageHandlers?.nativeLesson?.postMessage({kind:'result',letter:activeLetter,statistics:session?.statistics||LearnerExperience.statistics(LearnerExperience.work()),saved:LearnerExperience.store().lastSaveSucceeded});
@@ -65,6 +67,11 @@ if(location.hash.startsWith('#author-')){
  document.querySelector('#open-parent').click();document.querySelector('#open-developer').click();
  document.querySelectorAll('#developer-panel details.page-editor').forEach(e=>e.open=true);
 }else{
+ document.querySelector('#finish-session').onclick=()=>NativeApp.command('finish');
+ const independent=document.querySelector('#try-independent');
+ independent.addEventListener('click',()=>{
+  document.querySelector('#independent-practice')?.scrollIntoView({block:'start'});
+ });
  for(const type of ['pointerdown','pointerup','pointercancel','click','change'])document.addEventListener(type,()=>NativeApp.schedule(),true);
  NativeApp.publish(true);
 }

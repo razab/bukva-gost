@@ -88,6 +88,20 @@ for (const letter of Object.keys(glyphs).filter(c => /^[А-ЯЁ]$/.test(c))) {
   manifest.letterImages.push({letter, sha256: createHash('sha256').update(png).digest('hex')});
 }
 if (manifest.letterImages.length !== 33) throw Error('Native course needs 33 GOST letter images');
+const digits = vm.runInNewContext(assets.get('components/number-glyphs.js').toString() + ';NumberGlyphs');
+const digitPaths = [...'123'].map((digit, i) =>
+  `<path d="${digits[digit].outline}" transform="translate(${i * 64} 115) scale(${100/1400} ${-100/1400})"/>`
+).join('');
+const pickerDigits = new Resvg(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 196 130">${digitPaths}</svg>`, {
+  fitTo: {mode: 'width', value: 392}
+}).render().asPng();
+const pickerDigitsDirectory = path.join(output, 'Assets.xcassets', 'PickerNumbers.imageset');
+await fs.mkdir(pickerDigitsDirectory, {recursive: true});
+await fs.writeFile(path.join(pickerDigitsDirectory, 'Digits.png'), pickerDigits);
+await fs.writeFile(path.join(pickerDigitsDirectory, 'Contents.json'), JSON.stringify({
+  images: [{filename: 'Digits.png', idiom: 'universal', scale: '2x'}], info: {author: 'xcode', version: 1}
+}));
+manifest.pickerDigitsSHA256 = createHash('sha256').update(pickerDigits).digest('hex');
 const iconSource = await fs.readFile(path.join(root, 'concepts/assets/icons/icon.svg'));
 const icon = new Resvg(iconSource, {fitTo: {mode: 'width', value: 1024}, background: '#fffefa'}).render().asPng();
 const iconDirectory = path.join(output, 'Assets.xcassets', 'AppIcon.appiconset');
