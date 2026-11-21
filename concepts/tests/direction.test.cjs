@@ -5,6 +5,14 @@ let app=boot();const plain=v=>JSON.parse(JSON.stringify(v));
 function cell(){return app.nodes.practice.children.find(r=>r.dataset.lessonStage==='upper-letter').children[0].parts}
 function draw(canvas,lines){const frame=JSON.parse(canvas.attrs['data-view-box']),rect=canvas.getBoundingClientRect();for(const line of lines){const points=line.map(([x,y])=>[(x-frame.x)*rect.width/frame.width,(y-frame.y)*rect.height/frame.height]);canvas.emit('pointerdown',points[0]);for(const p of points.slice(1))canvas.emit('pointermove',p);canvas.emit('pointerup',points.at(-1))}}
 function clear(){cell().output.onclick();cell().button.onclick()}
+const body=app.run("WorksheetCatalog.elements.find(part=>part.id==='gost-b90-a-body')");
+const warmup=app.nodes.practice.children.find(row=>row.dataset.component===body.id).children[0].parts;
+draw(warmup.canvas,plain(body.model));
+assert.equal(warmup.output.textContent,'100%','The closed а warmup must accept its own complete route');
+warmup.output.onclick();warmup.button.onclick();
+draw(warmup.canvas,plain(body.model).map(line=>line.reverse()));
+assert.equal(warmup.output.dataset.direction,'backward');
+warmup.output.onclick();warmup.button.onclick();
 for(const character of ['А','О']){
  app.run(`build(0,${JSON.stringify(character)})`);
  const routes=plain(app.run('demonstrationFor(models)'));
@@ -55,8 +63,17 @@ for(const character of run('LetterCurriculum.order')){
  run(`build(0,${JSON.stringify(character)})`);
  const parts=run('WorksheetCatalog.elements');
  for(let at=0;at<parts.length;at++){
-  const result=run(`(()=>{const part=WorksheetCatalog.elements[${at}],route=StrokeDirection.route(part.model),clipped=TraceFeedback.sample(route,2).flatMap(line=>{const out=[];let current=[];for(const p of line){if(TraceFeedback.distance(p,part.model)<2)current.push(p);else{if(current.length>1)out.push(current);current=[]}}if(current.length>1)out.push(current);return out});return StrokeDirection.assess(clipped.map(l=>l.map(([x,y])=>[x/150,y/180])),part.model)})()`);
-  assert.equal(result.backwards,false,character+' '+parts[at].id+' correct warmup direction');
+  const reference=`WorksheetCatalog.elements[${at}].model`;
+  const directed=plain(run(`StrokeDirection.route(${reference})`));
+  const size=directed.reduce((sum,line)=>sum+line.slice(1).reduce((n,[x,y],i)=>n+Math.hypot(x-line[i][0],y-line[i][1]),0),0);
+  const check=(lines,dx=0,dy=0)=>run(`StrokeDirection.assess(${JSON.stringify(lines.map(line=>line.map(([x,y])=>[(x+dx)/150,(y+dy)/180])))},${reference})`);
+  for(const [dx,dy] of [[0,0],[4,0],[-4,0],[0,4],[0,-4]]){
+   assert.equal(check(directed,dx,dy).backwards,false,character+' '+parts[at].id+' forward warmup');
+  }
+  if(size>=12){
+   assert.equal(check(directed.map(line=>[...line].reverse())).backwards,true,character+' '+parts[at].id+' reversed warmup');
+   assert(run(`guide(${reference}).includes('warmup-arrow')`),character+' '+parts[at].id+' lacks direction cue');
+  }
  }
 }
 run("build(0,'А')");if(!cell().output.disabled)clear();

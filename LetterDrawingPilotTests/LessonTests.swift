@@ -60,6 +60,38 @@ final class LessonTests: XCTestCase {
     }
 
     @MainActor
+    func testClosedWarmupDirection() async throws {
+        let web = try await loadedLesson(requireA: false)
+        let outcomes = try await web.evaluateJavaScript("""
+            (() => {
+                build(variant,'А');
+                const part=WorksheetCatalog.elements.find(p=>p.id==='gost-b90-a-body');
+                return [false,true].map((reverse,i)=>{
+                    const id=PracticeElement.key(part.id,i);
+                    const canvas=document.querySelector(`[data-surface-id="${id}"]`);
+                    const score=canvas.closest('.cell').querySelector('.score');
+                    data[id]=StrokeDirection.route(part.model).map(line=>
+                        (reverse?[...line].reverse():line).map(([x,y])=>[x/150,y/180]));
+                    refresh([id]);
+                    return {score:score.textContent, direction:score.dataset.direction,
+                        cue:!!canvas.parentElement.querySelector('.warmup-arrow'),
+                        label:getComputedStyle(score,'::after').content};
+                });
+            })()
+            """) as? [[String: Any]]
+        XCTAssertEqual(outcomes?.first?["score"] as? String, "100%")
+        XCTAssertEqual(outcomes?.first?["direction"] as? String, "correct")
+        XCTAssertEqual(outcomes?.last?["direction"] as? String, "backward")
+        XCTAssertEqual(outcomes?.last?["cue"] as? Bool, true)
+        XCTAssertTrue((outcomes?.last?["label"] as? String)?.contains("Не по стрелке") ?? false)
+        let attachment = XCTAttachment(image: try await web.takeSnapshot(configuration: nil))
+        attachment.name = "closed-warmup-direction"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+        _ = try await web.evaluateJavaScript("build(variant,'А');true")
+    }
+
+    @MainActor
     func testNumbersWorksheet() async throws {
         let web = try await loadedLesson()
         let before = try await web.evaluateJavaScript("JSON.stringify(Object.fromEntries(Object.keys(localStorage).filter(k=>k.startsWith('letter-worksheet-')&&k!=='letter-worksheet-numbers-v1').sort().map(k=>[k,localStorage.getItem(k)])))") as? String

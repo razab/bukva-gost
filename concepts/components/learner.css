@@ -94,4 +94,5 @@ body.learner[data-variant] .sheet{padding-bottom:max(140px,calc(var(--cell-heigh
 /* Keep the percentage anchored; the error explains why a matching shape is not green. */
 .learner .cell-foot{height:48px}
 .learner .cell-foot .score{position:relative;min-width:48px;min-height:48px}
-.learner .score[data-direction=backward]::after{content:"Обратно";position:absolute;bottom:0;left:0;right:0;font:10px/12px system-ui,sans-serif;color:#b66255;pointer-events:none}
+.learner .score[data-direction=backward]::after{content:"Не по стрелке";position:absolute;bottom:0;left:50%;transform:translateX(-50%);white-space:nowrap;font:9px/12px system-ui,sans-serif;color:#b66255;pointer-events:none}
+.learner .warmup-arrow{fill:none;stroke:#527b61;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke;pointer-events:none}

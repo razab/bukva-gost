@@ -1,7 +1,27 @@
 // Teaching direction is separate from font geometry and permits pen lifts.
 const StrokeDirection={
- routes:new WeakMap(),geometry:new WeakMap(),cache:new WeakMap(),cell:12,
+ routes:new WeakMap(),geometry:new WeakMap(),cache:new WeakMap(),warmups:new Map(),warmupCues:new WeakMap(),cell:12,
  register(model,teaching=model,complete=false){this.routes.set(model,teaching);if(complete)this.geometry.set(model,teaching)},
+ registerWarmup({id,model},glyphModel){
+  if(!this.warmups.has(id)){
+   const route=model.map(line=>{
+    // A warmup may join pieces the full letter teaches as separate motions.
+    const direction=this.assess([line.map(([x,y])=>[x/150,y/180])],glyphModel);
+    return direction.ratio<.2?[...line].reverse():line;
+   });
+   const cue=TraceFeedback.sample(route,8,32).map(line=>{
+    if(line.length<3)return '';
+    const [x,y]=line[1],[endX,endY]=line[2],length=Math.hypot(endX-x,endY-y);
+    if(length<1)return '';
+    const dx=(endX-x)/length,dy=(endY-y)/length;
+    return `<path class="warmup-arrow" d="M${x-5*dx-3*dy} ${y-5*dy+3*dx} L${x} ${y} L${x-5*dx+3*dy} ${y-5*dy-3*dx}"/>`;
+   }).join('');
+   this.warmups.set(id,{route,cue});
+  }
+  const {route,cue}=this.warmups.get(id);
+  this.register(model,route);
+  this.warmupCues.set(model,cue);
+ },
  route(model){return this.routes.get(model)||model},
  prepare(model){
   const teaching=this.route(model);if(this.cache.has(teaching))return this.cache.get(teaching);
