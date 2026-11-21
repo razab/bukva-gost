@@ -60,6 +60,58 @@ final class LessonTests: XCTestCase {
     }
 
     @MainActor
+    func testJoinedLowercaseA() async throws {
+        let web = try await loadedLesson(requireA: false)
+        let outcomes = try await web.callAsyncJavaScript("""
+            const initialLetter=activeLetter;
+            build(variant,'А');
+            const [body,stem]=lowercase;
+            const persist=save, append=writingTimes.append;
+            save=()=>{};
+            writingTimes.append=()=>{};
+            let results;
+            try {
+                results=[[[...body,...stem.slice(1)]],[body,stem],[[...stem].reverse()]].map((strokes,i)=>{
+                    const id='gost-file-b90-lower-'+i;
+                    const canvas=document.querySelector(`[data-surface-id="${id}"]`);
+                    const score=canvas.closest('.cell').querySelector('.score');
+                    delete data[id];
+                    refresh([id]);
+                    canvas.setPointerCapture=()=>{};
+                    const box=canvas.getBoundingClientRect(), frame=JSON.parse(canvas.dataset.viewBox);
+                    for(const line of strokes){
+                        const event=(type,[x,y])=>canvas.dispatchEvent(new PointerEvent(type,{
+                            bubbles:true,cancelable:true,pointerType:'pen',pointerId:1,isPrimary:true,
+                            clientX:box.left+(x-frame.x)/frame.width*box.width,
+                            clientY:box.top+(y-frame.y)/frame.height*box.height
+                        }));
+                        event('pointerdown',line[0]);
+                        for(const point of line.slice(1,-1))event('pointermove',point);
+                        event('pointerup',line.at(-1));
+                    }
+                    return [score.textContent,score.dataset.direction];
+                });
+            } finally {
+                save=persist;
+                writingTimes.append=append;
+            }
+            document.querySelector('[data-surface-id="gost-file-b90-lower-0"]').scrollIntoView({block:'center'});
+            await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+            return {results,initialLetter};
+            """, arguments: [:], in: nil, contentWorld: .page) as? [String: Any]
+        let results = outcomes?["results"] as? [[String]]
+        XCTAssertEqual(results?.first, ["100%", "correct"])
+        XCTAssertEqual(results?[1], ["100%", "correct"])
+        XCTAssertEqual(results?.last?.last, "backward")
+        let attachment = XCTAttachment(image: try await web.takeSnapshot(configuration: nil))
+        attachment.name = "joined-lowercase-a"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+        _ = try await web.callAsyncJavaScript("build(variant,letter);return true",
+            arguments: ["letter": outcomes?["initialLetter"] as? String ?? "А"], in: nil, contentWorld: .page)
+    }
+
+    @MainActor
     func testClosedWarmupDirection() async throws {
         let web = try await loadedLesson(requireA: false)
         let outcomes = try await web.evaluateJavaScript("""

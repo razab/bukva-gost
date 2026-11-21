@@ -13,6 +13,52 @@ warmup.output.onclick();warmup.button.onclick();
 draw(warmup.canvas,plain(body.model).map(line=>line.reverse()));
 assert.equal(warmup.output.dataset.direction,'backward');
 warmup.output.onclick();warmup.button.onclick();
+const [loopA,stemA]=plain(app.run('lowercase'));
+const joinedA=[...loopA,...stemA.slice(1)];
+let lowerA=app.nodes.practice.children.find(row=>row.dataset.lessonStage==='lower-letter').children[0].parts;
+const lowerAId='gost-file-b90-lower-0';
+const lowerASave=()=>plain(app.run(`data[${JSON.stringify(lowerAId)}]`));
+const clearLowerA=()=>{lowerA.output.onclick();lowerA.button.onclick()};
+draw(lowerA.canvas,[joinedA]);
+assert.equal(lowerA.output.textContent,'100%');
+assert.equal(lowerA.output.dataset.direction,'correct');
+const savedJoined=lowerASave();
+app=boot(app.saved);
+lowerA=app.nodes.practice.children.find(row=>row.dataset.lessonStage==='lower-letter').children[0].parts;
+assert.equal(lowerA.output.textContent,'100%');
+assert.deepEqual(lowerASave(),savedJoined);
+clearLowerA();
+for(const [name,lines,backward] of [
+ ['closed then lift',[loopA,stemA],false],
+ ['standalone reverse',[[...stemA].reverse()],true],
+ ['reverse body then stem',[[...loopA].reverse(),stemA],true],
+ ['joined followed by reverse',[joinedA,[...stemA].reverse()],true],
+ ['fully reversed',[[...joinedA].reverse()],true]
+]){
+ draw(lowerA.canvas,lines);
+ assert.equal(lowerA.output.dataset.direction,backward?'backward':'correct',name);
+ if(!backward)assert.equal(lowerA.output.textContent,'100%');
+ clearLowerA();
+}
+assert.equal(app.run("LearnerExperience.directionVersion('gost-file-b90-lower-0','А')"),3);
+assert.equal(app.run("LearnerExperience.directionVersion('gost-file-b90-lower-0','О')"),1);
+assert.equal(app.run("LearnerExperience.directionVersion('element-v1-gost-b90-a-body-0')"),2);
+const mixed=app.run("LetterSequence.compose('На а',DrawingGlyphs,{gap:20,maxWidth:150})");
+const mixedLines=mixed.glyphs.flatMap(glyph=>(glyph.model===app.run('lowercase')?[joinedA]:plain(app.run("demonstrationFor(DrawingGlyphs['Н'].model)"))).map(line=>line.map(([x,y])=>[(x+glyph.x)/mixed.width,(y+glyph.y)/mixed.height])));
+const checkMixed=lines=>app.run(`(()=>{const sequence=LetterSequence.compose('На а',DrawingGlyphs,{gap:20,maxWidth:150});return assessWriting(${JSON.stringify(lines)},sequence.model,8,{width:sequence.width,height:sequence.height})})()`);
+assert.equal(checkMixed(mixedLines).direction.backwards,false);
+assert.equal(checkMixed(mixedLines).score,100);
+assert.equal(checkMixed([[...mixedLines[0]].reverse(),...mixedLines.slice(1)]).direction.backwards,true);
+for(const scale of [.3,.6,.92,1.6])for(const tolerance of [1,8,16]){
+ for(const offset of (tolerance>=8?[-4,0,4]:[0])){
+  const context={scale,tolerance:tolerance/scale};
+  const sparse=plain(app.run(`TraceFeedback.sample(${JSON.stringify([joinedA])},4)[0]`));
+  const trace=(reverse)=>[(reverse?[...sparse].reverse():sparse).map(([x,y])=>[(x+offset/scale)/150,y/180])];
+  const check=reverse=>app.run(`StrokeDirection.assess(${JSON.stringify(trace(reverse))},lowercase,${JSON.stringify(context)})`);
+  assert.equal(check(false).backwards,false,`Joined а at scale ${scale}, tolerance ${tolerance}, offset ${offset}`);
+  assert.equal(check(true).backwards,true,'A reversed circuit must still fail');
+ }
+}
 for(const character of ['А','О']){
  app.run(`build(0,${JSON.stringify(character)})`);
  const routes=plain(app.run('demonstrationFor(models)'));

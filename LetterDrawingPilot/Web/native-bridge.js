@@ -18,7 +18,7 @@ window.NativeApp={
    canRestore:!document.querySelector('#restore-backup').hidden};
   if(catalog)state.lessons=LetterCurriculum.order.map(letter=>{
    const sessions=LearnerExperience.store().sessions(letter),result=LearnerExperience.completedResult(sessions);
-   const tasks=LearnerExperience.attempts().tasks(letter).filter(t=>t.profile===LearnerExperience.profile(t.id));
+   const tasks=LearnerExperience.attempts().tasks(letter).filter(t=>t.profile===LearnerExperience.profile(t.id,letter));
    const weak=tasks.sort((a,b)=>a.recent.at(-1).score-b.recent.at(-1).score)[0];
    return {letter,sessions:sessions.length,score:result?.score??null,difficulty:result?LearnerExperience.difficulty(result.session.statistics?.tolerance):'',
     independentScore:sessions.at(-1)?.independentScore??null,

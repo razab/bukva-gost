@@ -25,6 +25,10 @@ function registerTeachingDirections(){
  for(const part of WorksheetCatalog.elements)StrokeDirection.registerWarmup(part,sequenceSources[part.letters[0]].model);
 }
 registerTeachingDirections();
+if(typeof StrokeDirection!=='undefined'){
+ const lowercaseA=DrawingGlyphs['а'].model;
+ StrokeDirection.registerJoinedLoops(lowercaseA,[lowercaseA[0]]);
+}
 function fontOutline(model,extra=''){const glyph=modelGlyph.get(model);return !glyph?'':`<path d="${glyph.outline}" transform="translate(30 140) scale(${fontScale} ${-fontScale})" stroke="${(extra.match(/fill="([^"]+)"/)||[])[1]||'none'}" stroke-width="${boldExpansion()/fontScale}" stroke-linejoin="round" ${extra}/>`}
 const svgNS='http://www.w3.org/2000/svg';
 const path=line=>line.map((p,i)=>`${i?'L':'M'}${p[0]} ${p[1]}`).join(' ');
@@ -39,7 +43,7 @@ const message=document.querySelector('#message');
 const writingTimes=new WritingTimes(localStorage,()=>{message.textContent='Время письма остаётся в этой вкладке; сохранить его не удалось.'});
 let composition;const compositions=new Map();
 function editComposition(patch){if(activePointer!==null)return;composition.update(variant,patch);const oldHistory=history;build(variant);history=oldHistory;refresh()}
-const worksheetBuild='2026-11-21.62';
+const worksheetBuild='2026-11-21.63';
 const practiceGeometry=size=>({width:size*1.5,height:size*1.8});
 const preferenceDefaults=Object.freeze({size:118,bold:100,tolerance:8,rowGap:22,columnGap:12,letterGap:20,leftInset:15,penWidth:3,smoothing:0,practiceRepeats:0});
 const preferenceLimits={size:[30,160],bold:[100,150],tolerance:[.5,16],rowGap:[0,80],columnGap:[0,60],letterGap:[0,50],leftInset:[0,30],penWidth:[.5,8],smoothing:[0,2],practiceRepeats:[0,10]};

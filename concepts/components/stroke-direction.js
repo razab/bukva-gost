@@ -1,7 +1,35 @@
 // Teaching direction is separate from font geometry and permits pen lifts.
 const StrokeDirection={
- routes:new WeakMap(),geometry:new WeakMap(),cache:new WeakMap(),warmups:new Map(),warmupCues:new WeakMap(),cell:12,
+ routes:new WeakMap(),geometry:new WeakMap(),cache:new WeakMap(),warmups:new Map(),warmupCues:new WeakMap(),joinedLoops:new WeakMap(),cell:12,
  register(model,teaching=model,complete=false){this.routes.set(model,teaching);if(complete)this.geometry.set(model,teaching)},
+ registerJoinedLoops(model,loops){
+  if(!loops.length)return;
+  this.joinedLoops.set(model,loops.map(loop=>{
+   const [sample]=TraceFeedback.sample([loop],8);
+   return {
+    model:[loop],
+    start:loop[0],
+    checkpoints:[.25,.5,.75].map(fraction=>sample[Math.floor((sample.length-1)*fraction)])
+   };
+  }));
+ },
+ closeIndex(line,{start,checkpoints},radius){
+  const distance=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);
+  if(line.length<5||distance(line[0],start)>radius)return -1;
+  let i=1;
+  for(const target of [...checkpoints,start]){
+   while(i<line.length&&distance(line[i],target)>radius)i++;
+   if(i===line.length)return -1;
+   i++;
+  }
+  // The pen may continue immediately down the stem. Cut at the closest return.
+  let closest=i-1;
+  while(i<line.length&&distance(line[i],start)<=radius){
+   if(distance(line[i],start)<distance(line[closest],start))closest=i;
+   i++;
+  }
+  return closest;
+ },
  registerWarmup({id,model},glyphModel){
   if(!this.warmups.has(id)){
    const route=model.map(line=>{
@@ -36,8 +64,31 @@ const StrokeDirection={
   const prepared={grid,segments};this.cache.set(teaching,prepared);return prepared;
  },
  assess(strokes,model,{width=150,height=180,tolerance=8,scale=1}={}){
-  const {grid}=this.prepare(model),radius=tolerance+2/scale,ambiguity=Math.max(.8,Math.min(4,tolerance*scale/2))/scale,minReverse=4/scale;
   const actual=TraceFeedback.sample(strokes.map(line=>line.map(([x,y])=>[x*width,y*height])),2/scale,1536);
+  const standard=this.measure(actual,model,{tolerance,scale});
+  const loops=this.joinedLoops.get(model);
+  if(!standard.backwards||!loops)return standard;
+
+  // Only a completed, correctly directed loop licenses the upward return.
+  // Any following motion is still graded against the descending stem.
+  let checkedLoop=0;
+  const remainder=actual.map(line=>{
+   for(const loop of loops){
+    const close=this.closeIndex(line,loop,Math.min(16,tolerance+2/scale));
+    if(close<1)continue;
+    const result=this.measure([line.slice(0,close+1)],loop.model,{tolerance,scale});
+    if(result.backwards||!result.checked)continue;
+    checkedLoop+=result.checked;
+    return line.slice(close);
+   }
+   return line;
+  });
+  if(!checkedLoop)return standard;
+  const rest=this.measure(remainder,model,{tolerance,scale}),checked=checkedLoop+rest.checked;
+  return {backwards:rest.backwards,ratio:(checkedLoop+rest.checked*rest.ratio)/checked,checked};
+ },
+ measure(actual,model,{tolerance,scale}){
+  const {grid}=this.prepare(model),radius=tolerance+2/scale,ambiguity=Math.max(.8,Math.min(4,tolerance*scale/2))/scale,minReverse=4/scale;
   let checked=0,backwards=0;
   for(const line of actual){
    let run=0;const flush=()=>{if(run>=minReverse)backwards+=run;run=0};

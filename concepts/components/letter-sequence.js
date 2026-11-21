@@ -21,7 +21,12 @@ const LetterSequence={
    wordBreak=false;lastOrigin=cursor;maxOrigin=Math.max(maxOrigin,cursor);firstLeft??=source.bounds?.[0]||0;
    glyphs.push({model:source.model,x:cursor,y:lineY});for(const line of source.model)model.push(line.map(([x,y])=>[x+cursor,y+lineY]));cursor+=source.advance;previous=source;
   }
-  if(typeof StrokeDirection!=='undefined')StrokeDirection.register(model,glyphs.flatMap(g=>StrokeDirection.route(g.model).map(line=>line.map(([x,y])=>[x+g.x,y+g.y]))),true);
+  if(typeof StrokeDirection!=='undefined'){
+   const translate=(line,g)=>line.map(([x,y])=>[x+g.x,y+g.y]);
+   StrokeDirection.register(model,glyphs.flatMap(g=>StrokeDirection.route(g.model).map(line=>translate(line,g))),true);
+   StrokeDirection.registerJoinedLoops(model,glyphs.flatMap(g=>
+    (StrokeDirection.joinedLoops.get(g.model)||[]).map(loop=>translate(loop.model[0],g))));
+  }
   return {text,model,glyphs,breaks,width:maxOrigin+150,height:180+lineY};
 
  },

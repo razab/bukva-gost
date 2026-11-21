@@ -89,6 +89,10 @@ Practice of letters, numbers, signs, their parts and text SHALL check stroke dir
 - **WHEN** a learner follows the arrow on the closed warmup for lowercase а or another practice part
 - **THEN** direction uses the actual warmup path. Its arrow and assessment agree, even if the same area is drawn in separate motions in the whole letter.
 
+#### Scenario: Join the body and descending stem of lowercase а
+- **WHEN** the learner closes the lowercase а body in the taught direction and proceeds down the right stem with or without a pen lift
+- **THEN** the completion of the loop SHALL be accepted in single-letter and text practice. The descending stem remains checked, and a standalone upward stem is rejected. The existing split demonstration and closed warmup remain valid.
+
 ## Evidence
 
 - `concepts/components/input-policy.js`
