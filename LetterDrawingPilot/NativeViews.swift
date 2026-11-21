@@ -13,11 +13,11 @@ struct NativeWorkspace: View {
                 .toolbar {
                     ToolbarItem(placement: .topBarLeading) {
                         Button { controller.present(.letters) } label: {
-                            Text("Буквы")
-                                .font(.body.weight(.semibold))
-                                .frame(minWidth: 68, minHeight: 44)
+                            Label("Выбрать букву", systemImage: "square.grid.2x2")
+                                .frame(minWidth: 44, minHeight: 44)
                                 .contentShape(Rectangle())
                         }
+                        .labelStyle(.iconOnly)
                         .buttonStyle(.plain)
                         .accessibilityIdentifier("show-letters")
                         .disabled(controller.controlsUnavailable)
@@ -91,8 +91,8 @@ struct NativeWorkspace: View {
 @available(iOS 18.0, *)
 private struct LetterPickerSizing: PresentationSizing {
     func proposedSize(for root: PresentationSizingRoot, context: PresentationSizingContext) -> ProposedViewSize {
-        // Seven columns and five rows, with room for the system sheet header.
-        ProposedViewSize(width: 660, height: 444)
+        // Five rows plus the difficulty control and system sheet header.
+        ProposedViewSize(width: 660, height: 500)
     }
 }
 
@@ -140,9 +140,28 @@ private struct NativeLetters: View {
     let openNumbers: () -> Void
 
     var body: some View {
-        ViewThatFits(in: .vertical) {
-            grid.fixedSize(horizontal: false, vertical: true)
-            ScrollView { grid }
+        VStack(spacing: 0) {
+            Picker("Сложность", selection: Binding(get: { controller.state.level }, set: { controller.command("level", ["level": $0]) })) {
+                Text("Легче").tag("easy")
+                Text("Обычно").tag("standard")
+                Text("Точнее").tag("precise")
+            }
+            .pickerStyle(.segmented)
+            .controlSize(.large)
+            .frame(maxWidth: 400, minHeight: 44)
+            .padding(.horizontal, 16)
+            .padding(.top, 4)
+
+            if ["ideal", "impossible", "custom"].contains(controller.state.level) {
+                Text("Технический допуск")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
+
+            ViewThatFits(in: .vertical) {
+                grid.fixedSize(horizontal: false, vertical: true)
+                ScrollView { grid }
+            }
         }
         .background(Color(uiColor: .systemGroupedBackground))
     }
@@ -213,15 +232,6 @@ private struct NativeSettings: View {
     @State private var importing = false
     var body: some View {
         Form {
-            Section("Сложность") {
-                Picker("Сложность", selection: Binding(get: { controller.state.level }, set: { controller.command("level", ["level": $0]) })) {
-                    Text("Легче").tag("easy"); Text("Обычно").tag("standard"); Text("Точнее").tag("precise")
-                }.pickerStyle(.segmented)
-                if let size = controller.state.preferences["size"] {
-                    LabeledContent("Высота заглавной", value: size.formatted() + " пт")
-                }
-                LabeledContent("Допуск", value: "±" + (controller.state.preferences["tolerance"] ?? 8).formatted() + " px")
-            }
             Section("Перо") {
                 NativeSlider(controller: controller, key: "penWidth", title: "Толщина пера", range: 0.5...8, step: 0.5, unit: " px")
                 Picker("Плавность", selection: Binding(get: { Int(controller.state.preferences["smoothing"] ?? 0) }, set: { controller.command("configure", ["smoothing": $0]) })) {

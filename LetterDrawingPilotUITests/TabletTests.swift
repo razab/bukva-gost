@@ -65,7 +65,7 @@ final class TabletTests: XCTestCase {
 
     func testNumbersFromMainPicker() {
         let lettersButton = app.buttons["show-letters"]
-        XCTAssertEqual(lettersButton.label, "Буквы")
+        XCTAssertEqual(lettersButton.label, "Выбрать букву")
         attach("worksheet-toolbar")
         lettersButton.tap()
         let numbers = app.buttons["choose-numbers"]
@@ -100,6 +100,10 @@ final class TabletTests: XCTestCase {
             app.buttons["show-letters"].tap()
             let numbers = app.buttons["choose-numbers"]
             XCTAssertTrue(numbers.waitForExistence(timeout: 5))
+            let difficulty = app.segmentedControls.firstMatch
+            XCTAssertTrue(difficulty.buttons["Легче"].isHittable)
+            XCTAssertTrue(difficulty.buttons["Обычно"].isHittable)
+            XCTAssertTrue(difficulty.buttons["Точнее"].isHittable)
             let letterTiles = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "letter-"))
                 .allElementsBoundByIndex
             XCTAssertEqual(letterTiles.count, 33)
@@ -120,9 +124,7 @@ final class TabletTests: XCTestCase {
         app.buttons["letter-41e"].tap()
         XCTAssertTrue(app.buttons["close-sheet"].waitForNonExistence(timeout: 5))
         settings()
-        app.segmentedControls.buttons["Точнее"].tap()
-        XCTAssertTrue(app.segmentedControls.buttons["Точнее"].isSelected)
-        app.segmentedControls.buttons["Обычно"].tap()
+        XCTAssertFalse(app.segmentedControls.buttons["Точнее"].exists)
         attach("native-settings")
         close()
         app.buttons["Образец"].tap()
@@ -219,25 +221,36 @@ final class TabletTests: XCTestCase {
                 .matching(NSPredicate(format: "label == %@", "Буква " + letter + ", проба 1")).firstMatch
         }
         let upper = practice("А"), lower = practice("а")
+        let picker = app.buttons["show-letters"]
+        XCTAssertEqual(picker.label, "Выбрать букву")
+        XCTAssertGreaterThanOrEqual(picker.frame.height, 44)
+        XCTAssertGreaterThanOrEqual(picker.frame.width, 44)
+        attach("new-picker-button")
         var previousHeight = CGFloat.infinity
-        for (level, height) in [("Легче", 73), ("Обычно", 52), ("Точнее", 36)] {
-            settings()
-            app.segmentedControls.buttons[level].tap()
-            let size = app.staticTexts.containing(NSPredicate(format: "label CONTAINS %@", "\(height) пт")).firstMatch
-            XCTAssertTrue(size.waitForExistence(timeout: 5), "Expected \(height) пт for \(level)")
+        for level in ["Легче", "Обычно", "Точнее"] {
+            picker.tap()
+            let segment = app.segmentedControls.buttons[level]
+            XCTAssertTrue(segment.waitForExistence(timeout: 5))
+            segment.tap()
+            XCTAssertTrue(segment.isSelected)
+            XCTAssertTrue(app.buttons["choose-numbers"].isHittable)
+            if level == "Обычно" { attach("picker-difficulty") }
             close()
             XCTAssertTrue(upper.waitForExistence(timeout: 5))
             XCTAssertTrue(lower.exists)
             XCTAssertLessThan(upper.frame.height, previousHeight)
             previousHeight = upper.frame.height
-            scrollTo(upper)
-            attach("practice-\(height)")
         }
+        picker.tap()
+        XCTAssertTrue(app.segmentedControls.buttons["Точнее"].isSelected)
+        app.buttons["letter-41e"].tap()
+        let next = practice("О")
+        XCTAssertTrue(next.waitForExistence(timeout: 5))
         app.terminate()
         app.launch()
-        XCTAssertTrue(app.buttons["lesson-menu"].waitForExistence(timeout: 15))
-        settings()
-        XCTAssertTrue(app.staticTexts.containing(NSPredicate(format: "label CONTAINS %@", "36 пт")).firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(picker.waitForExistence(timeout: 15))
+        picker.tap()
+        XCTAssertTrue(app.segmentedControls.buttons["Точнее"].isSelected)
         close()
     }
 
