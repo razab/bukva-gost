@@ -11,7 +11,7 @@ for(const level of ['standard','easy','precise']){
  const [left,right,bar]=plain(app.run('demonstrationFor(models)'));
  const [[x0,y],[x1]]=bar;
  for(const [name,points,backward] of [
-  ['brief correction',[[x0,y],[x0+10/scale,y],[x0+5.5/scale,y],[x1,y]],false],
+  ['brief correction',[[x0,y],[x0+10/scale,y],[x0+2/scale,y],[x1,y]],false],
   ['reverse crossbar',[...bar].reverse(),true]
  ]){
   draw(cell().canvas,[left,right,points]);
@@ -105,7 +105,8 @@ for(const [character,glyph] of Object.entries(glyphs)){
  for(const scale of [.3,.6,1.6])for(const tolerance of [1,16]){
   const normalized=route.map(l=>l.map(([x,y])=>[x/150,y/180]));
   assert.equal(run(`StrokeDirection.assess(${JSON.stringify(normalized)},${model},{scale:${scale},tolerance:${tolerance/scale}}).backwards`),false,character+' correct scaled');
-  if(length>12)assert.equal(run(`StrokeDirection.assess(${JSON.stringify(normalized.map(l=>[...l].reverse()))},${model},{scale:${scale},tolerance:${tolerance/scale}}).backwards`),true,character+' reverse scaled');
+  const longEnough=route.some(line=>line.some(([x,y])=>Math.hypot(x-line.at(-1)[0],y-line.at(-1)[1])*scale>=10));
+  assert.equal(run(`StrokeDirection.assess(${JSON.stringify(normalized.map(l=>[...l].reverse()))},${model},{scale:${scale},tolerance:${tolerance/scale}}).backwards`),longEnough,character+' reverse scaled');
  }
  assert.equal(check(route.map(l=>l.map(([x,y],i)=>[x+Math.sin(i)*.3,y+Math.cos(i)*.3]))).backwards,false,character+' jitter rejected');
  for(const [dx,dy] of [[-4,0],[4,0],[0,-4],[0,4]])assert.equal(check(route.map(l=>l.map(([x,y])=>[x+dx/.92,y+dy/.92]))).backwards,false,character+' in-corridor offset rejected');
@@ -113,18 +114,26 @@ for(const [character,glyph] of Object.entries(glyphs)){
 const vertical=[[[45,40],[45,140]]],normal=vertical.map(l=>l.map(([x,y])=>[x/150,y/180]));
 assert.equal(run(`StrokeDirection.assess(${JSON.stringify(normal)},${JSON.stringify(vertical)}).backwards`),false);
 assert.equal(run(`StrokeDirection.assess(${JSON.stringify(normal.map(l=>[...l].reverse()))},${JSON.stringify(vertical)}).backwards`),true);
+// A long teaching stroke needs more than the screen minimum, independently of another stroke.
+for(const [length,reverse,expected] of [[300,12,false],[300,18,true],[100,8,false],[100,12,true]]){
+ const model=[[[45,20],[45,20+length]],[[90,20],[90,370]]];
+ const ink=[[[45,20],[45,60],[45,60-reverse],[45,20+length]],model[1]];
+ const check=run(`StrokeDirection.assess(${JSON.stringify(ink.map(line=>line.map(([x,y])=>[x/150,y/400])))},${JSON.stringify(model)},{width:150,height:400})`);
+ assert.equal(check.backwards,expected,length+' long with '+reverse+' back');
+}
 for(const text of ['ААА','СОК','её ЯЯ']){
  const composed=run(`LetterSequence.compose(${JSON.stringify(text)},DrawingGlyphs,{gap:20,maxWidth:150})`),routes=plain(run(`StrokeDirection.route(LetterSequence.compose(${JSON.stringify(text)},DrawingGlyphs,{gap:20,maxWidth:150}).model)`));
  const check=lines=>run(`(()=>{const sequence=LetterSequence.compose(${JSON.stringify(text)},DrawingGlyphs,{gap:20,maxWidth:150});return StrokeDirection.assess(${JSON.stringify(lines.map(l=>l.map(([x,y])=>[x/composed.width,y/composed.height])))},sequence.model,{width:sequence.width,height:sequence.height})})()`);
  assert.equal(check(routes).backwards,false,text+' correct');assert.equal(check(routes.map(l=>[...l].reverse())).backwards,true,text+' reverse');
 }
-assert.equal(run('drawingGeometryRevision'),'4633c1e3');assert(run("LearnerExperience.profile('x').includes('direction:4')"));
+assert.equal(run('drawingGeometryRevision'),'4633c1e3');assert(run("LearnerExperience.profile('x').includes('direction:5')"));
 for(const character of run('LetterCurriculum.order')){
  run(`build(0,${JSON.stringify(character)})`);
  const parts=run('WorksheetCatalog.elements');
  for(let at=0;at<parts.length;at++){
   const reference=`WorksheetCatalog.elements[${at}].model`;
   const directed=plain(run(`StrokeDirection.route(${reference})`));
+  if(parts[at].id==='gost-b90-437-part-2')assert(directed[0][0][0]>directed[0].at(-1)[0],'З warmup must retain its right-to-left arrow');
   const size=directed.reduce((sum,line)=>sum+line.slice(1).reduce((n,[x,y],i)=>n+Math.hypot(x-line[i][0],y-line[i][1]),0),0);
   const check=(lines,dx=0,dy=0)=>run(`StrokeDirection.assess(${JSON.stringify(lines.map(line=>line.map(([x,y])=>[(x+dx)/150,(y+dy)/180])))},${reference})`);
   for(const [dx,dy] of [[0,0],[4,0],[-4,0],[0,4],[0,-4]]){

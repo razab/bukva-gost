@@ -33,8 +33,8 @@ const StrokeDirection={
  registerWarmup({id,model},glyphModel){
   if(!this.warmups.has(id)){
    const route=model.map(line=>{
-    // A warmup may join pieces the full letter teaches as separate motions.
-    const direction=this.assess([line.map(([x,y])=>[x/150,y/180])],glyphModel);
+    // Keep authored cues independent from the threshold for grading handwriting.
+    const direction=this.assess([line.map(([x,y])=>[x/150,y/180])],glyphModel,{forWarmup:true});
     return direction.ratio<.2?[...line].reverse():line;
    });
    const cue=TraceFeedback.sample(route,8,32).map(line=>{
@@ -53,19 +53,24 @@ const StrokeDirection={
  route(model){return this.routes.get(model)||model},
  prepare(model){
   const teaching=this.route(model);if(this.cache.has(teaching))return this.cache.get(teaching);
-  const grid=new Map(),segments=[];
-  for(const line of TraceFeedback.sample(teaching,3,2048))for(let i=1;i<line.length;i++){
-   const [ax,ay]=line[i-1],[bx,by]=line[i],dx=bx-ax,dy=by-ay,length=Math.hypot(dx,dy);if(length<.1)continue;
-   const segment={ax,ay,dx,dy,length,square:length*length};segments.push(segment);
-   for(let x=Math.floor(Math.min(ax,bx)/this.cell);x<=Math.floor(Math.max(ax,bx)/this.cell);x++)for(let y=Math.floor(Math.min(ay,by)/this.cell);y<=Math.floor(Math.max(ay,by)/this.cell);y++){
-    const key=x+','+y;if(!grid.has(key))grid.set(key,[]);grid.get(key).push(segment);
+  const grid=new Map();
+  for(const [index,line] of TraceFeedback.sample(teaching,3,2048).entries()){
+   const stroke=teaching[index];
+   const strokeLength=stroke.slice(1).reduce((sum,[x,y],i)=>sum+Math.hypot(x-stroke[i][0],y-stroke[i][1]),0);
+   for(let i=1;i<line.length;i++){
+    const [ax,ay]=line[i-1],[bx,by]=line[i],dx=bx-ax,dy=by-ay,length=Math.hypot(dx,dy);if(length<.1)continue;
+    const segment={ax,ay,dx,dy,length,square:length*length,strokeLength};
+    for(let x=Math.floor(Math.min(ax,bx)/this.cell);x<=Math.floor(Math.max(ax,bx)/this.cell);x++)for(let y=Math.floor(Math.min(ay,by)/this.cell);y<=Math.floor(Math.max(ay,by)/this.cell);y++){
+     const key=x+','+y;if(!grid.has(key))grid.set(key,[]);grid.get(key).push(segment);
+    }
    }
   }
-  const prepared={grid,segments};this.cache.set(teaching,prepared);return prepared;
+  this.cache.set(teaching,grid);return grid;
  },
- assess(strokes,model,{width=150,height=180,tolerance=8,scale=1}={}){
+ assess(strokes,model,{width=150,height=180,tolerance=8,scale=1,forWarmup=false}={}){
   const actual=TraceFeedback.sample(strokes.map(line=>line.map(([x,y])=>[x*width,y*height])),2/scale,1536);
-  const standard=this.measure(actual,model,{tolerance,scale});
+  const options={tolerance,scale,forWarmup};
+  const standard=this.measure(actual,model,options);
   const loops=this.joinedLoops.get(model);
   if(!standard.backwards||!loops)return standard;
 
@@ -76,7 +81,7 @@ const StrokeDirection={
    for(const loop of loops){
     const close=this.closeIndex(line,loop,Math.min(16,tolerance+2/scale));
     if(close<1)continue;
-    const result=this.measure([line.slice(0,close+1)],loop.model,{tolerance,scale});
+    const result=this.measure([line.slice(0,close+1)],loop.model,options);
     if(result.backwards||!result.checked)continue;
     checkedLoop+=result.checked;
     return line.slice(close);
@@ -84,30 +89,36 @@ const StrokeDirection={
    return line;
   });
   if(!checkedLoop)return standard;
-  const rest=this.measure(remainder,model,{tolerance,scale}),checked=checkedLoop+rest.checked;
+  const rest=this.measure(remainder,model,options),checked=checkedLoop+rest.checked;
   return {backwards:rest.backwards,ratio:(checkedLoop+rest.checked*rest.ratio)/checked,checked};
  },
- measure(actual,model,{tolerance,scale}){
-  const {grid}=this.prepare(model),radius=tolerance+2/scale,ambiguity=Math.max(.8,Math.min(4,tolerance*scale/2))/scale,minReverse=6/scale;
+ measure(actual,model,{tolerance,scale,forWarmup}){
+  const grid=this.prepare(model),radius=tolerance+2/scale,ambiguity=Math.max(.8,Math.min(4,tolerance*scale/2))/scale,minReverse=(forWarmup?6:10)/scale, reverseShare=forWarmup?0:.05;
   let checked=0,backwards=0;
   for(const line of actual){
-   let run=0,start,substantial=false;
+   let run=0,start,threshold,substantial=false;
    const flush=()=>{if(substantial)backwards+=run;run=0;substantial=false};
    for(let i=1;i<line.length;i++){
     const a=line[i-1],b=line[i],dx=b[0]-a[0],dy=b[1]-a[1],length=Math.hypot(dx,dy);if(length<.1)continue;
     const x=(a[0]+b[0])/2,y=(a[1]+b[1])/2,candidates=new Set();
     for(let cx=Math.floor((x-radius)/this.cell);cx<=Math.floor((x+radius)/this.cell);cx++)for(let cy=Math.floor((y-radius)/this.cell);cy<=Math.floor((y+radius)/this.cell);cy++)for(const s of grid.get(cx+','+cy)||[])candidates.add(s);
     let nearest=Infinity;const nearby=[];
-    for(const s of candidates){const t=Math.max(0,Math.min(1,((x-s.ax)*s.dx+(y-s.ay)*s.dy)/s.square)),distance=Math.hypot(x-s.ax-t*s.dx,y-s.ay-t*s.dy);if(distance>radius)continue;nearest=Math.min(nearest,distance);nearby.push({distance,dot:(dx*s.dx+dy*s.dy)/(length*s.length)})}
-    let forward=false,reverse=false;
-    for(const p of nearby)if(p.distance<=nearest+ambiguity){if(p.dot>.45)forward=true;if(p.dot<-.45)reverse=true}
+    for(const s of candidates){const t=Math.max(0,Math.min(1,((x-s.ax)*s.dx+(y-s.ay)*s.dy)/s.square)),distance=Math.hypot(x-s.ax-t*s.dx,y-s.ay-t*s.dy);if(distance>radius)continue;nearest=Math.min(nearest,distance);nearby.push({distance,strokeLength:s.strokeLength,dot:(dx*s.dx+dy*s.dy)/(length*s.length)})}
+    let forward=false,reverse=null;
+    for(const p of nearby)if(p.distance<=nearest+ambiguity){
+     if(p.dot>.45)forward=true;
+     if(p.dot<-.45&&(!reverse||p.distance<reverse.distance))reverse=p;
+    }
     // At joins/intersections both directions may be equally close.
-    if(forward===reverse){flush();continue}
+    if(forward===Boolean(reverse)){flush();continue}
     checked+=length;
     if(reverse){
-     if(!run)start=a;
+     if(!run){
+      start=a;
+      threshold=Math.max(minReverse,reverseShare*reverse.strokeLength);
+     }
      run+=length;
-     substantial||=Math.hypot(b[0]-start[0],b[1]-start[1])>=minReverse;
+     substantial||=Math.hypot(b[0]-start[0],b[1]-start[1])>=threshold;
     }else flush();
    }flush();
   }

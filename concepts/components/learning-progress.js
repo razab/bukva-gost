@@ -9,7 +9,7 @@ class LearningProgress {
   if(value?.version!==1||!Number.isFinite(value.tolerance)||value.tolerance<.5||value.tolerance>16||!Number.isFinite(value.size)||value.size<30||value.size>160||!Number.isFinite(value.bold)||value.bold<100||value.bold>150)return null;
   const group=(v,time=false)=>{if(!v||!Number.isSafeInteger(v.count)||v.count<0||v.count>10000)return null;const out={count:v.count,score:v.count?this.score(v.score):null};if(time){out.timedCount=Number.isSafeInteger(v.timedCount)&&v.timedCount>=0&&v.timedCount<=v.count?v.timedCount:0;out.meanMs=out.timedCount&&Number.isFinite(v.meanMs)&&v.meanMs>=0&&v.meanMs<=86400000?Math.round(v.meanMs):null;if(out.meanMs===null)out.timedCount=0}return out};
   const upper=group(value.upper,true),lower=group(value.lower,true),overall=group(value.overall);if(!upper||!lower||!overall||overall.count<upper.count+lower.count)return null;
-  return {version:1,tolerance:value.tolerance,size:value.size,bold:value.bold,upper,lower,overall,...(['geometry-direction-v1','geometry-direction-v2','geometry-direction-v3','geometry-direction-v4'].includes(value.assessment)?{assessment:value.assessment}:{})};
+  return {version:1,tolerance:value.tolerance,size:value.size,bold:value.bold,upper,lower,overall,...(['geometry-direction-v1','geometry-direction-v2','geometry-direction-v3','geometry-direction-v4','geometry-direction-v5'].includes(value.assessment)?{assessment:value.assessment}:{})};
  }
  read(){
   const out={version:1,letters:{}};

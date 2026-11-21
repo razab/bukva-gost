@@ -95,7 +95,7 @@ Practice of letters, numbers, signs, their parts and text SHALL check stroke dir
 
 #### Scenario: Correct a short movement
 - **WHEN** the learner briefly corrects a stroke and continues in the taught direction
-- **THEN** only a continuous unambiguous reverse run reaching at least 6 CSS px from its start counts for direction. A shorter correction does not lower the direction grade, show «Не по стрелке», or block the next lesson. Geometry is assessed independently.
+- **THEN** only a continuous unambiguous reverse run reaching at least 5% of its corresponding taught stroke length and at least 10 CSS px from its start counts for direction. A shorter correction does not lower the direction grade, show «Не по стрелке», or block the next lesson. Geometry is assessed independently.
 
 ## Evidence
 

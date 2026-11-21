@@ -361,11 +361,26 @@ final class TabletTests: XCTestCase {
         XCTAssertTrue(app.buttons[previous].waitForExistence(timeout: 15))
     }
 
+    private func openMenuAndCheckVersion(in app: XCUIApplication) {
+        app.buttons["lesson-menu"].tap()
+        let version = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Версия ")).firstMatch
+        XCTAssertTrue(version.waitForExistence(timeout: 5))
+        XCTAssertNotNil(version.label.range(of: #"^Версия [0-9.]+ \([0-9]+\)$"#, options: .regularExpression))
+        XCTAssertTrue(app.buttons["Настройки"].isHittable)
+    }
+
+    func testBuildVersionIsVisibleInActionMenu() {
+        openMenuAndCheckVersion(in: app)
+        attach("build-version-in-menu")
+    }
+
     func testInstalledNativePresentation() {
         let installed = XCUIApplication(bundleIdentifier: "md.dcor.bukvygost.pilot")
         installed.launch()
         XCTAssertTrue(installed.buttons["lesson-menu"].waitForExistence(timeout: 15))
-        installed.buttons["lesson-menu"].tap(); installed.buttons["Настройки"].tap()
+        openMenuAndCheckVersion(in: installed)
+        attach("installed-build-version")
+        installed.buttons["Настройки"].tap()
         XCTAssertTrue(installed.navigationBars["Настройки"].waitForExistence(timeout: 5))
         attach("installed-native-settings")
         installed.buttons["close-sheet"].tap()

@@ -5,6 +5,11 @@ import UniformTypeIdentifiers
 struct NativeWorkspace: View {
     @StateObject private var controller = PilotLesson.Coordinator()
     @State private var numbers = false
+    private var version: String {
+        let release = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "—"
+        let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "—"
+        return "Версия \(release) (\(build))"
+    }
     var body: some View {
         NavigationStack {
             PilotLesson(controller: controller)
@@ -28,10 +33,14 @@ struct NativeWorkspace: View {
                         Button { controller.present(.sample) } label: { Label("Образец", systemImage: "pencil.tip").frame(minWidth: 44, minHeight: 44).contentShape(Rectangle()) }
                             .labelStyle(.titleAndIcon).buttonStyle(.plain).disabled(controller.controlsUnavailable)
                         Menu {
-                            Button("Настройки", systemImage: "gearshape") { controller.present(.settings) }
-                            Button("Моя практика", systemImage: "chart.bar") { controller.present(.progress) }
-                            Divider()
-                            Button("Сохранить копию…", systemImage: "square.and.arrow.up") { controller.command("export") }
+                            Section {
+                                Button("Настройки", systemImage: "gearshape") { controller.present(.settings) }
+                                Button("Моя практика", systemImage: "chart.bar") { controller.present(.progress) }
+                                Divider()
+                                Button("Сохранить копию…", systemImage: "square.and.arrow.up") { controller.command("export") }
+                            } header: {
+                                Text(version)
+                            }
                         } label: { Label("Ещё", systemImage: "ellipsis").labelStyle(.iconOnly).frame(minWidth: 44, minHeight: 44).contentShape(Rectangle()) }
                         .menuStyle(.button).buttonStyle(.plain)
                         .accessibilityIdentifier("lesson-menu")
