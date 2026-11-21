@@ -5,6 +5,23 @@ let app=boot();const plain=v=>JSON.parse(JSON.stringify(v));
 function cell(){return app.nodes.practice.children.find(r=>r.dataset.lessonStage==='upper-letter').children[0].parts}
 function draw(canvas,lines){const frame=JSON.parse(canvas.attrs['data-view-box']),rect=canvas.getBoundingClientRect();for(const line of lines){const points=line.map(([x,y])=>[(x-frame.x)*rect.width/frame.width,(y-frame.y)*rect.height/frame.height]);canvas.emit('pointerdown',points[0]);for(const p of points.slice(1))canvas.emit('pointermove',p);canvas.emit('pointerup',points.at(-1))}}
 function clear(){cell().output.onclick();cell().button.onclick()}
+for(const level of ['standard','easy','precise']){
+ app.nodes['level-'+level].onclick();
+ const scale=app.run('preferences.size/100');
+ const [left,right,bar]=plain(app.run('demonstrationFor(models)'));
+ const [[x0,y],[x1]]=bar;
+ for(const [name,points,backward] of [
+  ['brief correction',[[x0,y],[x0+10/scale,y],[x0+5.5/scale,y],[x1,y]],false],
+  ['reverse crossbar',[...bar].reverse(),true]
+ ]){
+  draw(cell().canvas,[left,right,points]);
+  assert.equal(cell().output.dataset.direction,backward?'backward':'correct',level+' '+name);
+  assert.equal(app.nodes['next-letter'].disabled,backward,level+' '+name);
+  if(!backward)assert.equal(cell().output.textContent,'100%');
+  clear();
+ }
+}
+app.nodes['level-standard'].onclick();
 const body=app.run("WorksheetCatalog.elements.find(part=>part.id==='gost-b90-a-body')");
 const warmup=app.nodes.practice.children.find(row=>row.dataset.component===body.id).children[0].parts;
 draw(warmup.canvas,plain(body.model));
@@ -40,9 +57,6 @@ for(const [name,lines,backward] of [
  if(!backward)assert.equal(lowerA.output.textContent,'100%');
  clearLowerA();
 }
-assert.equal(app.run("LearnerExperience.directionVersion('gost-file-b90-lower-0','А')"),3);
-assert.equal(app.run("LearnerExperience.directionVersion('gost-file-b90-lower-0','О')"),1);
-assert.equal(app.run("LearnerExperience.directionVersion('element-v1-gost-b90-a-body-0')"),2);
 const mixed=app.run("LetterSequence.compose('На а',DrawingGlyphs,{gap:20,maxWidth:150})");
 const mixedLines=mixed.glyphs.flatMap(glyph=>(glyph.model===app.run('lowercase')?[joinedA]:plain(app.run("demonstrationFor(DrawingGlyphs['Н'].model)"))).map(line=>line.map(([x,y])=>[(x+glyph.x)/mixed.width,(y+glyph.y)/mixed.height])));
 const checkMixed=lines=>app.run(`(()=>{const sequence=LetterSequence.compose('На а',DrawingGlyphs,{gap:20,maxWidth:150});return assessWriting(${JSON.stringify(lines)},sequence.model,8,{width:sequence.width,height:sequence.height})})()`);
@@ -104,7 +118,7 @@ for(const text of ['ААА','СОК','её ЯЯ']){
  const check=lines=>run(`(()=>{const sequence=LetterSequence.compose(${JSON.stringify(text)},DrawingGlyphs,{gap:20,maxWidth:150});return StrokeDirection.assess(${JSON.stringify(lines.map(l=>l.map(([x,y])=>[x/composed.width,y/composed.height])))},sequence.model,{width:sequence.width,height:sequence.height})})()`);
  assert.equal(check(routes).backwards,false,text+' correct');assert.equal(check(routes.map(l=>[...l].reverse())).backwards,true,text+' reverse');
 }
-assert.equal(run('drawingGeometryRevision'),'4633c1e3');assert(run("LearnerExperience.profile('x').includes('direction:1')"));
+assert.equal(run('drawingGeometryRevision'),'4633c1e3');assert(run("LearnerExperience.profile('x').includes('direction:4')"));
 for(const character of run('LetterCurriculum.order')){
  run(`build(0,${JSON.stringify(character)})`);
  const parts=run('WorksheetCatalog.elements');

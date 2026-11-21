@@ -30,18 +30,19 @@ final class LessonTests: XCTestCase {
 
     @MainActor
     func testDirectionFeedback() async throws {
-        let web = try await loadedLesson()
+        let web = try await loadedLesson(requireA: false)
         let result = try await web.evaluateJavaScript("""
             (()=>{
                 build(variant,'А');
-                const outcomes=[];
+                const outcomes=[],[left,right,bar]=demonstrationFor(models);
                 for(const [index,reverse] of [false,true].entries()){
                     const canvas=document.querySelector(`[data-surface-id="gost-file-b90-upper-${index}"]`),cell=canvas.closest('.cell'),score=cell.querySelector('.score');
                     if(!score.disabled){score.click();cell.querySelector('.reset').click()}
                     canvas.scrollIntoView({block:'center'});canvas.setPointerCapture=()=>{};
                     const frame=JSON.parse(canvas.dataset.viewBox),rect=canvas.getBoundingClientRect();
-                    for(const line of demonstrationFor(models)){
-                        const route=reverse?[...line].reverse():line;
+                    const scale=rect.width/frame.width,[[x0,y],[x1]]=bar;
+                    const crossbar=reverse?[...bar].reverse():[[x0,y],[x0+10/scale,y],[x0+5.5/scale,y],[x1,y]];
+                    for(const route of [left,right,crossbar]){
                         for(let i=0;i<route.length;i++){
                             const [x,y]=route[i];canvas.dispatchEvent(new PointerEvent(i===0?'pointerdown':i===route.length-1?'pointerup':'pointermove',{bubbles:true,cancelable:true,pointerType:'pen',pointerId:1,isPrimary:true,clientX:rect.left+(x-frame.x)/frame.width*rect.width,clientY:rect.top+(y-frame.y)/frame.height*rect.height}));
                         }
@@ -52,10 +53,11 @@ final class LessonTests: XCTestCase {
             })()
             """) as? [[String: Any]]
         XCTAssertEqual(result?.first?["score"] as? Int, 100)
+        XCTAssertEqual(result?.first?["backward"] as? Bool, false)
         XCTAssertEqual(result?.last?["backward"] as? Bool, true)
         XCTAssertLessThan(result?.last?["score"] as? Int ?? 100, 90)
         let attachment = XCTAttachment(image: try await web.takeSnapshot(configuration: nil))
-        attachment.name = "direction-correct-and-backward"; attachment.lifetime = .keepAlways; add(attachment)
+        attachment.name = "short-correction-and-reversed-crossbar"; attachment.lifetime = .keepAlways; add(attachment)
         _ = try await web.evaluateJavaScript("reset('gost-file-b90-upper-1');refresh()")
     }
 

@@ -93,6 +93,10 @@ Practice of letters, numbers, signs, their parts and text SHALL check stroke dir
 - **WHEN** the learner closes the lowercase а body in the taught direction and proceeds down the right stem with or without a pen lift
 - **THEN** the completion of the loop SHALL be accepted in single-letter and text practice. The descending stem remains checked, and a standalone upward stem is rejected. The existing split demonstration and closed warmup remain valid.
 
+#### Scenario: Correct a short movement
+- **WHEN** the learner briefly corrects a stroke and continues in the taught direction
+- **THEN** only a continuous unambiguous reverse run reaching at least 6 CSS px from its start counts for direction. A shorter correction does not lower the direction grade, show «Не по стрелке», or block the next lesson. Geometry is assessed independently.
+
 ## Evidence
 
 - `concepts/components/input-policy.js`

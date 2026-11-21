@@ -88,10 +88,11 @@ const StrokeDirection={
   return {backwards:rest.backwards,ratio:(checkedLoop+rest.checked*rest.ratio)/checked,checked};
  },
  measure(actual,model,{tolerance,scale}){
-  const {grid}=this.prepare(model),radius=tolerance+2/scale,ambiguity=Math.max(.8,Math.min(4,tolerance*scale/2))/scale,minReverse=4/scale;
+  const {grid}=this.prepare(model),radius=tolerance+2/scale,ambiguity=Math.max(.8,Math.min(4,tolerance*scale/2))/scale,minReverse=6/scale;
   let checked=0,backwards=0;
   for(const line of actual){
-   let run=0;const flush=()=>{if(run>=minReverse)backwards+=run;run=0};
+   let run=0,start,substantial=false;
+   const flush=()=>{if(substantial)backwards+=run;run=0;substantial=false};
    for(let i=1;i<line.length;i++){
     const a=line[i-1],b=line[i],dx=b[0]-a[0],dy=b[1]-a[1],length=Math.hypot(dx,dy);if(length<.1)continue;
     const x=(a[0]+b[0])/2,y=(a[1]+b[1])/2,candidates=new Set();
@@ -102,7 +103,12 @@ const StrokeDirection={
     for(const p of nearby)if(p.distance<=nearest+ambiguity){if(p.dot>.45)forward=true;if(p.dot<-.45)reverse=true}
     // At joins/intersections both directions may be equally close.
     if(forward===reverse){flush();continue}
-    checked+=length;if(reverse)run+=length;else flush();
+    checked+=length;
+    if(reverse){
+     if(!run)start=a;
+     run+=length;
+     substantial||=Math.hypot(b[0]-start[0],b[1]-start[1])>=minReverse;
+    }else flush();
    }flush();
   }
   return {backwards:backwards>0,ratio:checked?Math.max(0,1-backwards/checked):1,checked};
