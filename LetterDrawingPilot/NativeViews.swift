@@ -217,6 +217,9 @@ private struct NativeSettings: View {
                 Picker("Сложность", selection: Binding(get: { controller.state.level }, set: { controller.command("level", ["level": $0]) })) {
                     Text("Легче").tag("easy"); Text("Обычно").tag("standard"); Text("Точнее").tag("precise")
                 }.pickerStyle(.segmented)
+                if let size = controller.state.preferences["size"] {
+                    LabeledContent("Высота заглавной", value: size.formatted() + " пт")
+                }
                 LabeledContent("Допуск", value: "±" + (controller.state.preferences["tolerance"] ?? 8).formatted() + " px")
             }
             Section("Перо") {

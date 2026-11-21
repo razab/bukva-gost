@@ -212,6 +212,35 @@ final class TabletTests: XCTestCase {
         scrollTo(defaults); defaults.tap(); close()
     }
 
+    func testDifficultyChangesPracticeSize() {
+        select("410")
+        func practice(_ letter: String) -> XCUIElement {
+            app.webViews.firstMatch.descendants(matching: .any)
+                .matching(NSPredicate(format: "label == %@", "Буква " + letter + ", проба 1")).firstMatch
+        }
+        let upper = practice("А"), lower = practice("а")
+        var previousHeight = CGFloat.infinity
+        for (level, height) in [("Легче", 73), ("Обычно", 52), ("Точнее", 36)] {
+            settings()
+            app.segmentedControls.buttons[level].tap()
+            let size = app.staticTexts.containing(NSPredicate(format: "label CONTAINS %@", "\(height) пт")).firstMatch
+            XCTAssertTrue(size.waitForExistence(timeout: 5), "Expected \(height) пт for \(level)")
+            close()
+            XCTAssertTrue(upper.waitForExistence(timeout: 5))
+            XCTAssertTrue(lower.exists)
+            XCTAssertLessThan(upper.frame.height, previousHeight)
+            previousHeight = upper.frame.height
+            scrollTo(upper)
+            attach("practice-\(height)")
+        }
+        app.terminate()
+        app.launch()
+        XCTAssertTrue(app.buttons["lesson-menu"].waitForExistence(timeout: 15))
+        settings()
+        XCTAssertTrue(app.staticTexts.containing(NSPredicate(format: "label CONTAINS %@", "36 пт")).firstMatch.waitForExistence(timeout: 5))
+        close()
+    }
+
     func testNativeDeveloperProgressAndResult() {
         select("410")
         let finish = app.webViews.firstMatch.buttons["Завершить занятие"]

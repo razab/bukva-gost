@@ -2,7 +2,7 @@ const fs=require('fs'),path=require('path'),assert=require('assert/strict');
 const h=fs.readFileSync(path.join(__dirname,'worksheet.test.cjs'),'utf8').split('let app=boot();')[0];
 const boot=saved=>new Function('require','__dirname',h+"return boot(arguments[2],'learner');")(require,__dirname,saved);
 const saved={'letter-preferences-v1':JSON.stringify({size:61,bold:100,tolerance:3,rowGap:4,columnGap:12,letterGap:20,letterGapDefaultVersion:2}),'letter-worksheet-v3-0':JSON.stringify({'old-note':[[[.1,.2],[.3,.4]]]})};
-let app=boot(saved),run=s=>app.run(s);assert.equal(run('learnerMode'),true);assert.equal(run('preferences.size'),92);assert.equal(JSON.parse(saved['letter-preferences-v1']).size,61);assert.equal(run('data["old-note"].length'),1);
+let app=boot(saved),run=s=>app.run(s);assert.equal(run('learnerMode'),true);assert.equal(run('preferences.size'),52);assert.equal(JSON.parse(saved['letter-preferences-v1']).size,61);assert.equal(run('data["old-note"].length'),1);
 const row=stage=>app.nodes.practice.children.find(r=>r.dataset.lessonStage===stage);
 function fire(canvas,type,p){const frame=JSON.parse(canvas.attrs['data-view-box']),r=canvas.getBoundingClientRect();canvas.emit(type,[(p[0]-frame.x)/frame.width*r.width,(p[1]-frame.y)/frame.height*r.height])}
 function draw(canvas,stroke){fire(canvas,'pointerdown',stroke[0]);for(const p of stroke.slice(1))fire(canvas,'pointermove',p);fire(canvas,'pointerup',stroke.at(-1))}

@@ -15,9 +15,21 @@ class LearnerComposition extends PageComposition {
 }
 const DeveloperPanel={
  key:'gost-developer-preferences-v1',visible:false,
- preferences(base){try{const saved=JSON.parse(localStorage.getItem(this.key)||'null');return validPreferences({...base,...Object.fromEntries(Object.keys(base).filter(k=>typeof saved?.[k]==='number'&&Number.isFinite(saved[k])).map(k=>[k,saved[k]]))})}catch{return {...base}}},
- persist(value){try{localStorage.setItem(this.key,JSON.stringify(value))}catch{message.textContent='Настройки остаются в этой вкладке.'}},
- removeTolerance(){try{const saved=JSON.parse(localStorage.getItem(this.key)||'{}');delete saved.tolerance;localStorage.setItem(this.key,JSON.stringify(saved))}catch{message.textContent='Уровень остаётся в этой вкладке.'}},
+ overrides(){
+  const saved=JSON.parse(localStorage.getItem(this.key)||'{}')||{};
+  // Old versions stored the entire profile even when a different setting changed.
+  if(saved.size===92&&saved.manualSize!==true)delete saved.size;
+  return saved
+ },
+ preferences(base){try{const saved=this.overrides();return validPreferences({...base,...Object.fromEntries(Object.keys(base).filter(k=>typeof saved[k]==='number'&&Number.isFinite(saved[k])).map(k=>[k,saved[k]]))})}catch{return {...base}}},
+ persist(patch){
+  try{const saved={...this.overrides(),...patch};if(Object.hasOwn(patch,'size'))saved.manualSize=true;localStorage.setItem(this.key,JSON.stringify(saved))}
+  catch{message.textContent='Настройки остаются в этой вкладке.'}
+ },
+ removeLevelOverrides(){
+  try{const saved=this.overrides();delete saved.size;delete saved.manualSize;delete saved.tolerance;localStorage.setItem(this.key,JSON.stringify(saved))}
+  catch{message.textContent='Уровень остаётся в этой вкладке.'}
+ },
  initialVariant(){try{const value=JSON.parse(localStorage.getItem('gost-developer-style-v1')||'0');return Number.isInteger(value)&&value>=0&&value<5?value:0}catch{return 0}},
  initialize(){
   const $=id=>document.querySelector('#'+id);
@@ -29,7 +41,7 @@ const DeveloperPanel={
   const repeats=$('setting-practiceRepeats');
   repeats.onchange=()=>configure({practiceRepeats:Number(repeats.value)});
   names.forEach((name,index)=>{const button=document.createElement('button');button.type='button';button.textContent=name;button.onclick=()=>{if(activePointer!==null)return;try{localStorage.setItem('gost-developer-style-v1',JSON.stringify(index))}catch{}build(index)};document.querySelector('.variants').append(button)});
-  $('settings-defaults').onclick=()=>{if(activePointer!==null)return;try{localStorage.removeItem(this.key)}catch{}configure({...LearnerExperience.preferences,tolerance:LearnerExperience.levels[LearnerExperience.level].tolerance},{persist:false})};
+  $('settings-defaults').onclick=()=>{if(activePointer!==null)return;try{localStorage.removeItem(this.key)}catch{}configure(LearnerExperience.levelPreferences(),{persist:false})};
   $('settings-legacy').onclick=()=>{if(activePointer!==null)return;try{const old=JSON.parse(localStorage.getItem('letter-preferences-v1')||'null');if(old&&typeof old==='object')configure(validPreferences(old));else message.textContent='Прежних технических настроек здесь нет.'}catch{message.textContent='Не удалось прочитать прежние настройки.'}};
   $('composition-legacy').onclick=()=>{if(activePointer!==null)return;const old=new PageComposition({letter:activeLetter});editComposition(old.get(variant))};
   $('clear-all').onclick=()=>{if(activePointer!==null||!Object.values(data).some(s=>s.length))return;snapshot();data={};save();refresh()};this.sync()

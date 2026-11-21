@@ -1,16 +1,17 @@
 const LearnerExperience={
  // Default teaching profile. Difficulty and explicit developer overrides are global.
- preferences:Object.freeze({size:92,bold:100,tolerance:8,rowGap:16,columnGap:16,letterGap:20,leftInset:15,penWidth:3,smoothing:0,practiceRepeats:0}),
+ preferences:Object.freeze({size:52,bold:100,tolerance:8,rowGap:16,columnGap:16,letterGap:20,leftInset:15,penWidth:3,smoothing:0,practiceRepeats:0}),
  independent:false,ready:false,fullGuide:true,level:'standard',
  levels:Object.freeze({
-  easy:{label:'Легче',tolerance:12},
-  standard:{label:'Обычно',tolerance:8},
-  precise:{label:'Точнее',tolerance:4},
+  easy:{label:'Легче',tolerance:12,size:73},
+  standard:{label:'Обычно',tolerance:8,size:52},
+  precise:{label:'Точнее',tolerance:4,size:36},
   ideal:{label:'Идеально',tolerance:2,technical:true},
   impossible:{label:'Невозможно',tolerance:1,technical:true}
  }),
  readUI(){try{const saved=JSON.parse(localStorage.getItem('gost-learner-ui-preferences-v1')||'null');if(Object.hasOwn(this.levels,saved?.level))this.level=saved.level}catch{}this.fullGuide=true},
- initialPreferences(){this.readUI();return DeveloperPanel.preferences({...this.preferences,tolerance:this.levels[this.level].tolerance})},
+ levelPreferences(){const level=this.levels[this.level];return {...this.preferences,size:level.size??this.preferences.size,tolerance:level.tolerance}},
+ initialPreferences(){this.readUI();return DeveloperPanel.preferences(this.levelPreferences())},
  syncLevels(){
   const tolerance=preferences.tolerance;
   let selected;
@@ -22,10 +23,18 @@ const LearnerExperience={
   const level=this.levels[selected],current=document.querySelector('#level-current');
   current.textContent='Выбрано: '+(level&&!level.technical?level.label:'Технический допуск');
   current.dataset.kind=selected||'custom';
-  document.querySelector('#level-summary').textContent=(level?'':'Свой допуск · ')+'Ширина коридора: '+tolerance*2+' px.';
+  document.querySelector('#level-summary').textContent=(level?'':'Свой допуск · ')+'Ширина коридора: '+tolerance*2+' px. Высота заглавной: '+preferences.size+' px.';
   document.querySelector('#setting-tolerance').setAttribute('aria-valuetext','Плюс-минус '+tolerance+' пикселя');
  },
- setLevel(level){if(activePointer!==null||!Object.hasOwn(this.levels,level))return false;this.level=level;try{const old=JSON.parse(localStorage.getItem('gost-learner-ui-preferences-v1')||'{}');localStorage.setItem('gost-learner-ui-preferences-v1',JSON.stringify({...old,level}))}catch{message.textContent='Уровень остаётся в этой вкладке.'}DeveloperPanel.removeTolerance();return configure({tolerance:this.levels[level].tolerance},{persist:false})},
+ setLevel(level){
+  if(activePointer!==null||!Object.hasOwn(this.levels,level))return false;
+  const {size,tolerance,technical}=this.levels[level];
+  if(technical)return configure({tolerance});
+  this.level=level;
+  try{const old=JSON.parse(localStorage.getItem('gost-learner-ui-preferences-v1')||'{}');localStorage.setItem('gost-learner-ui-preferences-v1',JSON.stringify({...old,level}))}catch{message.textContent='Уровень остаётся в этой вкладке.'}
+  DeveloperPanel.removeLevelOverrides();
+  return configure({size,tolerance},{persist:false})
+ },
  store(){return this.progress||(this.progress=new LearningProgress(localStorage,()=>{message.textContent='Журнал пока доступен только в этой вкладке.'}))},
  attempts(){return this.attemptStore||(this.attemptStore=new PracticeAttempts(localStorage,()=>{message.textContent='Сравнение попыток пока доступно только в этой вкладке.'}))},
  guideProfile(id){return id.startsWith('independent-')?'anchors':'full'},
