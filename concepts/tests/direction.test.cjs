@@ -3,7 +3,7 @@ const dir=__dirname,h=fs.readFileSync(path.join(dir,'worksheet.test.cjs'),'utf8'
 const boot=saved=>new Function('require','__dirname',h+'return boot(arguments[2],"learner");')(require,dir,saved);
 let app=boot();const plain=v=>JSON.parse(JSON.stringify(v));
 function cell(){return app.nodes.practice.children.find(r=>r.dataset.lessonStage==='upper-letter').children[0].parts}
-function draw(canvas,lines){const frame=JSON.parse(canvas.attrs['data-view-box']),rect=canvas.getBoundingClientRect();for(const line of lines){const points=line.map(([x,y])=>[(x-frame.x)*rect.width/frame.width,(y-frame.y)*rect.height/frame.height]);canvas.emit('pointerdown',points[0]);for(const p of points.slice(1))canvas.emit('pointermove',p);canvas.emit('pointerup',points.at(-1))}}
+const draw=require('./helpers/worksheet-pen.cjs');
 function clear(parts=cell()){parts.output.onclick();parts.button.onclick()}
 for(const level of ['standard','easy','precise']){
  app.nodes['level-'+level].onclick();
@@ -293,8 +293,11 @@ for(const level of ['easy','standard','precise']){
    check(moved,false,'a one-pixel offset must not reverse direction');
   }
   if(direction.some(line=>length(line)*scale>=10))check(direction.map(line=>[...line].reverse()),true,'reverse the route');
-  if(id==='gost-b90-42b-part-0'||id==='gost-b90-44b-part-0'){
-   check([shown[0],[...shown[1]].reverse()],true,'reverse only the rounding while correctly drawing the stem');
+  for(const [i,line] of shown.entries()){
+   const end=line.at(-1),reach=Math.max(...line.map(([x,y])=>Math.hypot(x-end[0],y-end[1])));
+   if(reach*scale<10)continue;
+   // Start with the reversed stroke so it cannot extend a valid preceding join.
+   check([[...line].reverse(),...shown.filter((_,j)=>j!==i)],true,'reverse only stroke '+(i+1));
   }
  }
 }

@@ -407,7 +407,7 @@ final class LessonTests: XCTestCase {
     }
 
     @MainActor
-    func testWarmupOnYeryFollowsLetterScheme() async throws {
+    func testCourseWritingDirectionInWebKit() async throws {
         let lesson = try await loadedLesson(requireA: false)
         let url = try XCTUnwrap(lesson.url)
         let configuration = WKWebViewConfiguration()
@@ -420,45 +420,86 @@ final class LessonTests: XCTestCase {
             if (try? await web.evaluateJavaScript("typeof NativeApp === 'object'") as? Bool) == true { break }
             try await Task.sleep(for: .milliseconds(100))
         }
-        let evidence = try await web.callAsyncJavaScript("""
-            await NativeApp.command('select',{letter:'Ы'});
+        let letters = try await web.callAsyncJavaScript("""
             await NativeApp.command('level',{level:'standard'});
-            const id='element-v1-gost-b90-42b-part-0-0';
-            const canvas=document.querySelector('[data-surface-id="'+id+'"]'),cell=canvas.closest('.cell');
-            const score=cell.querySelector('.score'),resetButton=cell.querySelector('.reset');
-            const frame=JSON.parse(canvas.dataset.viewBox);
-            canvas.scrollIntoView({block:'center',behavior:'instant'});
-            canvas.setPointerCapture=()=>{};
-            const [stem,rounding]=DrawingGlyphs.Ы.demonstration;
-            const draw=lines=>{
-                const box=canvas.getBoundingClientRect();
-                for(const stroke of lines)stroke.forEach(([x,y],index)=>canvas.dispatchEvent(new PointerEvent(
-                     index===0?'pointerdown':index===stroke.length-1?'pointerup':'pointermove',
-                     {pointerId:1,pointerType:'pen',isPrimary:true,bubbles:true,cancelable:true,
-                      clientX:box.left+(x-frame.x)*box.width/frame.width,
-                      clientY:box.top+(y-frame.y)*box.height/frame.height})));
-                return {score:score.textContent,direction:score.dataset.direction};
-            };
-            const shown=draw([stem,rounding]);
-            const contacts=readInk(worksheetStorageKey())?.[id]?.length;
-            score.click();resetButton.click();
-            const opposite=draw([stem,[...rounding].reverse()]);
-            score.click();resetButton.click();
-            draw([stem,rounding]);
-            await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
-            return {shown,opposite,contacts,arrows:cell.querySelectorAll('.warmup-arrow').length};
-            """, arguments: [:], in: nil, contentWorld: .page) as? [String: Any]
-        let shown = evidence?["shown"] as? [String: String]
-        let opposite = evidence?["opposite"] as? [String: String]
-        XCTAssertEqual(shown?["score"], "100%")
-        XCTAssertEqual(shown?["direction"], "correct")
-        XCTAssertEqual(opposite?["direction"], "backward")
-        XCTAssertEqual(evidence?["contacts"] as? Int, 2)
-        XCTAssertEqual(evidence?["arrows"] as? Int, 2)
-        let attachment = XCTAttachment(image: try await web.takeSnapshot(configuration: nil))
-        attachment.name = "yery-warmup-two-teaching-strokes"
-        attachment.lifetime = .keepAlways
-        add(attachment)
+            await NativeApp.command('option',{key:'additional',enabled:true});
+            configure({practiceRepeats:1});
+            return LetterCurriculum.order;
+            """, arguments: [:], in: nil, contentWorld: .page) as? [String]
+        let course = try XCTUnwrap(letters)
+        XCTAssertEqual(course.count, 33)
+        var forms = 0
+        var warmups = 0
+        var reversed = 0
+        for letter in course {
+            let report = try await web.callAsyncJavaScript(#"""
+                LearnerExperience.extraOpen.add(letter);
+                await NativeApp.command('select',{letter});
+                if (activeLetter !== letter) throw Error('Wrong lesson: ' + activeLetter);
+                const demo = selector => [...document.querySelectorAll(selector + ' path[data-line]')].map(path =>
+                    [...path.getAttribute('d').matchAll(/[ML](-?[\d.]+) (-?[\d.]+)/g)]
+                        .map(([,x,y]) => [Number(x),Number(y)]));
+                const definitions = new Map(WorksheetCatalog.elements.map(def => [def.id,def]));
+                const warmups = [...document.querySelectorAll('#practice .row.warmup')];
+                if (warmups.length !== composition.get(variant).elements.length) throw Error(letter + ': incomplete warmups');
+                const fields = [
+                    ['upper-letter',demo('#demo')],
+                    ['lower-letter',demo('#demo-lower')]
+                ].map(([stage,route]) => [document.querySelector('[data-lesson-stage="' + stage + '"]'),route]);
+                for (const row of warmups) {
+                    const part = definitions.get(row.dataset.component);
+                    const route = part.teachingRoute || (part.sourceKind === 'demonstration' ? part.model : StrokeDirection.route(part.model));
+                    fields.push([row,route]);
+                }
+
+                let reversed = 0;
+                for (const [row,route] of fields) {
+                    const canvas = row.querySelector('canvas'),cell = canvas.closest('.cell');
+                    const score = cell.querySelector('.score'),reset = cell.querySelector('.reset');
+                    const label = letter + ': ' + canvas.getAttribute('aria-label');
+                    if (!route.length || route.some(line => line.length < 2)) throw Error(label + ': missing route');
+                    if (score.textContent !== '—') throw Error(label + ': stale score before writing');
+                    canvas.scrollIntoView({block:'center',behavior:'instant'});
+                    canvas.setPointerCapture = () => {};
+                    const check = (lines,backward) => {
+                        const view = JSON.parse(canvas.dataset.viewBox),box = canvas.getBoundingClientRect();
+                        for (const line of lines) line.forEach(([x,y],index) => canvas.dispatchEvent(new PointerEvent(
+                            index === 0 ? 'pointerdown' : index === line.length-1 ? 'pointerup' : 'pointermove',
+                            {pointerId:1,pointerType:'pen',isPrimary:true,button:0,bubbles:true,cancelable:true,
+                             clientX:box.left+(x-view.x)*box.width/view.width,
+                             clientY:box.top+(y-view.y)*box.height/view.height})));
+                        const expected = backward ? 'backward' : 'correct';
+                        const shown = score.getAttribute('aria-label').includes('против стрелки');
+                        if (score.dataset.direction !== expected || shown !== backward
+                            || (backward && !(parseInt(score.textContent, 10) < 90))) {
+                            throw Error(label + ': ' + expected + ' → ' + score.getAttribute('aria-label'));
+                        }
+                        score.click();
+                        reset.click();
+                        if (score.textContent !== '—') throw Error(label + ': reset failed');
+                    };
+
+                    check(route,false);
+                    for (const [index,line] of route.entries()) {
+                        const [x,y] = line.at(-1);
+                        const reach = Math.max(...line.map(([a,b]) => Math.hypot(a-x,b-y)));
+                        if (reach * Number(canvas.dataset.scale) < 10) continue;
+                        check([[...line].reverse(),...route.filter((_,i) => i !== index)],true);
+                        reversed++;
+                    }
+                }
+                return [fields.length-warmups.length,warmups.length,reversed];
+                """#, arguments: ["letter": letter], in: nil, contentWorld: .page) as? [Int]
+            let values = try XCTUnwrap(report)
+            XCTAssertEqual(values.count, 3)
+            forms += values[0]
+            warmups += values[1]
+            reversed += values[2]
+        }
+        XCTAssertEqual(forms, 66)
+        XCTAssertGreaterThan(warmups, 0)
+        XCTAssertGreaterThan(reversed, forms + warmups)
+        print("COURSE_WRITING_WEBKIT: forms=\(forms), warmups=\(warmups), individually reversed strokes=\(reversed)")
     }
 
     @MainActor

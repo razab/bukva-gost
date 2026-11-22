@@ -104,7 +104,7 @@
 
 ## Проверки и локальные команды
 
-- `npm test` / `npm run test:medium` / `npm run test:full`:3/9/34 файла;
+- `npm test` / `npm run test:medium` / `npm run test:full`:3/9/35 файлов;
   medium/full≥70% строк, функций и ветвей browser JS. Новые tests входят в каталог,
   новый range обязан иметь контракт в sliders.test.cjs.
 - Миграции, geometry, промежуточная заливка у кончика, все 66 форм, рисунки и иконки
