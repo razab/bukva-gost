@@ -17,7 +17,7 @@ const WorksheetDock={
   this.hero=$('worksheet-hero');this.bar=$('writing-dock');this.visual=$('hero-visual');this.inline=$('inline-loupe');this.dockLive=$('dock-loupe');this.dockPicture=$('dock-illustration');this.toolbar=document.querySelector('.appbar');this.heroDemo=$('hero-demo');this.dockDemo=$('dock-demo-region');
   if(!this.hero||!this.bar||!this.visual||!this.toolbar)return false;this.isWriting=isWriting;this.ready=true;this.lastY=window.scrollY;
   this.views=[{node:this.inline,guide:$('inline-loupe-guide'),ruling:$('inline-loupe-ruling'),ink:$('inline-loupe-ink'),feedback:$('inline-loupe-feedback')},{node:this.dockLive,guide:$('dock-loupe-guide'),ruling:$('dock-loupe-ruling'),ink:$('dock-loupe-ink'),feedback:$('dock-loupe-feedback')}];
-  window.addEventListener('scroll',()=>this.update(true),{passive:true});window.addEventListener('resize',()=>this.update(),{passive:true});this.observer=new ResizeObserver(()=>this.update());this.observer.observe(this.toolbar);this.observer.observe(this.visual);this.observer.observe(this.dockLive);this.update();return true;
+  window.addEventListener('scroll',()=>this.update(true),{passive:true});window.addEventListener('resize',()=>this.update(),{passive:true});this.observer=new ResizeObserver(()=>this.update());this.observer.observe(this.toolbar);this.observer.observe(this.visual);this.observer.observe(this.inline);this.observer.observe(this.dockLive);this.update();return true;
  },
  update(fromScroll=false){
   if(!this.ready)return;const y=window.scrollY,toolbar=this.toolbar.getBoundingClientRect(),wanted=y>8&&this.hero.getBoundingClientRect().top<toolbar.bottom-4;document.body.style.setProperty('--toolbar-height',`${toolbar.bottom}px`);

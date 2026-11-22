@@ -1,5 +1,8 @@
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
-const h=fs.readFileSync(path.join(__dirname,'worksheet.test.cjs'),'utf8').split('let app=boot();')[0];const boot=saved=>new Function('require','__dirname',h+"return boot(arguments[2],'learner');")(require,__dirname,saved);
+const h=fs.readFileSync(path.join(__dirname,'worksheet.test.cjs'),'utf8').split('let app=boot();')[0];function boot(saved){
+ saved['gost-learner-ui-preferences-v1']??=JSON.stringify({options:{additional:true}});
+ return new Function('require','__dirname',h+"return boot(arguments[2],'learner');")(require,__dirname,saved);
+}
 function field(app,index){const descendants=node=>[node,...node.children.flatMap(descendants)];return descendants(app.nodes.practice).find(r=>r.dataset.component==='gost-b90-A-bar').children[index].parts}
 function draw(app,index){const cell=field(app,index),frame=JSON.parse(cell.canvas.attrs['data-view-box']),r=cell.canvas.getBoundingClientRect(),line=app.run('WorksheetCatalog.elements.find(d=>d.id==="gost-b90-A-bar").model[0]'),xy=p=>[(p[0]-frame.x)/frame.width*r.width,(p[1]-frame.y)/frame.height*r.height];cell.canvas.emit('pointerdown',xy(line[0]));cell.canvas.emit('pointermove',xy(line.at(-1)));cell.canvas.emit('pointerup',xy(line.at(-1)))}
 const key='letter-worksheet-v3-0',id=i=>'element-v1-gost-b90-A-bar-'+i;

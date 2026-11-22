@@ -214,6 +214,40 @@ final class TabletTests: XCTestCase {
         scrollTo(defaults); defaults.tap(); close()
     }
 
+    func testLessonContentSwitchesPersist() {
+        settings()
+        let keys = ["schemes", "additional", "independent"]
+        for key in keys {
+            let toggle = app.switches["show-" + key]
+            XCTAssertTrue(toggle.waitForExistence(timeout: 5))
+            let switchEnd = toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.94, dy: 0.5))
+            if toggle.value as? String == "1" {
+                switchEnd.tap()
+                XCTAssertTrue(waitForToggle(toggle, value: "0"))
+            }
+            switchEnd.tap()
+            XCTAssertTrue(waitForToggle(toggle, value: "1"), key)
+        }
+        attach("lesson-content-settings")
+        close()
+        app.terminate()
+        app.launch()
+        settings()
+        for key in keys {
+            let toggle = app.switches["show-" + key]
+            XCTAssertTrue(toggle.waitForExistence(timeout: 5))
+            XCTAssertTrue(waitForToggle(toggle, value: "1"), key)
+            toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.94, dy: 0.5)).tap()
+            XCTAssertTrue(waitForToggle(toggle, value: "0"), key)
+        }
+        close()
+    }
+
+    private func waitForToggle(_ toggle: XCUIElement, value: String) -> Bool {
+        let state = NSPredicate(format: "value == %@", value)
+        return XCTWaiter.wait(for: [XCTNSPredicateExpectation(predicate: state, object: toggle)], timeout: 5) == .completed
+    }
+
     func testDifficultyChangesPracticeSize() {
         select("410")
         func practice(_ letter: String) -> XCUIElement {

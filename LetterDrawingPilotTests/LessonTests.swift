@@ -65,6 +65,7 @@ final class LessonTests: XCTestCase {
     func testAdditionalExercisesUseCurrentMovements() async throws {
         let web = try await loadedLesson(requireA: false)
         let report = try await web.callAsyncJavaScript("""
+            await NativeApp.command('option',{key:'additional',enabled:true});
             build(variant,'Б');
             const details=document.querySelector('#additional-practice');
             details.open=true;
@@ -183,6 +184,7 @@ final class LessonTests: XCTestCase {
     func testConnectedAuditRoutes() async throws {
         let web = try await loadedLesson(requireA: false)
         let report = try await web.callAsyncJavaScript("""
+            await NativeApp.command('option',{key:'schemes',enabled:true});
             LearnerExperience.setLevel('precise');
             build(variant,'Э');
             const id='gost-file-b90-lower-0';
@@ -232,6 +234,7 @@ final class LessonTests: XCTestCase {
     func testBeWarmupAndJoinedLowercase() async throws {
         let web = try await loadedLesson(requireA: false)
         let report = try await web.callAsyncJavaScript("""
+            await NativeApp.command('option',{key:'schemes',enabled:true});
             build(variant,'Б');
             const warmup=WorksheetCatalog.elements.find(p=>p.letters[0]==='Б');
             const checks=[
@@ -461,6 +464,147 @@ final class LessonTests: XCTestCase {
     }
 
     @MainActor
+    func testLessonOptionsAndLiveDemo() async throws {
+        let web = try await loadedLesson(requireA: false)
+        let window = try XCTUnwrap(web.window)
+        let original = window.bounds
+        defer { window.bounds = original; window.rootViewController?.view.frame = original }
+        for size in [CGSize(width: 1194, height: 834), CGSize(width: 834, height: 1194), CGSize(width: 390, height: 780)] {
+            window.bounds = CGRect(origin: .zero, size: size)
+            window.rootViewController?.view.frame = window.bounds
+            window.layoutIfNeeded()
+            for _ in 0..<40 {
+                let width = try await web.evaluateJavaScript("innerWidth") as? Double ?? 0
+                if abs(width - size.width) < 1 { break }
+                try await Task.sleep(for: .milliseconds(100))
+            }
+            let report = try await web.callAsyncJavaScript("""
+                const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+                const issues=[];
+                const check=(passed,label)=>{if(!passed)issues.push(label)};
+                const $=id=>document.querySelector('#'+id);
+                const option=(key,enabled)=>NativeApp.command('option',{key,enabled});
+                await NativeApp.command('select',{letter:'А'});
+                for(const key of ['schemes','additional','independent'])await option(key,false);
+                check(!$('additional-practice')&&$('try-independent').hidden,'optional work is hidden');
+                check(getComputedStyle($('hero-scheme-upper').parentElement).display==='none','schemes are hidden');
+                document.body.classList.remove('native-ipad');
+                $('open-parent').click();
+                const labels=['schemes','additional','independent'].map(key=>$('parent-show-'+key).parentElement);
+                const boxes=labels.map(label=>label.getBoundingClientRect());
+                for(const [index,rect] of boxes.entries()){
+                    check(rect.width>=48&&rect.height>=48,'setting hit target');
+                    if(index>0)check(rect.top-boxes[index-1].bottom>=8,'setting hit target gap');
+                    for(const x of [rect.left+5,rect.left+rect.width/2,rect.right-5]){
+                        check(labels[index].contains(document.elementFromPoint(x,rect.top+rect.height/2)),'setting hit test');
+                    }
+                }
+                $('parent-panel').close();
+                document.body.classList.add('native-ipad');
+                for(const [level,tolerance,size] of [['easy',6,73],['standard',4,52],['precise',2,36]]){
+                    await NativeApp.command('level',{level});
+                    check(preferences.tolerance===tolerance&&preferences.size===size&&LearnerExperience.activeLevel()===level,level);
+                }
+                await NativeApp.command('level',{level:'ideal'});
+                check(preferences.tolerance===2&&LearnerExperience.activeLevel()==='ideal','technical ±2');
+                await NativeApp.command('level',{level:'standard'});
+                await option('additional',true);
+                await option('independent',true);
+                check(!!$('additional-practice')&&!$('try-independent').hidden,'optional work returns');
+                await option('additional',false);
+                await option('independent',false);
+                // A short sheet can fit entirely at tall sizes. Force enough scroll
+                // room in this fixture to exercise the pinned header at every size.
+                const sheet=document.querySelector('.sheet');
+                sheet.style.minHeight=(innerHeight+620)+'px';
+                for(const compact of [false,true]){
+                    window.scrollTo({top:compact?340:0,behavior:'instant'});
+                    await pause(100);
+                    WorksheetDock.update(true);
+                    check(WorksheetDock.compact===compact,
+                        'compact position '+compact+' at scroll '+scrollY+' and pointer '+activePointer);
+                    const canvas=[...document.querySelectorAll('#practice canvas')].find(field=>{
+                        const rect=field.getBoundingClientRect();
+                        return rect.top>=145&&rect.bottom<innerHeight;
+                    });
+                    if(!canvas){issues.push('no visible field');continue}
+
+                    canvas.setPointerCapture=()=>{};
+                    const box=canvas.getBoundingClientRect();
+                    const send=(type,y)=>canvas.dispatchEvent(new PointerEvent(type,{pointerId:8,pointerType:'pen',
+                        clientX:box.left+box.width*.5,clientY:box.top+box.height*y,bubbles:true,cancelable:true}));
+                    send('pointerdown',.7);
+                    send('pointermove',.5);
+                    const svg=$(compact?'dock-demo-upper':'demo'),loupe=$(compact?'dock-loupe':'inline-loupe');
+                    playDemo();
+                    const movement=svg.querySelector('[data-line="0"]');
+                    const initial=movement.getAttribute('stroke-dashoffset');
+                    await pause(180);
+                    const demo=svg.getBoundingClientRect(),copy=loupe.getBoundingClientRect();
+                    check(!loupe.hidden&&copy.width>0,'visible copy '+compact);
+                    check(demo.right<=copy.left+1&&demo.width>0,'demo and copy overlap '+compact);
+                    check(initial!==movement.getAttribute('stroke-dashoffset'),'demo stopped during writing '+compact);
+                    send('pointercancel',.5);
+                    await option('schemes',true);
+                    const scheme=$(compact?'dock-scheme-upper':'hero-scheme-upper').parentElement;
+                    check(getComputedStyle(scheme).display!=='none'&&scheme.getBoundingClientRect().right<=loupe.getBoundingClientRect().left+1,'schemes and copy overlap');
+                    await pause(65);
+                    const fitted=WorksheetDock.windowBox;
+                    check(!!fitted&&Math.abs(fitted.width*fitted.zoom*WorksheetDock.scale-loupe.getBoundingClientRect().width)<1,'copy did not refit when schemes appeared');
+                    await option('schemes',false);
+                    if(compact&&innerWidth>innerHeight){
+                        send('pointerdown',.7);
+                        send('pointermove',.42);
+                        await pause(120);
+                    }
+                }
+                sheet.style.minHeight='';
+                return {issues,width:innerWidth};
+                """, arguments: [:], in: nil, contentWorld: .page) as? [String: Any]
+            XCTAssertEqual(report?["width"] as? Double ?? 0, size.width, accuracy: 1)
+            XCTAssertEqual(report?["issues"] as? [String], [], "Viewport \(size.width)")
+            if size.width > size.height {
+                let attachment = XCTAttachment(image: try await web.takeSnapshot(configuration: nil))
+                attachment.name = "demo-and-live-copy"
+                attachment.lifetime = .keepAlways
+                add(attachment)
+                _ = try await web.evaluateJavaScript("cancelActiveStroke?.();undefined")
+            }
+        }
+    }
+
+    @MainActor
+    func testSampleRespectsWritingSchemeSetting() async throws {
+        let lesson = try await loadedLesson(requireA: false)
+        let folder = try XCTUnwrap(lesson.url).deletingLastPathComponent()
+        let sample = WKWebView(frame: lesson.frame)
+        let host = try XCTUnwrap(lesson.superview)
+        host.addSubview(sample)
+        defer { sample.removeFromSuperview() }
+
+        for enabled in [false, true, false] {
+            _ = try await lesson.callAsyncJavaScript(
+                "return await NativeApp.command('option',{key:'schemes',enabled:enabled});",
+                arguments: ["enabled": enabled], in: nil, contentWorld: .page
+            )
+            sample.loadFileURL(folder.appendingPathComponent("sample.html"), allowingReadAccessTo: folder)
+            for _ in 0..<50 {
+                if !sample.isLoading,
+                   (try? await sample.evaluateJavaScript("!!document.querySelector('#demo [data-line]')") as? Bool) == true { break }
+                try await Task.sleep(for: .milliseconds(100))
+            }
+            let report = try await sample.evaluateJavaScript("""
+                ({
+                    demo: !!document.querySelector('#demo [data-line]'),
+                    scheme: getComputedStyle(document.querySelector('#instruction-upper')).display !== 'none'
+                })
+                """) as? [String: Bool]
+            XCTAssertEqual(report?["demo"], true)
+            XCTAssertEqual(report?["scheme"], enabled)
+        }
+    }
+
+    @MainActor
     func testNativeLayoutSizes() async throws {
         let web = try await loadedLesson()
         let window = try XCTUnwrap(web.window)
@@ -495,6 +639,7 @@ final class LessonTests: XCTestCase {
     func testWorksheetActionsAreInline() async throws {
         let web = try await loadedLesson(requireA: false)
         let issues = try await web.callAsyncJavaScript("""
+            await NativeApp.command('option',{key:'independent',enabled:true});
             await NativeApp.command('select',{letter:'А'});
             const issues=[];
             const footer=document.querySelector('.session-footer');

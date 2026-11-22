@@ -239,8 +239,22 @@ private struct NativeLetters: View {
 private struct NativeSettings: View {
     @ObservedObject var controller: PilotLesson.Coordinator
     @State private var importing = false
+
+    private func option(_ title: String, key: String) -> some View {
+        Toggle(title, isOn: Binding(
+            get: { controller.state.options?[key] == true },
+            set: { controller.command("option", ["key": key, "enabled": $0]) }
+        ))
+        .accessibilityIdentifier("show-" + key)
+    }
+
     var body: some View {
         Form {
+            Section("На листе") {
+                option("Схемы со стрелками", key: "schemes")
+                option("Ещё упражнения", key: "additional")
+                option("Самостоятельная проба", key: "independent")
+            }
             Section("Перо") {
                 NativeSlider(controller: controller, key: "penWidth", title: "Толщина пера", range: 0.5...8, step: 0.5, unit: " px")
                 Picker("Плавность", selection: Binding(get: { Int(controller.state.preferences["smoothing"] ?? 0) }, set: { controller.command("configure", ["smoothing": $0]) })) {
@@ -422,7 +436,7 @@ private struct NativeSessionResult: View {
     var body: some View {
         Form {
             Section {
-                LabeledContent("Сложность", value: [12.0:"Легче",8:"Обычно",4:"Точнее",2:"Идеально",1:"Невозможно"][result.statistics.tolerance] ?? "Свой допуск")
+                LabeledContent("Сложность", value: result.statistics.difficulty)
                 LabeledContent("Заглавная", value: summary(result.statistics.upper))
                 LabeledContent("Строчная", value: summary(result.statistics.lower))
                 LabeledContent("Общий средний", value: summary(result.statistics.overall))

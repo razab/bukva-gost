@@ -1,6 +1,9 @@
 const fs=require('fs'),path=require('path'),assert=require('assert/strict');
 const h=fs.readFileSync(path.join(__dirname,'worksheet.test.cjs'),'utf8').split('let app=boot();')[0];
-const boot=saved=>new Function('require','__dirname',h+"return boot(arguments[2],'learner');")(require,__dirname,saved||{});
+function boot(saved={}){
+ saved['gost-learner-ui-preferences-v1']??=JSON.stringify({options:{additional:true}});
+ return new Function('require','__dirname',h+"return boot(arguments[2],'learner');")(require,__dirname,saved);
+}
 const descendants=node=>[node,...node.children.flatMap(descendants)];
 const mainRows=app=>app.nodes.practice.children.filter(row=>row.dataset.lessonStage);
 function draw(canvas,stroke){const f=JSON.parse(canvas.attrs['data-view-box']),r=canvas.getBoundingClientRect(),points=stroke.map(([x,y])=>[(x-f.x)/f.width*r.width,(y-f.y)/f.height*r.height]);canvas.emit('pointerdown',points[0]);for(const p of points.slice(1))canvas.emit('pointermove',p);canvas.emit('pointerup',points.at(-1))}

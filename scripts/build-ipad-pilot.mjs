@@ -41,10 +41,12 @@ const animationStart = runtime.indexOf('function stopDemo()');
 const animationEnd = runtime.indexOf('// Geometric tracing similarity');
 const fontFunction = runtime.match(/^function fontOutline\([^\n]+/m)?.[0];
 if (animationStart < 0 || animationEnd < animationStart || !fontFunction) throw Error('Cannot reuse worksheet demo');
-const sample = `<!doctype html><html lang="ru"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><style>:root{--accent:#347356}body{margin:0;background:#fffefa;user-select:none;-webkit-user-select:none}section{display:grid;grid-template-columns:1fr 1fr;padding:24px;gap:16px;max-width:680px;margin:auto}svg{width:100%;height:260px;min-width:0}@media(max-height:600px){svg{height:180px}section{padding:12px}}</style>
-<section><svg id="demo" viewBox="0 0 150 180"></svg><svg id="instruction-upper"></svg></section><section><svg id="demo-lower" viewBox="0 0 150 180"></svg><svg id="instruction-lower"></svg></section>
+const sample = `<!doctype html><html lang="ru"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><style>:root{--accent:#347356}body{margin:0;background:#fffefa;user-select:none;-webkit-user-select:none}html:not([data-show-schemes=true]) .sample-scheme{display:none}section{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);padding:24px;gap:16px;max-width:680px;margin:auto}svg{width:100%;height:260px;min-width:0}@media(max-height:600px){svg{height:180px}section{padding:12px}}</style>
+<section><svg id="demo" viewBox="0 0 150 180"></svg><svg id="instruction-upper" class="sample-scheme"></svg></section><section><svg id="demo-lower" viewBox="0 0 150 180"></svg><svg id="instruction-lower" class="sample-scheme"></svg></section>
 <script src="components/glyphs.js"></script><script src="components/writing-scheme.js"></script><script>
 const activeLetter=decodeURIComponent(location.hash.slice(1))||'А';
+try{document.documentElement.dataset.showSchemes=String(JSON.parse(localStorage.getItem('gost-learner-ui-preferences-v1')||'null')?.options?.schemes===true)}catch{}
+
 const models=DrawingGlyphs[activeLetter].model,lowercase=DrawingGlyphs[activeLetter.toLowerCase()].model;
 const learnerMode=false,fontScale=100/1400;let animation=null;
 const preferences={bold:100};try{const saved=JSON.parse(localStorage.getItem('gost-developer-preferences-v1')||'{}');if(Number.isFinite(saved.bold))preferences.bold=Math.max(100,Math.min(150,saved.bold))}catch{}

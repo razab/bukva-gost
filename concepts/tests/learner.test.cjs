@@ -1,6 +1,42 @@
 const fs=require('fs'),path=require('path'),assert=require('assert/strict');
 const h=fs.readFileSync(path.join(__dirname,'worksheet.test.cjs'),'utf8').split('let app=boot();')[0];
 const boot=saved=>new Function('require','__dirname',h+"return boot(arguments[2],'learner');")(require,__dirname,saved);
+{
+ let page=boot({});
+ const toggle=key=>{const control=page.nodes['parent-show-'+key];control.checked=!control.checked;control.onchange()};
+ const extra=()=>page.nodes.practice.children.find(row=>row.id==='additional-practice');
+ assert.equal(page.run('preferences.tolerance'),4);
+ assert.equal(page.run('document.body.dataset.showSchemes'),'false');
+ assert.equal(extra(),undefined);
+ assert.equal(page.nodes['try-independent'].hidden,true);
+ page.nodes['try-independent'].onclick();
+ assert(!page.nodes.practice.children.some(row=>row.id==='independent-practice'));
+ toggle('schemes');
+ assert.equal(page.run('document.body.dataset.showSchemes'),'true');
+ assert.equal(extra(),undefined);
+ toggle('additional');
+ assert(extra()&&!extra().open);
+ toggle('independent');
+ assert.equal(page.nodes['try-independent'].hidden,false);
+ page.nodes['try-independent'].onclick();
+ const id='independent-gost-b90-А';
+ page.run(`data[${JSON.stringify(id)}]=[[[.5,.3],[.5,.6]]];save();refresh()`);
+ toggle('independent');
+ assert.equal(page.run('LearnerExperience.work().independent'),0);
+ assert.equal(page.run(`data[${JSON.stringify(id)}].length`),1);
+ page=boot(page.saved);
+ assert.equal(page.run('document.body.dataset.showSchemes'),'true');
+ assert(extra()&&!extra().open);
+ assert.equal(page.nodes['try-independent'].hidden,true);
+ toggle('independent');
+ page.nodes['try-independent'].onclick();
+ assert.equal(page.run('LearnerExperience.work().independent'),1);
+ page.run("build(0,'Б')");
+ assert.equal(page.nodes['try-independent'].hidden,false);
+ assert(extra());
+ console.log('PASS: three independent settings default off, toggle through controls, persist and restore existing independent work');
+}
+
 const saved={'letter-preferences-v1':JSON.stringify({size:61,bold:100,tolerance:3,rowGap:4,columnGap:12,letterGap:20,letterGapDefaultVersion:2}),'letter-worksheet-v3-0':JSON.stringify({'old-note':[[[.1,.2],[.3,.4]]]})};
 let app=boot(saved),run=s=>app.run(s);assert.equal(run('learnerMode'),true);assert.equal(run('preferences.size'),52);assert.equal(JSON.parse(saved['letter-preferences-v1']).size,61);assert.equal(run('data["old-note"].length'),1);
 const row=stage=>app.nodes.practice.children.find(r=>r.dataset.lessonStage===stage);
@@ -15,6 +51,7 @@ function draw(canvas,stroke){fire(canvas,'pointerdown',stroke[0]);for(const p of
  const otherFields=()=>run('JSON.stringify(surfaces.map(s=>s.id).filter(id=>!/^(gost-file-b90-|element-v1-)/.test(id)))');
  const setRepeats=value=>{const select=app.nodes['setting-practiceRepeats'];select.value=String(value);select.onchange()};
  app=boot({});
+ run("LearnerExperience.setOption('additional',true);LearnerExperience.setOption('independent',true)");
  run('editComposition({elements:composition.get(0).elements.slice(1).map(e=>({...e,repeats:4}))})');
  app.nodes['try-independent'].onclick();
  app.nodes['open-developer'].onclick();
@@ -80,7 +117,7 @@ function draw(canvas,stroke){fire(canvas,'pointerdown',stroke[0]);for(const p of
 {
  const retired='gost-b90-431-route-v2-0',loop='gost-b90-431-part-8';
  const oldId='element-v1-'+retired+'-0',silhouette=[[[.4,.3],[.56,.3]]];
- const savedBe={'drawing-active-letter-v1':'Б'};
+ const savedBe={'drawing-active-letter-v1':'Б','gost-learner-ui-preferences-v1':JSON.stringify({options:{additional:true}})};
  app=boot(savedBe);
  const beKey=run('worksheetStorageKey()');
  savedBe[beKey]=JSON.stringify({[oldId]:silhouette});
@@ -107,7 +144,7 @@ function draw(canvas,stroke){fire(canvas,'pointerdown',stroke[0]);for(const p of
 }
 let cell=row('upper-letter').children[0].parts,model=run('demonstrationFor(models)');draw(cell.canvas,model[0]);assert.equal(cell.output.dataset.band,'pending');assert.equal(app.nodes['finish-session'].disabled,false);for(const line of model.slice(1))draw(cell.canvas,line);assert.equal(cell.output.textContent,'100%');assert.equal(cell.output.dataset.band,'green');
 cell.output.onclick();assert.equal(cell.button.hidden,false);cell.button.onclick();assert.equal(cell.output.textContent,'—');app.nodes.undo.onclick();assert.equal(cell.output.textContent,'100%');
-const tracing=run('JSON.stringify(data)');app.nodes['try-independent'].onclick();let block=app.nodes.practice.children.find(r=>r.id==='independent-practice');assert(block);let independent=block.children[1].children[1].parts;assert(!independent.canvas.attrs['data-surface-id'].includes('upper-0'));assert(!block.children[1].children[1].html.includes('class="corridor"'));assert.equal(independent.output.textContent,'—');
+const tracing=run('JSON.stringify(data)');run("LearnerExperience.setOption('independent',true)");app.nodes['try-independent'].onclick();let block=app.nodes.practice.children.find(r=>r.id==='independent-practice');assert(block);let independent=block.children[1].children[1].parts;assert(!independent.canvas.attrs['data-surface-id'].includes('upper-0'));assert(!block.children[1].children[1].html.includes('class="corridor"'));assert.equal(independent.output.textContent,'—');
 const lower=run('demonstrationFor(lowercase)');for(const line of lower)draw(independent.canvas,line);assert.equal(independent.output.textContent,'100%');assert.equal(run('LearnerExperience.work().independent'),1);assert.equal(run('data["gost-file-b90-upper-0"].length'),run('demonstrationFor(DrawingGlyphs.А.model).length'));
 app.nodes['finish-session'].onclick();assert.equal(app.nodes['session-result'].attrs.open,'');assert.equal(run('LearnerExperience.store().summary().sessions'),1);app.nodes['finish-session'].onclick();assert.equal(run('LearnerExperience.store().summary().sessions'),1);assert.equal(run('LearnerExperience.store().sessions("А")[0].independentScore'),100);app.nodes['result-next'].onclick();assert.equal(run('activeLetter'),'О');assert.equal(run('LearnerExperience.independent'),false);assert.equal(run('data["old-note"]'),undefined);
 run("build(0,'А')");assert.equal(run('data["old-note"].length'),1);app=boot(saved);run=s=>app.run(s);assert.equal(run('LearnerExperience.store().summary().sessions'),1);assert.equal(run('data["gost-file-b90-upper-0"].length'),run('demonstrationFor(DrawingGlyphs.А.model).length'));assert.equal(run('data["independent-gost-b90-а"].length'),lower.length);assert.equal(run('LearnerExperience.independent'),false);
@@ -136,7 +173,7 @@ console.log('PASS: all33 learner lessons, authored settings and known-letter tas
 
 let errors=0,fail=true,safe={};const progress=app.run('LearningProgress');const journal=new progress({getItem(){return null},setItem(k,v){if(fail)throw Error('full');safe[k]=v}},()=>errors++);journal.finish('А',{traced:1,signature:'same'});assert.equal(journal.lastSaveSucceeded,false);assert.equal(errors,1);fail=false;journal.finish('А',{traced:1,signature:'same'});assert.equal(journal.lastSaveSucceeded,true);assert.equal(journal.summary().sessions,1);assert(safe['gost-learning-progress-v1']);console.log('PASS: storage failure stays recoverable; retry persists without duplicate session');
 // Hiding an independent field changes its visibility, not the practiced work.
-app=boot({});run=s=>app.run(s);app.nodes['try-independent'].onclick();block=app.nodes.practice.children.find(r=>r.id==='independent-practice');independent=block.children[1].children[1].parts;for(const line of run('demonstrationFor(lowercase)'))draw(independent.canvas,line);assert.equal(run('LearnerExperience.work().independent'),1);app.nodes['try-independent'].onclick();assert.equal(run('LearnerExperience.work().independent'),1);assert.equal(app.nodes['finish-session'].disabled,false);app.nodes['finish-session'].onclick();assert.equal(run('LearnerExperience.store().sessions("А")[0].independent'),1);const hiddenReload=boot(app.saved);assert.equal(hiddenReload.run('LearnerExperience.work().independent'),1);assert.equal(hiddenReload.nodes['finish-session'].disabled,false);console.log('PASS: hidden independent work remains in completion/progress after hide and reload');
+app=boot({});run=s=>app.run(s);run("LearnerExperience.setOption('independent',true)");app.nodes['try-independent'].onclick();block=app.nodes.practice.children.find(r=>r.id==='independent-practice');independent=block.children[1].children[1].parts;for(const line of run('demonstrationFor(lowercase)'))draw(independent.canvas,line);assert.equal(run('LearnerExperience.work().independent'),1);app.nodes['try-independent'].onclick();assert.equal(run('LearnerExperience.work().independent'),1);assert.equal(app.nodes['finish-session'].disabled,false);app.nodes['finish-session'].onclick();assert.equal(run('LearnerExperience.store().sessions("А")[0].independent'),1);const hiddenReload=boot(app.saved);assert.equal(hiddenReload.run('LearnerExperience.work().independent'),1);assert.equal(hiddenReload.nodes['finish-session'].disabled,false);console.log('PASS: hidden independent work remains in completion/progress after hide and reload');
 
 // Durations come from real accepted pen intervals, not page-open/idle time.
 app=boot({});run=s=>app.run(s);run('measuredTime=0;performance.now=()=>measuredTime');
@@ -149,11 +186,11 @@ timedUpper.output.onclick();timedUpper.button.onclick();assert.equal(run(`writin
 fire(timedUpper.canvas,'pointerdown',run('models[0][0]'));run('measuredTime+=90000');fire(timedUpper.canvas,'pointercancel',run('models[0][0]'));assert.equal(run('LearnerExperience.statistics(LearnerExperience.work()).upper.meanMs'),3300);
 timed(timedUpper.canvas,[run('models[0]')],700);assert.equal(run('LearnerExperience.statistics(LearnerExperience.work()).upper.meanMs'),4000);app.nodes.undo.onclick();assert.equal(run('LearnerExperience.statistics(LearnerExperience.work()).upper.meanMs'),3300);
 let warm=app.nodes.practice.children.find(r=>r.dataset.lessonStage==='lower-elements').children[0].parts;warm.canvas.emit('pointerdown',[1,1]);warm.canvas.emit('pointerup',[2,2]);const text=app.nodes.practice.children.find(r=>r.dataset.component==='letter-sequence'),textModel=run(`LetterSequence.compose(${JSON.stringify(text.attrs['aria-label'])},sequenceSources,{gap:preferences.letterGap}).model`);timed(text.children[0].parts.canvas,textModel,5000);
-app.nodes['try-independent'].onclick();block=app.nodes.practice.children.find(r=>r.id==='independent-practice');timed(block.children[1].children[1].parts.canvas,run('demonstrationFor(lowercase)'),12000);
+run("LearnerExperience.setOption('independent',true)");app.nodes['try-independent'].onclick();block=app.nodes.practice.children.find(r=>r.id==='independent-practice');timed(block.children[1].children[1].parts.canvas,run('demonstrationFor(lowercase)'),12000);
 stats=run('LearnerExperience.statistics(LearnerExperience.work())');assert.equal(stats.overall.count,4);assert.equal(stats.overall.score,run('LearnerExperience.work().traceScore'));assert(stats.overall.score<100);assert.equal(stats.upper.count,1);assert.equal(stats.lower.count,1);assert.equal(stats.upper.meanMs,3300);assert.equal(stats.lower.meanMs,4200);
 app.nodes['finish-session'].onclick();assert(app.nodes['result-statistics'].innerHTML.includes('3,3 с'));assert(app.nodes['result-statistics'].innerHTML.includes('4,2 с'));assert(app.nodes['result-statistics'].innerHTML.includes('<dd>Обычно</dd>'));const finishedStats=run('LearnerExperience.store().sessions("А").at(-1).statistics');assert.equal(finishedStats.overall.count,4);const finishedCount=run('LearnerExperience.store().summary().sessions');app.nodes['finish-session'].onclick();assert.equal(run('LearnerExperience.store().summary().sessions'),finishedCount);
 const restoredTimes=boot(app.saved);assert.equal(restoredTimes.run('LearnerExperience.statistics(LearnerExperience.work()).upper.meanMs'),3300);assert.equal(restoredTimes.run('LearnerExperience.store().sessions("А").at(-1).statistics.lower.meanMs'),4200);
-run('configure({tolerance:2})');app.nodes['finish-session'].onclick();assert(app.nodes['result-statistics'].innerHTML.includes('<dd>Идеально</dd>'));run('configure({tolerance:3.5})');app.nodes['finish-session'].onclick();assert(app.nodes['result-statistics'].innerHTML.includes('Свой допуск ±3,5 px'));assert.equal(run('LearnerExperience.store().sessions("А")[0].statistics.tolerance'),8);
+run('configure({tolerance:2})');app.nodes['finish-session'].onclick();assert(app.nodes['result-statistics'].innerHTML.includes('<dd>Идеально</dd>'));run('configure({tolerance:3.5})');app.nodes['finish-session'].onclick();assert(app.nodes['result-statistics'].innerHTML.includes('Свой допуск ±3,5 px'));assert.equal(run('LearnerExperience.store().sessions("А")[0].statistics.tolerance'),4);
 // Old strokes have percentages but no fabricated zero-second duration.
 const legacy=boot({'letter-worksheet-v3-0':JSON.stringify({'gost-file-b90-upper-0':run('demonstrationFor(models)').map(line=>line.map(([x,y])=>[x/150,y/180]))})});assert.equal(legacy.run('LearnerExperience.statistics(LearnerExperience.work()).upper.count'),1);assert.equal(legacy.run('LearnerExperience.statistics(LearnerExperience.work()).upper.meanMs'),null);legacy.nodes['finish-session'].onclick();assert(legacy.nodes['result-statistics'].innerHTML.includes('время —'));
 console.log('PASS session summary: difficulty/manual tolerance, separate100%/3.3s and100%/4.2s, idle excluded, cancellation/reset/undo/reload, warmup/text overall included, independent excluded, historical snapshots/idempotency and unknown legacy time');
@@ -172,6 +209,8 @@ const reopened=boot(app.saved);
 assert.equal(reopened.nodes['level-precise'].attrs['aria-pressed'],'true');
 assert.equal(reopened.nodes['lesson-grid'].children[0].children[1].textContent,'100% · Обычно');
 assert.match(reopened.nodes['progress-list'].children[0].children[1].textContent,/по контуру: 100% · Обычно/);
+assert.equal(reopened.run('LearnerExperience.difficulty(4)'), 'Точнее');
+assert.equal(reopened.run('LearnerExperience.difficulty(4,"standard")'), 'Обычно');
 console.log('PASS: finishing at standard and switching to precise preserves the saved label and score in both views after reload');
 app=boot({});run=s=>app.run(s);
 run("LearnerExperience.store().finish('А',{traced:1,traceScore:95,signature:'legacy-green',at:1});LearnerExperience.store().finish('О',{traced:1,traceScore:90,signature:'threshold',at:2});LearnerExperience.store().finish('Н',{traced:1,traceScore:0,signature:'zero',at:3});LearnerExperience.store().finish('И',{traced:1,signature:'unknown',at:4});LearnerExperience.store().finish('У',{independent:1,independentScore:100,signature:'independent-only',at:5});LearnerExperience.renderOverview()");

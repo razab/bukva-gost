@@ -7,7 +7,7 @@ window.NativeApp={
   if(independent.textContent!=='Самостоятельная проба')independent.textContent='Самостоятельная проба';
   if(!window.webkit?.messageHandlers?.nativeLesson)return;
   const work=LearnerExperience.work();
-  const state={kind:'state',letter:activeLetter,preferences,variant,stylusOnly,
+  const state={kind:'state',letter:activeLetter,preferences,variant,stylusOnly,options:LearnerExperience.options,activeLevel:LearnerExperience.activeLevel(),
    canUndo:history.length>0,hasWork:work.written.length>0,writing:activePointer!==null,
    hasAnyInk:Object.values(data).some(strokes=>strokes.length>0),
    independent:LearnerExperience.independent,canNext:!!LetterCurriculum.lesson(activeLetter).next&&!LearnerExperience.hasBackwardWork(work),
@@ -20,7 +20,7 @@ window.NativeApp={
    const sessions=LearnerExperience.store().sessions(letter),result=LearnerExperience.completedResult(sessions);
    const tasks=LearnerExperience.comparableAttempts(letter);
    const weak=tasks.sort((a,b)=>a.recent.at(-1).score-b.recent.at(-1).score)[0];
-   return {letter,sessions:sessions.length,score:result?.score??null,difficulty:result?LearnerExperience.difficulty(result.session.statistics?.tolerance):'',
+   return {letter,sessions:sessions.length,score:result?.score??null,difficulty:result?LearnerExperience.difficulty(result.session.statistics?.tolerance,result.session.statistics?.level):'',
     independentScore:sessions.at(-1)?.independentScore??null,
     repeat:weak?{id:weak.id,label:weak.label,best:weak.best,recent:weak.recent.slice(-3).map(a=>a.score)}:null};
   });
@@ -37,6 +37,7 @@ window.NativeApp={
    case 'independent':document.querySelector('#try-independent').click();break;
    case 'level':LearnerExperience.setLevel(payload.level);break;
    case 'configure':configure(payload);break;
+   case 'option':if(!LearnerExperience.setOption(payload.key,payload.enabled))return false;break;
    case 'stylus':configureInput(payload.enabled);break;
    case 'style':document.querySelectorAll('.variants button')[payload.index]?.click();break;
    case 'defaults':document.querySelector('#settings-defaults').click();break;
@@ -57,7 +58,7 @@ window.NativeApp={
    }
    default:throw Error('Неизвестное действие');
   }
-  this.publish(['select','next','finish','restore','repeat'].includes(action));return true;
+  this.publish(['select','next','finish','restore','repeat','option'].includes(action));return true;
  }
 };
 if(location.hash.startsWith('#author-')){

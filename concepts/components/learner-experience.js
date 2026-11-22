@@ -1,25 +1,53 @@
 const LearnerExperience={
  // Default teaching profile. Difficulty and explicit developer overrides are global.
- preferences:Object.freeze({size:52,bold:100,tolerance:8,rowGap:16,columnGap:16,letterGap:20,leftInset:15,penWidth:3,smoothing:0,practiceRepeats:0}),
- independent:false,ready:false,fullGuide:true,level:'standard',
+ preferences:Object.freeze({size:52,bold:100,tolerance:4,rowGap:16,columnGap:16,letterGap:20,leftInset:15,penWidth:3,smoothing:0,practiceRepeats:0}),
+ independent:false,ready:false,level:'standard',
+ options:{schemes:false,additional:false,independent:false},
  levels:Object.freeze({
-  easy:{label:'Легче',tolerance:12,size:73},
-  standard:{label:'Обычно',tolerance:8,size:52},
-  precise:{label:'Точнее',tolerance:4,size:36},
+  easy:{label:'Легче',tolerance:6,size:73},
+  standard:{label:'Обычно',tolerance:4,size:52},
+  precise:{label:'Точнее',tolerance:2,size:36},
   ideal:{label:'Идеально',tolerance:2,technical:true},
   impossible:{label:'Невозможно',tolerance:1,technical:true}
  }),
- readUI(){try{const saved=JSON.parse(localStorage.getItem('gost-learner-ui-preferences-v1')||'null');if(Object.hasOwn(this.levels,saved?.level))this.level=saved.level}catch{}this.fullGuide=true},
+ uiKey:'gost-learner-ui-preferences-v1',
+ readUI(){
+  let saved=null;try{saved=JSON.parse(localStorage.getItem(this.uiKey)||'null')}catch{}
+  this.level=Object.hasOwn(this.levels,saved?.level)&&!this.levels[saved.level].technical?saved.level:'standard';
+  for(const key of Object.keys(this.options))this.options[key]=saved?.options?.[key]===true;
+  if(!this.options.independent)this.independent=false;
+ },
+ saveUI(patch){
+  try{const old=JSON.parse(localStorage.getItem(this.uiKey)||'{}');localStorage.setItem(this.uiKey,JSON.stringify({...old,...patch}))}
+  catch{message.textContent='Настройки остаются в этой вкладке.'}
+ },
+ syncOptions(){
+  document.body.dataset.showSchemes=String(this.options.schemes);
+  for(const [key,enabled] of Object.entries(this.options)){
+   const control=document.querySelector('#parent-show-'+key);if(control)control.checked=enabled;
+  }
+  document.querySelector('#try-independent').hidden=!this.options.independent;
+ },
+ setOption(key,enabled){
+  if(activePointer!==null||!Object.hasOwn(this.options,key)||typeof enabled!=='boolean'){this.syncOptions();return false}
+  this.options[key]=enabled;this.saveUI({options:this.options});this.syncOptions();
+  if(key==='schemes')renderWritingSchemes();
+  else{if(key==='independent'&&!enabled)this.independent=false;reflowPage()}
+  return true;
+ },
+ activeLevel(){
+  const t=preferences.tolerance;
+  if(t===2){let manual=false;try{manual=Object.hasOwn(DeveloperPanel.overrides(),'tolerance')}catch{}
+   return this.level==='precise'&&!manual?'precise':'ideal';
+  }
+  return Object.keys(this.levels).find(key=>this.levels[key].tolerance===t)||'custom';
+ },
  levelPreferences(){const level=this.levels[this.level];return {...this.preferences,size:level.size??this.preferences.size,tolerance:level.tolerance}},
  initialPreferences(){this.readUI();return DeveloperPanel.preferences(this.levelPreferences())},
  syncLevels(){
   const tolerance=preferences.tolerance;
-  let selected;
-  for(const [key,level] of Object.entries(this.levels)){
-   const active=tolerance===level.tolerance;
-   document.querySelector('#level-'+key)?.setAttribute('aria-pressed',String(active));
-   if(active)selected=key;
-  }
+  const selected=this.activeLevel();
+  for(const key of Object.keys(this.levels))document.querySelector('#level-'+key)?.setAttribute('aria-pressed',String(key===selected));
   const level=this.levels[selected],current=document.querySelector('#level-current');
   current.textContent='Выбрано: '+(level&&!level.technical?level.label:'Технический допуск');
   current.dataset.kind=selected||'custom';
@@ -31,7 +59,7 @@ const LearnerExperience={
   const {size,tolerance,technical}=this.levels[level];
   if(technical)return configure({tolerance});
   this.level=level;
-  try{const old=JSON.parse(localStorage.getItem('gost-learner-ui-preferences-v1')||'{}');localStorage.setItem('gost-learner-ui-preferences-v1',JSON.stringify({...old,level}))}catch{message.textContent='Уровень остаётся в этой вкладке.'}
+  this.saveUI({level});
   DeveloperPanel.removeLevelOverrides();
   return configure({size,tolerance},{persist:false})
  },
@@ -41,8 +69,8 @@ const LearnerExperience={
  directionVersion:7,
  profile(id){return 'geometry:'+drawingGeometryRevision+';assessment:2;direction:'+this.directionVersion+';size:'+preferences.size+';bold:'+preferences.bold+';tolerance:'+preferences.tolerance+';gap:'+preferences.letterGap+';guide:'+this.guideProfile(id)},
  recordAttempts(work){for(const surface of work.written)this.attempts().record({letter:activeLetter,id:surface.id,label:surface.label||'Самостоятельная проба',profile:this.profile(surface.id),strokes:data[surface.id],score:surface.assessment().score})},
- comparableAttempts(letter){return this.attempts().tasks(letter).filter(task=>!WorksheetCatalog.isRetiredTrial(task.id)&&task.profile===this.profile(task.id))},
- repeat(letter,task){if(activePointer!==null)return;this.independent=task.id.startsWith('independent-');build(variant,letter);if(this.independent&&!document.querySelector('#independent-practice'))reflowPage();document.querySelector('#progress-panel').close();const target=[...document.querySelectorAll('canvas[data-surface-id]')].find(c=>c.dataset.surfaceId===task.id)||[...document.querySelectorAll('canvas[data-surface-id]')].find(c=>c.getAttribute('aria-label')===task.label);target?.scrollIntoView?.({block:'center',behavior:'smooth'});target?.focus?.({preventScroll:true})},
+ comparableAttempts(letter){return this.attempts().tasks(letter).filter(task=>!WorksheetCatalog.isRetiredTrial(task.id)&&(this.options.independent||!task.id.startsWith('independent-'))&&task.profile===this.profile(task.id))},
+ repeat(letter,task){if(activePointer!==null)return;this.independent=this.options.independent&&task.id.startsWith('independent-');build(variant,letter);if(this.independent&&!document.querySelector('#independent-practice'))reflowPage();document.querySelector('#progress-panel').close();const target=[...document.querySelectorAll('canvas[data-surface-id]')].find(c=>c.dataset.surfaceId===task.id)||[...document.querySelectorAll('canvas[data-surface-id]')].find(c=>c.getAttribute('aria-label')===task.label);target?.scrollIntoView?.({block:'center',behavior:'smooth'});target?.focus?.({preventScroll:true})},
  letterLabel(element,letter){element.className='lesson-symbols';element.innerHTML='<span class="visually-hidden">'+letter+' '+letter.toLowerCase()+'</span>'+[letter,letter.toLowerCase()].map(c=>'<svg viewBox="0 0 150 180" aria-hidden="true">'+fontOutline(sequenceSources[c].model,'fill="#347356"')+'</svg>').join('')},
  // Keep author row IDs: replacing a repeated combination must not rename old ink.
  legacyLayout(defaults){const first=new Set();return {...defaults,elements:defaults.elements.map(e=>({...e,repeats:3})),textRows:defaults.textRows.filter(row=>{if(first.has(row.stage))return false;first.add(row.stage);return true}).map(row=>({...row,repeats:['lower-practice','upper-practice'].includes(row.stage)?2:1}))}},
@@ -79,9 +107,10 @@ const LearnerExperience={
   $('finish-session').onclick=()=>this.finish();$('result-continue').onclick=()=>close('session-result');
   const next=()=>{if(activePointer!==null||this.hasBackwardWork())return;const letter=LetterCurriculum.lesson(activeLetter).next;if(letter){this.independent=false;build(variant,letter);window.scrollTo({top:0})}};
   $('next-letter').onclick=next;$('result-next').onclick=()=>{close('session-result');next()};
-  $('try-independent').onclick=()=>{if(activePointer!==null)return;this.independent=!this.independent;const scroll=window.scrollY;reflowPage();window.scrollTo({top:scroll})};
+  for(const key of Object.keys(this.options)){const control=$('parent-show-'+key);if(control)control.onchange=()=>this.setOption(key,control.checked)}
+  $('try-independent').onclick=()=>{if(activePointer!==null||!this.options.independent)return;this.independent=!this.independent;const scroll=window.scrollY;reflowPage();window.scrollTo({top:scroll})};
  },
- mountIndependent(root,addCell){if(!this.independent)return;const block=document.createElement('section');block.className='independent-block';block.id='independent-practice';const title=document.createElement('h2');title.textContent='Самостоятельная проба';block.append(title);
+ mountIndependent(root,addCell){if(!this.independent||!this.options.independent)return;const block=document.createElement('section');block.className='independent-block';block.id='independent-practice';const title=document.createElement('h2');title.textContent='Самостоятельная проба';block.append(title);
   for(const character of [activeLetter.toLowerCase(),activeLetter]){
    const model=sequenceSources[character].model,row=document.createElement('div');row.className='row';row.dataset.lessonStage='independent';row.setAttribute('aria-label','Самостоятельно: '+character);
    const example=document.createElement('span');example.className='independent-example';example.setAttribute('aria-hidden','true');row.append(example);
@@ -91,26 +120,26 @@ const LearnerExperience={
   }root.append(block)
 
  },
- mounted(changed){if(changed)this.independent=false;this.initialize();this.refresh();const next=LetterCurriculum.lesson(activeLetter).next;document.querySelector('#next-letter').hidden=!next;document.querySelector('#result-next').hidden=!next;document.querySelector('#try-independent').setAttribute('aria-expanded',String(this.independent));document.querySelector('#try-independent').textContent=this.independent?'Скрыть самостоятельную пробу':this.hasStoredIndependent()?'Продолжить самостоятельную пробу':'Попробовать без контура';document.title=activeLetter+' '+activeLetter.toLowerCase()+' · Буквы по ГОСТ';this.renderOverview()},
+ mounted(changed){if(changed)this.independent=false;this.initialize();this.syncOptions();this.refresh();const next=LetterCurriculum.lesson(activeLetter).next;document.querySelector('#next-letter').hidden=!next;document.querySelector('#result-next').hidden=!next;document.querySelector('#try-independent').setAttribute('aria-expanded',String(this.independent));document.querySelector('#try-independent').textContent=this.independent?'Скрыть самостоятельную пробу':this.hasStoredIndependent()?'Продолжить самостоятельную пробу':'Попробовать без контура';document.title=activeLetter+' '+activeLetter.toLowerCase()+' · Буквы по ГОСТ';this.renderOverview()},
  hasStoredIndependent(){return [activeLetter.toLowerCase(),activeLetter].some(c=>data['independent-gost-b90-'+c]?.length)},
  storedIndependent(exclude=new Set()){return [activeLetter.toLowerCase(),activeLetter].flatMap(character=>{const id='independent-gost-b90-'+character;if(exclude.has(id)||!data[id]?.length)return [];const result=assessWriting(data[id],sequenceSources[character].model,preferences.tolerance/(preferences.size/100));return [{id,assessment:()=>result}]})},
- work(){const fields=surfaces.filter(s=>s.id&&!s.id.startsWith('art')),visibleIds=new Set(fields.map(s=>s.id)),visibleWritten=fields.filter(s=>!s.assessment().empty),hiddenIndependent=this.storedIndependent(visibleIds);const written=[...visibleWritten,...hiddenIndependent];const independent=written.filter(s=>s.id.startsWith('independent-')),traced=written.filter(s=>!s.id.startsWith('independent-'));const average=items=>items.length?Math.round(items.reduce((n,s)=>n+s.assessment().score,0)/items.length):null;return {fields,written,visibleWritten,hiddenIndependent,independent:independent.length,traced:traced.length,traceScore:average(traced),independentScore:average(independent)}},
+ work(){const fields=surfaces.filter(s=>s.id&&!s.id.startsWith('art')),visibleIds=new Set(fields.map(s=>s.id)),visibleWritten=fields.filter(s=>!s.assessment().empty),hiddenIndependent=this.options.independent?this.storedIndependent(visibleIds):[];const written=[...visibleWritten,...hiddenIndependent];const independent=written.filter(s=>s.id.startsWith('independent-')),traced=written.filter(s=>!s.id.startsWith('independent-'));const average=items=>items.length?Math.round(items.reduce((n,s)=>n+s.assessment().score,0)/items.length):null;return {fields,written,visibleWritten,hiddenIndependent,independent:independent.length,traced:traced.length,traceScore:average(traced),independentScore:average(independent)}},
  hasBackwardWork(work=this.work()){return work.visibleWritten.some(s=>!s.additional&&!s.id.startsWith('independent-')&&s.assessment().direction?.backwards)},
  refresh(){if(!this.ready)return;const work=this.work(),core=work.fields.filter(s=>!s.additional),written=work.visibleWritten.filter(s=>!s.additional),extra=work.visibleWritten.length-written.length;document.querySelector('#session-count').textContent=written.length+' / '+core.length+(extra?' · дополнительно: '+extra:'')+(work.hiddenIndependent.length?' · самостоятельно: '+work.hiddenIndependent.length:'');document.querySelector('#finish-session').disabled=!work.written.length;const backward=this.hasBackwardWork(work);document.querySelector('#next-letter').disabled=backward;document.querySelector('#result-next').disabled=backward},
- difficulty(tolerance){
+ difficulty(tolerance,level){
   if(!Number.isFinite(tolerance))return 'Сложность не записана';
-  const level=Object.values(this.levels).find(level=>level.tolerance===tolerance);
-  return level?.label??'Свой допуск ±'+String(tolerance).replace('.',',')+' px';
+  const recorded=level?this.levels[level]?.label:({12:'Легче',8:'Обычно',4:'Точнее',2:'Идеально',1:'Невозможно'})[tolerance];
+  return recorded??'Свой допуск ±'+String(tolerance).replace('.',',')+' px';
  },
  statistics(work){
   const traced=work.written.filter(s=>!s.id.startsWith('independent-')),average=items=>items.length?Math.round(items.reduce((sum,s)=>sum+s.assessment().score,0)/items.length):null;
   const group=register=>{const items=traced.filter(s=>new RegExp('^gost-file-b90-'+register+'-\\d+$').test(s.id)),times=items.map(s=>writingTimes.duration(worksheetStorageKey(),s.id,data[s.id])).filter(ms=>ms!==null);return {count:items.length,score:average(items),meanMs:times.length?Math.round(times.reduce((a,b)=>a+b,0)/times.length):null,timedCount:times.length}};
-  return {version:1,assessment:'geometry-direction-v'+this.directionVersion,tolerance:preferences.tolerance,size:preferences.size,bold:preferences.bold,upper:group('upper'),lower:group('lower'),overall:{count:traced.length,score:average(traced)}};
+  return {version:1,assessment:'geometry-direction-v'+this.directionVersion,level:this.activeLevel(),tolerance:preferences.tolerance,size:preferences.size,bold:preferences.bold,upper:group('upper'),lower:group('lower'),overall:{count:traced.length,score:average(traced)}};
  },
  renderResult(statistics){
   const percent=score=>score===null?'—':score+'%',group=(character,name,g)=>`<div class="session-stat"><dt><svg viewBox="0 0 150 180" role="img" aria-label="${name} ${character}">${fontOutline(sequenceSources[character].model,'fill="#347356"')}</svg></dt><dd>${g.count?percent(g.score)+' · '+(g.meanMs===null?'время —':(g.meanMs/1000).toFixed(1).replace('.',',')+' с'):'—'}<small>${g.count?'Проб: '+g.count:'Пока нет проб'}${g.timedCount&&g.timedCount<g.count?' · время по '+g.timedCount+' из '+g.count:''}</small></dd></div>`;
   document.querySelector('#result-summary').textContent='Проб по контуру: '+statistics.overall.count;
-  document.querySelector('#result-statistics').innerHTML=`<div class="session-stat"><dt>Сложность</dt><dd>${this.difficulty(statistics.tolerance)}</dd></div>`+group(activeLetter,'Заглавная',statistics.upper)+group(activeLetter.toLowerCase(),'Строчная',statistics.lower)+`<div class="session-stat session-stat-total"><dt>Общий средний</dt><dd>${percent(statistics.overall.score)}<small>Элементы, буквы и тексты</small></dd></div>`;
+  document.querySelector('#result-statistics').innerHTML=`<div class="session-stat"><dt>Сложность</dt><dd>${this.difficulty(statistics.tolerance,statistics.level)}</dd></div>`+group(activeLetter,'Заглавная',statistics.upper)+group(activeLetter.toLowerCase(),'Строчная',statistics.lower)+`<div class="session-stat session-stat-total"><dt>Общий средний</dt><dd>${percent(statistics.overall.score)}<small>Элементы, буквы и тексты</small></dd></div>`;
   document.querySelector('#result-statistics-note').textContent='Время — касания пера, без пауз. Самостоятельные пробы не учитываются.'+([statistics.upper,statistics.lower].some(g=>g.count>g.timedCount)?' У проб без замера время не указано.':'');
  },
  finish(){if(activePointer!==null||(typeof NumberPractice!=='undefined'&&NumberPractice.active))return;const work=this.work();if(!work.written.length)return;this.recordAttempts(work);const statistics=this.statistics(work);const unchangedProfile=['size','bold','tolerance','letterGap'].every(key=>preferences[key]===this.preferences[key]);const signature=JSON.stringify(work.written.map(s=>[s.id,data[s.id]]))+(unchangedProfile?'':this.profile('trace'))+((statistics.upper.timedCount||statistics.lower.timedCount)?JSON.stringify([statistics.upper.meanMs,statistics.lower.meanMs,statistics.upper.timedCount,statistics.lower.timedCount]):'');const session=this.store().finish(activeLetter,{...work,statistics,signature:(signature+';assessment:2;direction:'+statistics.assessment.slice('geometry-direction-v'.length)).split('').reduce((h,c)=>Math.imul(h^c.charCodeAt(0),16777619)>>>0,2166136261).toString(16)});if(!session)return;document.querySelector('#result-title').textContent=this.store().lastSaveSucceeded?'Занятие сохранено':'Занятие завершено';this.renderResult(session.statistics??{...statistics,tolerance:undefined});document.querySelector('#session-result').showModal();this.renderOverview()},
@@ -120,7 +149,7 @@ const LearnerExperience={
  },
  renderOverview(){this.store().synchronize();const root=document.querySelector('#lesson-grid');if(!root)return;root.replaceChildren();const progressRoot=document.querySelector('#progress-list');progressRoot.replaceChildren();
   for(const letter of LetterCurriculum.order){const sessions=this.store().sessions(letter),button=document.createElement('button');button.type='button';button.className='lesson-tile';button.setAttribute('aria-pressed',String(letter===activeLetter));const label=document.createElement('span');label.textContent=letter+' '+letter.toLowerCase();this.letterLabel(label,letter);const result=this.completedResult(sessions),status=document.createElement('small');
-   const resultText=result?result.score+'% · '+this.difficulty(result.session.statistics?.tolerance):'';
+   const resultText=result?result.score+'% · '+this.difficulty(result.session.statistics?.tolerance,result.session.statistics?.level):'';
    status.className='lesson-rate';status.textContent=resultText;button.append(label,status);
    button.setAttribute('aria-label',letter+' '+letter.toLowerCase()+(result?'. Последний результат: '+resultText:'. Нет результата по контуру.'));
    if(result){const bar=document.createElement('span'),fill=document.createElement('span');bar.className='lesson-rate-track';bar.dataset.band=result.score>=90?'green':'yellow';bar.setAttribute('aria-hidden','true');bar.style.setProperty('--lesson-rate',result.score+'%');fill.className='lesson-rate-fill';bar.append(fill);button.append(bar)}

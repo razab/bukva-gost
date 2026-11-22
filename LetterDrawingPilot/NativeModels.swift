@@ -29,9 +29,11 @@ struct NativeSnapshot: Decodable {
     var canRestore: Bool
     var notice: String?
     var penPreview: [[Double]]?
+    var options: [String: Bool]?
+    var activeLevel: String?
     var lessons: [LessonItem]?
     static let empty = NativeSnapshot(letter: "А", preferences: [:], variant: 0, stylusOnly: true, canUndo: false, hasWork: false, writing: false, independent: false, canNext: true, count: "", backupSummary: "", canRestore: false)
-    var level: String { [12.0:"easy",8:"standard",4:"precise",2:"ideal",1:"impossible"][preferences["tolerance"] ?? 8] ?? "custom" }
+    var level: String { activeLevel ?? "standard" }
 }
 
 struct NativeResult: Decodable {
@@ -41,6 +43,14 @@ struct NativeResult: Decodable {
 }
 struct SessionStatistics: Decodable {
     let tolerance: Double
+    let level: String?
+    var difficulty: String {
+        if let level {
+            return ["easy": "Легче", "standard": "Обычно", "precise": "Точнее",
+                    "ideal": "Идеально", "impossible": "Невозможно"][level] ?? "Свой допуск"
+        }
+        return [12.0: "Легче", 8: "Обычно", 4: "Точнее", 2: "Идеально", 1: "Невозможно"][tolerance] ?? "Свой допуск"
+    }
     let upper: SessionGroup
     let lower: SessionGroup
     let overall: SessionGroup
