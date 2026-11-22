@@ -407,6 +407,61 @@ final class LessonTests: XCTestCase {
     }
 
     @MainActor
+    func testWarmupOnYeryFollowsLetterScheme() async throws {
+        let lesson = try await loadedLesson(requireA: false)
+        let url = try XCTUnwrap(lesson.url)
+        let configuration = WKWebViewConfiguration()
+        configuration.websiteDataStore = .nonPersistent()
+        let web = WKWebView(frame: lesson.frame, configuration: configuration)
+        try XCTUnwrap(lesson.superview).addSubview(web)
+        defer { web.removeFromSuperview() }
+        web.loadFileURL(url, allowingReadAccessTo: url.deletingLastPathComponent())
+        for _ in 0..<70 {
+            if (try? await web.evaluateJavaScript("typeof NativeApp === 'object'") as? Bool) == true { break }
+            try await Task.sleep(for: .milliseconds(100))
+        }
+        let evidence = try await web.callAsyncJavaScript("""
+            await NativeApp.command('select',{letter:'Ы'});
+            await NativeApp.command('level',{level:'standard'});
+            const id='element-v1-gost-b90-42b-part-0-0';
+            const canvas=document.querySelector('[data-surface-id="'+id+'"]'),cell=canvas.closest('.cell');
+            const score=cell.querySelector('.score'),resetButton=cell.querySelector('.reset');
+            const frame=JSON.parse(canvas.dataset.viewBox);
+            canvas.scrollIntoView({block:'center',behavior:'instant'});
+            canvas.setPointerCapture=()=>{};
+            const [stem,rounding]=DrawingGlyphs.Ы.demonstration;
+            const draw=lines=>{
+                const box=canvas.getBoundingClientRect();
+                for(const stroke of lines)stroke.forEach(([x,y],index)=>canvas.dispatchEvent(new PointerEvent(
+                     index===0?'pointerdown':index===stroke.length-1?'pointerup':'pointermove',
+                     {pointerId:1,pointerType:'pen',isPrimary:true,bubbles:true,cancelable:true,
+                      clientX:box.left+(x-frame.x)*box.width/frame.width,
+                      clientY:box.top+(y-frame.y)*box.height/frame.height})));
+                return {score:score.textContent,direction:score.dataset.direction};
+            };
+            const shown=draw([stem,rounding]);
+            const contacts=readInk(worksheetStorageKey())?.[id]?.length;
+            score.click();resetButton.click();
+            const opposite=draw([stem,[...rounding].reverse()]);
+            score.click();resetButton.click();
+            draw([stem,rounding]);
+            await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+            return {shown,opposite,contacts,arrows:cell.querySelectorAll('.warmup-arrow').length};
+            """, arguments: [:], in: nil, contentWorld: .page) as? [String: Any]
+        let shown = evidence?["shown"] as? [String: String]
+        let opposite = evidence?["opposite"] as? [String: String]
+        XCTAssertEqual(shown?["score"], "100%")
+        XCTAssertEqual(shown?["direction"], "correct")
+        XCTAssertEqual(opposite?["direction"], "backward")
+        XCTAssertEqual(evidence?["contacts"] as? Int, 2)
+        XCTAssertEqual(evidence?["arrows"] as? Int, 2)
+        let attachment = XCTAttachment(image: try await web.takeSnapshot(configuration: nil))
+        attachment.name = "yery-warmup-two-teaching-strokes"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
+    @MainActor
     func testNumbersWorksheet() async throws {
         let web = try await loadedLesson()
         let before = try await web.evaluateJavaScript("JSON.stringify(Object.fromEntries(Object.keys(localStorage).filter(k=>k.startsWith('letter-worksheet-')&&k!=='letter-worksheet-numbers-v1').sort().map(k=>[k,localStorage.getItem(k)])))") as? String

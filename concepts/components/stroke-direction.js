@@ -1,6 +1,6 @@
 // Teaching direction is separate from font geometry and permits pen lifts.
 const StrokeDirection={
- routes:new WeakMap(),alternatives:new WeakMap(),geometry:new WeakMap(),cache:new WeakMap(),warmups:new Map(),warmupCues:new WeakMap(),joinedPaths:new WeakMap(),cell:12,
+ routes:new WeakMap(),alternatives:new WeakMap(),geometry:new WeakMap(),cache:new WeakMap(),warmups:new Map(),warmupCues:new WeakMap(),joinedPaths:new WeakMap(),singleContactWarmups:new WeakSet(),cell:12,
  register(model,teaching=model,complete=false,alternative){this.routes.set(model,teaching);if(complete)this.geometry.set(model,teaching);if(alternative)this.alternatives.set(model,alternative)},
  registerJoinedPaths(model,paths){
   if(!paths.length||this.joinedPaths.has(model))return;
@@ -30,26 +30,36 @@ const StrokeDirection={
   }
   return closest;
  },
- registerWarmup({id,model},glyphModel){
+ registerWarmup({id,model,teachingRoute,directionRoute,sourceKind},glyphModel){
   const whole=model.length===glyphModel.length&&model.every((line,index)=>line===glyphModel[index]);
+  const taught=teachingRoute||(sourceKind==='demonstration'?model:null);
   if(!this.warmups.has(id)){
-   const route=whole?this.route(glyphModel):model.map(line=>{
-    // Keep authored cues independent from the threshold for grading handwriting.
+   const route=whole?this.route(glyphModel):directionRoute||taught||model.map(line=>{
+    // Straight fragments can come from an earlier skeleton with opposite orientation.
     const direction=this.assess([line.map(([x,y])=>[x/150,y/180])],glyphModel,{forWarmup:true});
     return direction.ratio<.2?[...line].reverse():line;
    });
-   const cue=TraceFeedback.sample(route,8,32).map(line=>{
-    if(line.length<3)return '';
-    const [x,y]=line[1],[endX,endY]=line[2],length=Math.hypot(endX-x,endY-y);
+   const cue=(taught||route).map((stroke,index)=>{
+    const [points]=TraceFeedback.sample([stroke],4,32);
+    if(points.length<3)return '';
+    const [x,y]=points[2],before=points[1],after=points[3]||points[2];
+    const length=Math.hypot(after[0]-before[0],after[1]-before[1]);
     if(length<1)return '';
-    const dx=(endX-x)/length,dy=(endY-y)/length;
-    return `<path class="warmup-arrow" d="M${x-5*dx-3*dy} ${y-5*dy+3*dx} L${x} ${y} L${x-5*dx+3*dy} ${y-5*dy-3*dx}"/>`;
+    const dx=(after[0]-before[0])/length,dy=(after[1]-before[1])/length;
+    return `<path class="warmup-arrow" data-warmup-stroke="${index}" d="M${x-5*dx-3*dy} ${y-5*dy+3*dx} L${x} ${y} L${x-5*dx+3*dy} ${y-5*dy-3*dx}"/>`;
    }).join('');
    this.warmups.set(id,{route,cue});
   }
   const {route,cue}=this.warmups.get(id);
   this.register(model,route,whole,whole?this.alternatives.get(glyphModel):undefined);
-  if(whole&&this.joinedPaths.has(glyphModel))this.joinedPaths.set(model,this.joinedPaths.get(glyphModel));
+  const parentPaths=this.joinedPaths.get(glyphModel);
+  if(whole&&parentPaths)this.joinedPaths.set(model,parentPaths);
+  if(teachingRoute&&model.length===1){
+   // Allow the former continuous shape only as a complete directed sequence.
+   const inherited=parentPaths?.find(prefix=>prefix.model[0]===model[0]);
+   this.registerJoinedPaths(model,[{path:model[0],retrace:inherited?.retrace}]);
+   if(!inherited)this.singleContactWarmups.add(model);
+  }
   this.warmupCues.set(model,cue);
  },
  route(model){return this.routes.get(model)||model},
@@ -99,11 +109,11 @@ const StrokeDirection={
   // A completed directed prefix licenses its connected climb.
   // Further motion still uses the standard direction of the stem.
   let checkedPrefix=0,retraceLength=0;
-  const continuations=[];
+  const continuations=[],mergeLifts=!this.singleContactWarmups.has(model);
   for(const line of actual){
    if(!line.length)continue;
    const last=continuations.at(-1)?.at(-1);
-   if(last&&Math.hypot(last[0]-line[0][0],last[1]-line[0][1])<=1/scale)continuations.at(-1).push(...line);
+   if(mergeLifts&&last&&Math.hypot(last[0]-line[0][0],last[1]-line[0][1])<=1/scale)continuations.at(-1).push(...line);
    else continuations.push([...line]);
   }
   const joinRadius=Math.min(16,tolerance+2/scale);

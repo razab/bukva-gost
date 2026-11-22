@@ -13,6 +13,18 @@ const retiredParts=new Set(Object.entries({
  ж:['part-0','part-1','route-v2-3'],                 // Branches now drawn through the centre.
  ц:['part-1']                                       // Stem continues into the tail.
 }).flatMap(([character,parts])=>parts.map(part=>`gost-b90-${character.codePointAt(0).toString(16)}-${part}`)));
+// A skeleton can contain several teaching strokes in a different order.
+const reviewedWarmups={
+ 'gost-b90-42b-part-0':[0,1], 'gost-b90-44b-part-0':[0,1], // Ы/ы
+ 'gost-b90-442-part-0':[0,1],                              // т
+ 'gost-b90-415-part-1':[0,1], 'gost-b90-401-part-1':[0,1], 'gost-b90-451-part-0':[0,1,2], // Е/Ё/ё
+ 'gost-b90-414-part-1':[0,1],                              // Д
+ 'gost-b90-42f-part-2':[0,1], 'gost-b90-44f-part-2':[0,1], // Я/я
+ 'gost-b90-428-part-0':[0,1], 'gost-b90-448-part-0':[0,1], // Ш/ш
+ 'gost-b90-439-part-0':[0],                                // й, body without the mark
+ 'gost-b90-42e-part-2':[1,2], 'gost-b90-44e-part-2':[1,2], // Ю/ю
+ 'gost-b90-424-part-1':[1,2], 'gost-b90-444-part-1':[1,2]  // Ф/ф
+};
 const isRetiredTrial=id=>{
  const prefix='element-v1-';
  return id.startsWith(prefix)&&retiredParts.has(id.slice(prefix.length,id.lastIndexOf('-')));
@@ -49,7 +61,15 @@ function setLetterSources(sources,letter='А'){
    }
    if(dots.length)parts.push({id:'gost-b90-'+character.codePointAt(0).toString(16)+'-dots',name:character+' · Точки',letters:[character],model:dots});
   }
-  elements.splice(0,elements.length,...parts.filter(part=>!retiredParts.has(part.id)));return;
+  const available=parts.filter(part=>!retiredParts.has(part.id));
+  for(const part of available){
+   const indices=reviewedWarmups[part.id];
+   if(!indices)continue;
+   const glyph=sources[part.letters[0]];
+   part.teachingRoute=indices.map(index=>glyph.demonstration[index]);
+   if(part.id==='gost-b90-439-part-0')part.directionRoute=glyph.instruction.directionRoute.slice(0,2);
+  }
+  elements.splice(0,elements.length,...available);return;
  }
 
  const upper=sources['А'].model||sources['А'],lower=sources['а'].model||sources['а'];

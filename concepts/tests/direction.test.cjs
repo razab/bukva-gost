@@ -204,32 +204,104 @@ for(const text of ['ААА','СОК','её ЯЯ']){
  const check=lines=>run(`(()=>{const sequence=LetterSequence.compose(${JSON.stringify(text)},DrawingGlyphs,{gap:20,maxWidth:150});return StrokeDirection.assess(${JSON.stringify(lines.map(l=>l.map(([x,y])=>[x/composed.width,y/composed.height])))},sequence.model,{width:sequence.width,height:sequence.height})})()`);
  assert.equal(check(routes).backwards,false,text+' correct');assert.equal(check(routes.map(l=>[...l].reverse())).backwards,true,text+' reverse');
 }
-assert.equal(run('drawingGeometryRevision'),'4633c1e3');assert(run("LearnerExperience.profile('x').includes('direction:8')"));
-let wholeWarmups=0;
-for(const character of run('LetterCurriculum.order')){
- run(`build(0,${JSON.stringify(character)})`);
- const parts=run('WorksheetCatalog.elements');
- for(let at=0;at<parts.length;at++){
-  const reference=`WorksheetCatalog.elements[${at}].model`;
-  const glyph=`DrawingGlyphs[${JSON.stringify(parts[at].letters[0])}].model`;
-  if(run(`JSON.stringify(${reference})===JSON.stringify(${glyph})`)){
-   wholeWarmups++;
-   assert(run(`StrokeDirection.route(${reference})===StrokeDirection.route(${glyph})`),parts[at].id+' must use the whole letter teaching route');
+assert.equal(run('drawingGeometryRevision'),'4633c1e3');assert(run("LearnerExperience.profile('x').includes('direction:9')"));
+// Mount every authored main and optional warmup on a single real-component fixture.
+const warmupFixture=boot({});
+const warmupRun=code=>warmupFixture.run(code);
+let totalWarmups=0,wholeWarmups=0,authoredMatches=0;
+for(const level of ['easy','standard','precise']){
+ warmupRun(`LearnerExperience.setLevel('${level}')`);
+ const cases=warmupRun(`(()=>{
+  const root=document.createElement('section'),cases=[];
+  const normalize=lines=>lines.map(line=>line.map(([x,y])=>[x/150,y/180]));
+  for(const letter of LetterCurriculum.order){
+   WorksheetCatalog.setLetterSources(DrawingGlyphs,letter);
+   registerTeachingDirections();
+   for(const part of WorksheetCatalog.elements){
+    const glyph=DrawingGlyphs[part.letters[0]],model=part.model;
+    const row=PracticeElement.mount({root,definition:part,repeats:1,
+     addCell:(row,id,model,label)=>PracticeElement.createCell({row,id,model,label,guide,setupSurface,preferences,rulingLevels})});
+    const direction=StrokeDirection.route(model);
+    const shown=part.teachingRoute||(part.sourceKind==='demonstration'?model:direction);
+    const whole=JSON.stringify(glyph.model)===JSON.stringify(model);
+    // Infer matching strokes independently from their visible geometry.
+    // Reading only the grader's route would let the Ы bug pass again.
+    const strokes=glyph.demonstration.filter(line=>evaluate(normalize([line]),model,2.5).precision>=.97);
+    let authored=strokes.length&&evaluate(normalize(strokes),model,2.5).coverage>=.95?strokes:null;
+    if(part.id==='gost-b90-a-body'||part.id==='gost-b90-a-stem'){
+     // The two paths meet at the loop closure. Their explicit model boundary
+     // avoids picking up the next stroke where both fit the same corridor.
+     authored=[glyph.model[part.sourceStroke]];
+    }else if(!authored){
+     const trimmed=TraceFeedback.sample(glyph.demonstration,1.5).flatMap(stroke=>{
+      const spans=[];let span=[];
+      for(const point of stroke){
+       if(TraceFeedback.distance(point,model)<=2.5)span.push(point);
+       else if(span.length){spans.push(span);span=[]}
+      }
+      if(span.length)spans.push(span);
+      return spans.filter(line=>line.length>=6);
+     });
+     const similarity=evaluate(normalize(trimmed),model,3);
+     if(similarity.coverage>=.95&&similarity.precision>=.95)authored=trimmed;
+    }
+    cases.push({id:part.id,cell:row.children[0],direction,shown,whole,authored,
+       legacy:part.teachingRoute?model:null,matchesWhole:direction===StrokeDirection.route(glyph.model),scale:preferences.size/100});
+   }
   }
-  const directed=plain(run(`StrokeDirection.route(${reference})`));
-  if(parts[at].id==='gost-b90-437-part-2')assert(directed[0][0][0]>directed[0].at(-1)[0],'З warmup must retain its right-to-left arrow');
-  const size=directed.reduce((sum,line)=>sum+line.slice(1).reduce((n,[x,y],i)=>n+Math.hypot(x-line[i][0],y-line[i][1]),0),0);
-  const check=(lines,dx=0,dy=0)=>run(`StrokeDirection.assess(${JSON.stringify(lines.map(line=>line.map(([x,y])=>[(x+dx)/150,(y+dy)/180])))},${reference})`);
-  for(const [dx,dy] of [[0,0],[4,0],[-4,0],[0,4],[0,-4]]){
-   assert.equal(check(directed,dx,dy).backwards,false,character+' '+parts[at].id+' forward warmup');
+  return cases;
+ })()`);
+
+ const length=points=>points.slice(1).reduce((n,[x,y],i)=>n+Math.hypot(x-points[i][0],y-points[i][1]),0);
+ const directionOfArrow=(stroke,chevron)=>{
+  const [a,tip,b]=chevron,[tx,ty]=tip,dx=tx-(a[0]+b[0])/2,dy=ty-(a[1]+b[1])/2;
+  return stroke.slice(1).some(([x,y],i)=>{
+   const [sx,sy]=stroke[i],vx=x-sx,vy=y-sy,magnitude=Math.hypot(vx,vy);
+   if(!magnitude)return false;
+   const u=Math.max(0,Math.min(1,((tx-sx)*vx+(ty-sy)*vy)/magnitude**2));
+   return Math.hypot(tx-sx-u*vx,ty-sy-u*vy)<2.2&&(vx*dx+vy*dy)/magnitude/Math.hypot(dx,dy)>.45;
+  });
+ };
+ for(const {id,cell,direction,shown,whole,authored,legacy,matchesWhole,scale} of cases){
+  const context=`${level} ${id}`,parts=cell.parts;
+  if(level==='standard'){
+   totalWarmups++;
+   if(whole){wholeWarmups++;assert(matchesWhole,context+' should use the whole letter route')}
+   if(authored)authoredMatches++;
   }
-  if(size>=12){
-   assert.equal(check(directed.map(line=>[...line].reverse())).backwards,true,character+' '+parts[at].id+' reversed warmup');
-   assert(run(`guide(${reference}).includes('warmup-arrow')`),character+' '+parts[at].id+' lacks direction cue');
+  const check=(trace,backwards,label)=>{
+   draw(parts.canvas,trace);
+   assert.equal(parts.output.dataset.direction,backwards?'backward':'correct',context+' '+label);
+   clear(parts);
+  };
+  if(id==='gost-b90-437-part-2')assert(direction[0][0][0]>direction[0].at(-1)[0],'З retains its right-to-left arrow');
+  const arrows=[...cell.html.matchAll(/class="warmup-arrow" data-warmup-stroke="(\d+)" d="M([^ ]+) ([^ ]+) L([^ ]+) ([^ ]+) L([^ ]+) ([^"]+)"/g)];
+  for(const [i,line] of shown.entries()){
+   const arrow=arrows.find(m=>Number(m[1])===i);
+   if(length(line)>=8)assert(arrow,context+' missing arrow for stroke '+i);
+   if(arrow){
+    const [ax,ay,tx,ty,bx,by]=arrow.slice(2).map(Number);
+    assert(directionOfArrow(line,[[ax,ay],[tx,ty],[bx,by]]),context+' arrow points away from stroke '+i);
+   }
+  }
+  check(shown,false,'follow the visible route');
+  assert(authored,context+' is missing its independent reference');
+  check(authored,false,'follow the matching strokes from the letter demonstration');
+  if(legacy)check(legacy,false,'keep the complete previously taught contact');
+  for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){
+   const moved=shown.map(stroke=>stroke.map(([x,y])=>[x+dx/scale,y+dy/scale]));
+   check(moved,false,'a one-pixel offset must not reverse direction');
+  }
+  if(direction.some(line=>length(line)*scale>=10))check(direction.map(line=>[...line].reverse()),true,'reverse the route');
+  if(id==='gost-b90-42b-part-0'||id==='gost-b90-44b-part-0'){
+   check([shown[0],[...shown[1]].reverse()],true,'reverse only the rounding while correctly drawing the stem');
   }
  }
 }
+assert.equal(totalWarmups,120);
 assert.equal(wholeWarmups,22);
+assert.equal(authoredMatches,totalWarmups);
+console.log(`PASS: ${totalWarmups} mounted warmups across three difficulty levels, ${authoredMatches} independently matched glyph routes, visible arrow directions, small offsets and reverse strokes`);
 run("build(0,'А')");if(!cell().output.disabled)clear();
 run("var checks=0,originalAssess=assessWriting;assessWriting=(...args)=>{checks++;return originalAssess(...args)}");
 draw(cell().canvas,plain(run('demonstrationFor(models)')));
