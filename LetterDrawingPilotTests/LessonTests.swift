@@ -407,6 +407,60 @@ final class LessonTests: XCTestCase {
     }
 
     @MainActor
+    func testSentenceLeavesRoomForHand() async throws {
+        let web = try await loadedLesson(requireA: false)
+        let window = try XCTUnwrap(web.window)
+        let original = window.bounds
+        defer { window.bounds = original; window.rootViewController?.view.frame = original }
+        for size in [CGSize(width: 1194, height: 834), CGSize(width: 834, height: 1194), CGSize(width: 390, height: 780)] {
+            window.bounds = CGRect(origin: .zero, size: size)
+            window.rootViewController?.view.frame = window.bounds
+            window.layoutIfNeeded()
+            for _ in 0..<40 {
+                let viewport = try await web.evaluateJavaScript("innerWidth") as? Double ?? 0
+                if abs(viewport - size.width) < 1 { break }
+                try await Task.sleep(for: .milliseconds(100))
+            }
+            let report = try await web.callAsyncJavaScript("""
+                build(variant,'Б');
+                configure({size:52,leftInset:15,bold:100,tolerance:8},{persist:false});
+                const afterLayout=()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+                await afterLayout();
+                const row=document.querySelector('#practice [data-lesson-stage="consolidation"]');
+                window.scrollTo(0,row.getBoundingClientRect().top+scrollY-182);
+                await afterLayout();
+                const canvas=row.querySelector('canvas'),bounds=row.getBoundingClientRect(),field=canvas.getBoundingClientRect();
+                const style=getComputedStyle(row),y=field.top+8;
+                const hits=[field.left+3,(field.left+field.right)/2,field.right-3]
+                    .every(x=>document.elementFromPoint(x,y)===canvas);
+                const inMargin=document.elementFromPoint(bounds.right-5,y)?.closest('canvas');
+                return {text:row.getAttribute('aria-label'),width:innerWidth,rowWidth:bounds.width,
+                    left:field.left-bounds.left,right:bounds.right-field.right,reserve:parseFloat(style.paddingRight),
+                    ruling:style.getPropertyValue('--row-ruling-lines').includes('linear-gradient'),
+                    scale:Number(canvas.dataset.scale),hits,free:!inMargin,fits:document.body.scrollWidth<=innerWidth+1};
+                """, arguments: [:], in: nil, contentWorld: .page) as? [String: Any]
+            let rowWidth = try XCTUnwrap(report?["rowWidth"] as? Double)
+            let reserve = try XCTUnwrap(report?["reserve"] as? Double)
+            let right = try XCTUnwrap(report?["right"] as? Double)
+            XCTAssertEqual(report?["text"] as? String, "У Бориса барабан. Борис бил в барабан. Мы пели.")
+            XCTAssertEqual(report?["width"] as? Double ?? 0, size.width, accuracy: 1)
+            XCTAssertEqual(report?["left"] as? Double ?? 0, rowWidth * 0.15, accuracy: 1)
+            XCTAssertEqual(reserve, min(rowWidth * 0.1, 110), accuracy: 1)
+            XCTAssertGreaterThanOrEqual(right, reserve - 1)
+            XCTAssertEqual(report?["scale"] as? Double, 0.52)
+            for key in ["ruling", "hits", "free", "fits"] {
+                XCTAssertEqual(report?[key] as? Bool, true, key + " at width \(size.width)")
+            }
+            if size.width > size.height {
+                let attachment = XCTAttachment(image: try await web.takeSnapshot(configuration: nil))
+                attachment.name = "sentence-room-for-hand"
+                attachment.lifetime = .keepAlways
+                add(attachment)
+            }
+        }
+    }
+
+    @MainActor
     func testNativeLayoutSizes() async throws {
         let web = try await loadedLesson()
         let window = try XCTUnwrap(web.window)

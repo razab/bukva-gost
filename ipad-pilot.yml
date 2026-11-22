@@ -28,7 +28,7 @@ targets:
         TARGETED_DEVICE_FAMILY: '2'
         SWIFT_VERSION: '5.0'
         MARKETING_VERSION: '0.1'
-        CURRENT_PROJECT_VERSION: '21'
+        CURRENT_PROJECT_VERSION: '22'
   LetterDrawingPilotTests:
     type: bundle.unit-test
     platform: iOS

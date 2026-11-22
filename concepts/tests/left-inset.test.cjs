@@ -8,11 +8,31 @@ for(const line of app.run('demonstrationFor(models)'))draw(upper(app).canvas,lin
 app.nodes['setting-leftInset'].oninput({target:{value:'20'}});assert.equal(app.run('preferences.leftInset'),20);assert.equal(app.run('document.body.style["--practice-left-inset"]'),'20%');assert.equal(app.run('JSON.stringify(data)'),ink);assert.equal(app.run('history.length'),history);assert.equal(upper(app).output.textContent,'100%');
 app.run("build(0,'О')");assert.equal(app.run('preferences.leftInset'),20);app=boot(app.saved);assert.equal(app.run('preferences.leftInset'),20);app.run("build(0,'А')");assert.equal(app.run('JSON.stringify(data)'),ink);assert.equal(upper(app).output.textContent,'100%');
 console.log('PASS canary: 15% default → real20% control → draw retained at100% → another letter → reload; global percentage and undo history retained');
+{
+ const page=boot();
+ const text=page.run("LetterCurriculum.lesson('Б').examples.sentences[0]");
+ let previousWraps=0;
+ for(const width of [1170,810,366]){
+  page.nodes.practice.clientWidth=width;
+  page.run("build(0,'Б')");
+  const row=page.nodes.practice.children.find(r=>r.attrs['aria-label']===text);
+  const field=row.children[0],canvas=field.parts.canvas;
+  const reserve=Math.min(110,width*.1);
+  assert.equal(row.style['padding-right'],reserve+'px');
+  assert(parseFloat(field.style['--cell-width'])<=width*.85-reserve+1,'Text enters the hand area at '+width);
+  assert.equal(Number(canvas.attrs['data-scale']),.52);
+  const levels=JSON.parse(canvas.attrs['data-ruling-levels']);
+  assert(levels.length>=previousWraps);
+  previousWraps=levels.length;
+  assert.equal(page.nodes.practice.children.find(r=>r.dataset.lessonStage==='upper-letter').style['padding-right'],undefined);
+ }
+ console.log('PASS: reserved right area in the real Б sentence row at landscape, portrait and narrow widths');
+}
 if(process.env.LEFT_INSET_CANARY_ONLY==='1')process.exit(0);
 for(const [input,want] of [[0,0],[10,10],[20,20],[30,30],[-5,0],[90,30],[NaN,15]]){app.run(`configure({leftInset:${Number.isNaN(input)?'NaN':input}})`);assert.equal(app.run('preferences.leftInset'),want)}
 // At an exact width boundary, narrowing content must wrap instead of scaling.
 app=boot();const text=app.run("LetterCurriculum.lesson('М').examples.sentences[0]"),sequence=app.run(`LetterSequence.compose(${JSON.stringify(text)},sequenceSources,{gap:20,bold:100})`),sources=app.run('sequenceSources'),characters=text.replace(/ /g,'');
-const span=Math.max(...sequence.glyphs.map((g,i)=>g.x+sources[characters[i]].bounds[1]))-Math.min(...sequence.glyphs.map((g,i)=>g.x+sources[characters[i]].bounds[0]));app.nodes.practice.clientWidth=span*app.run('preferences.size/100')+32;app.run("build(0,'М');configure({leftInset:0})");
+const span=Math.max(...sequence.glyphs.map((g,i)=>g.x+sources[characters[i]].bounds[1]))-Math.min(...sequence.glyphs.map((g,i)=>g.x+sources[characters[i]].bounds[0]));const fit=span*app.run('preferences.size/100')+32;app.nodes.practice.clientWidth=fit+Math.min(110,fit/9);app.run("build(0,'М');configure({leftInset:0})");
 const sentence=()=>app.nodes.practice.children.find(r=>r.attrs['aria-label']===text).children[0].parts;
 const firstId=sentence().canvas.attrs['data-surface-id'],frame=sentence().canvas.attrs['data-view-box'];assert(!firstId.includes('-wrap'));
 for(const line of app.run(`StrokeDirection.route(LetterSequence.compose(${JSON.stringify(text)},sequenceSources,{gap:20,bold:100}).model)`))draw(sentence().canvas,line);assert.equal(sentence().output.textContent,'100%');const stored=app.run(`JSON.stringify(data[${JSON.stringify(firstId)}])`);

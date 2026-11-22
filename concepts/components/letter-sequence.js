@@ -36,10 +36,13 @@ const LetterSequence={
  mount({root,availableWidth=root.clientWidth,configuration,sources,guide,fontOutline,setupSurface,preferences,rulingLevels}){
   if(!configuration)return [];
   const gap=preferences.letterGap;
-  const contentWidth=(availableWidth||936)*(1-(preferences.leftInset||0)/100);
+  const rowWidth=availableWidth||936;
+  const rightInset=Math.min(rowWidth*.1,110);
+  const contentWidth=rowWidth*(1-(preferences.leftInset||0)/100)-rightInset;
   const fitWidth=p=>contentWidth/(p.size/100)-2*Math.max(5*p.bold/100,p.tolerance/(p.size/100),4/(p.size/100))-4/(p.size/100);
   const maxWidth=fitWidth(preferences);
   const sequence=this.compose(configuration.text,sources,{gap,bold:preferences.bold,maxWidth}),row=document.createElement('div'),surfaces=[];row.className='row sequence-row';row.dataset.component='letter-sequence';row.dataset.textRowId=configuration.id||'primary';row.dataset.lessonStage=configuration.stage||LetterCurriculum.textStage(configuration);row.setAttribute('aria-label',configuration.text);
+  row.style.setProperty('padding-right',rightInset+'px');
   const ink=sequence.glyphs.map((g,i)=>{const source=sources[configuration.text.replace(/ /g,'')[i]],b=source.inkBounds;return b?[b[0]+g.x,b[1]+g.y,b[2]+g.x,b[3]+g.y]:null}).filter(Boolean);if(ink.length)PracticeElement.inkBounds.set(sequence.model,[Math.min(...ink.map(b=>b[0])),Math.min(...ink.map(b=>b[1])),Math.max(...ink.map(b=>b[2])),Math.max(...ink.map(b=>b[3]))]);
   const sequenceGuide=()=>sequence.model.map(line=>`<path d="${line.map((p,i)=>`${i?'L':'M'}${p[0]} ${p[1]}`).join(' ')}" class="corridor"/>`).join('')+sequence.glyphs.map(g=>`<g transform="translate(${g.x} ${g.y||0})">${fontOutline(g.model,'fill="#789581" opacity=".22"')}</g>`).join('')+sequence.model.map(line=>`<path d="${line.map((p,i)=>`${i?'L':'M'}${p[0]} ${p[1]}`).join(' ')}" class="guide"/>`).join('');
   const levels=[...new Set(sequence.glyphs.map(g=>g.y||0))].flatMap(y=>(rulingLevels||[]).map(level=>level+y));
