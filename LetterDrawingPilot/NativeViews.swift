@@ -444,7 +444,19 @@ private struct NativeSessionResult: View {
             } footer: { Text("Время — касания пера, без пауз. Самостоятельные пробы не учитываются.") }
             Section {
                 Button("Ещё потренироваться") { controller.sheet = nil }
-                if controller.state.canNext { Button("Следующая буква", systemImage: "chevron.forward") { controller.afterDismiss { controller.command("next") } } }
+                if controller.state.canNext, let next = controller.state.nextLetter {
+                    Button {
+                        controller.afterDismiss { controller.command("next") }
+                    } label: {
+                        HStack(spacing: 8) {
+                            Text(result.letter)
+                            Image(systemName: "arrow.right")
+                            Text(next)
+                        }
+                        .font(.headline)
+                    }
+                    .accessibilityLabel("Следующая буква: " + next)
+                }
             }
         }
     }

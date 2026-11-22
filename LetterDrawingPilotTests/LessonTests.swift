@@ -690,13 +690,105 @@ final class LessonTests: XCTestCase {
     }
 
     @MainActor
+    func testFinishAt95AndShowLetterTransition() async throws {
+        let lesson = try await loadedLesson(requireA: false)
+        let url = try XCTUnwrap(lesson.url)
+        let config = WKWebViewConfiguration()
+        config.websiteDataStore = .nonPersistent()
+        let web = WKWebView(frame: lesson.frame, configuration: config)
+        try XCTUnwrap(lesson.superview).addSubview(web)
+        defer { web.removeFromSuperview() }
+        web.loadFileURL(url, allowingReadAccessTo: url.deletingLastPathComponent())
+        for _ in 0..<70 {
+            if (try? await web.evaluateJavaScript("typeof NativeApp === 'object'") as? Bool) == true { break }
+            try await Task.sleep(for: .milliseconds(100))
+        }
+        let report = try await web.callAsyncJavaScript("""
+            build(0,'Б');
+            composition.state[0]={...composition.get(0),textRows:[]};
+            configure({practiceRepeats:1},{persist:false});
+            const finish=document.querySelector('#finish-session'),next=document.querySelector('#next-letter');
+            const before=finish.disabled;
+            const blocked=await NativeApp.command('finish');
+            const upper='gost-file-b90-upper-0',lower='gost-file-b90-lower-0';
+            const ink=(source,dx=0)=>source.map(line=>line.map(([x,y])=>[(x+dx)/150,y/180]));
+            data[lower]=ink(demonstrationFor(lowercase));
+            const scoreField=surfaces.find(s=>s.id===upper);
+            const useScore=expected=>{
+                for(let dx=0;dx<12;dx+=.1){
+                    data[upper]=ink(demonstrationFor(models),dx);
+                    refresh([upper,lower]);
+                    if(scoreField.assessment().score===expected)return true;
+                }
+                return false;
+            };
+            const at94=useScore(94),locked94=finish.disabled,at95=useScore(95);
+            save();
+            const ready=!finish.disabled,caption=next.getAttribute('aria-label');
+            const color=getComputedStyle(finish).backgroundColor;
+            const tick=()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+            finish.scrollIntoView({block:'center'});
+            await tick();
+            const a=finish.getBoundingClientRect(),b=next.getBoundingClientRect();
+            const hit=control=>{
+                const r=control.getBoundingClientRect();
+                return r.width>=48&&r.height>=48&&[r.left+5,r.left+r.width/2,r.right-5].every(
+                    x=>control.contains(document.elementFromPoint(x,r.top+r.height/2)));
+            };
+            return {before,blocked,at94,locked94,at95,ready,caption,color,
+                targets:hit(finish)&&hit(next)&&(b.left-a.right>=8||b.top-a.bottom>=8),
+                check:getComputedStyle(finish.querySelector('svg')).display!=='none'};
+            """, arguments: [:], in: nil, contentWorld: .page) as? [String: Any]
+        for key in ["before", "at94", "locked94", "at95", "ready", "targets", "check"] {
+            XCTAssertEqual(report?[key] as? Bool, true, key)
+        }
+        XCTAssertEqual(report?["blocked"] as? Bool, false)
+        XCTAssertEqual(report?["caption"] as? String, "Следующая буква: Г")
+        XCTAssertEqual(report?["color"] as? String, "rgb(44, 103, 79)")
+        for size in [CGSize(width: 1194, height: 750), CGSize(width: 834, height: 1130), CGSize(width: 390, height: 760)] {
+            web.frame = CGRect(origin: web.frame.origin, size: size)
+            let layout = try await web.callAsyncJavaScript("""
+                const frame=()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+                await frame();
+                const finish=document.querySelector('#finish-session'),next=document.querySelector('#next-letter');
+                finish.scrollIntoView({block:'center'});
+                await frame();
+                const points=button=>{
+                    const r=button.getBoundingClientRect();
+                    return r.width>=48&&r.height>=48&&[r.left+5,r.left+r.width/2,r.right-5].every(
+                        x=>button.contains(document.elementFromPoint(x,r.top+r.height/2)));
+                };
+                const a=finish.getBoundingClientRect(),b=next.getBoundingClientRect();
+                return {width:innerWidth,fits:document.body.scrollWidth<=innerWidth+1,ready:!finish.disabled,
+                    hits:points(finish)&&points(next)&&(b.left-a.right>=8||b.top-a.bottom>=8)};
+                """, arguments: [:], in: nil, contentWorld: .page) as? [String: Any]
+            XCTAssertEqual(layout?["width"] as? Double ?? 0, size.width, accuracy: 1)
+            for key in ["fits", "ready", "hits"] { XCTAssertEqual(layout?[key] as? Bool, true, key) }
+            if size.width > size.height {
+                let attachment = XCTAttachment(image: try await web.takeSnapshot(configuration: nil))
+                attachment.name = "finish-ready-be"
+                attachment.lifetime = .keepAlways
+                add(attachment)
+            }
+        }
+        let saved = try await web.callAsyncJavaScript(
+            "return await NativeApp.command('finish') && LearnerExperience.store().sessions('Б').length===1;",
+            arguments: [:], in: nil, contentWorld: .page
+        ) as? Bool
+        XCTAssertEqual(saved, true)
+    }
+
+    @MainActor
     func testCourseNavigationAndBackupData() async throws {
         let web = try await loadedLesson()
         let valid = try await web.evaluateJavaScript("""
             (() => {
                 for (const letter of ['А', 'О']) {
                     build(0, letter);
-                    data['gost-file-b90-upper-0'] = models.map(line => line.map(([x,y]) => [x/150,y/180]));
+                    composition.state[0]={...composition.get(0),textRows:[]};
+                    configure({practiceRepeats:1},{persist:false});
+                    for(const [slot,model] of [['upper',models],['lower',lowercase]])
+                        data['gost-file-b90-'+slot+'-0']=demonstrationFor(model).map(line=>line.map(([x,y])=>[x/150,y/180]));
                     save(); refresh();
                     document.querySelector('#finish-session').click();
                     document.querySelector('#session-result').close();

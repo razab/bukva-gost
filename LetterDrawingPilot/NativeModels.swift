@@ -24,6 +24,7 @@ struct NativeSnapshot: Decodable {
     var writing: Bool
     var independent: Bool
     var canNext: Bool
+    var nextLetter: String?
     var count: String
     var backupSummary: String
     var canRestore: Bool

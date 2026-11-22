@@ -1,3 +1,4 @@
+const {fillControlProbes}=require('./helpers/finish-probes.cjs');
 const fs=require('fs'),path=require('path'),assert=require('assert/strict');
 const h=fs.readFileSync(path.join(__dirname,'worksheet.test.cjs'),'utf8').split('let app=boot();')[0];
 function boot(saved={}){
@@ -13,13 +14,13 @@ const parts=mainRows(app).filter(r=>/-elements$/.test(r.dataset.lessonStage));as
 let details=app.nodes.practice.children.find(r=>r.id==='additional-practice');assert(details&&!details.open);assert(descendants(details).some(r=>r.attrs['aria-label']==='она'));
 const word=mainRows(app).find(r=>r.attrs['aria-label']==='он').children[0].parts;
 const spec=app.run("LetterSequence.compose('он',sequenceSources,{gap:preferences.letterGap,bold:preferences.bold})");for(const line of app.run(`StrokeDirection.route(LetterSequence.compose('он',sequenceSources,{gap:preferences.letterGap,bold:preferences.bold}).model)`))draw(word.canvas,line);
-assert.equal(word.output.textContent,'100%');const ink=app.run('JSON.stringify(data)');app.nodes['finish-session'].onclick();assert.equal(app.run('LearnerExperience.store().summary().sessions'),1);
+assert.equal(word.output.textContent,'100%');fillControlProbes(app);const ink=app.run('JSON.stringify(data)');app.nodes['finish-session'].onclick();assert.equal(app.run('LearnerExperience.store().summary().sessions'),1);
 details.open=true;details.handlers.toggle[0]();app.run('configure({size:100})');assert.equal(app.nodes.practice.children.find(r=>r.id==='additional-practice').open,true);
 app=boot(app.saved);assert.equal(app.run('activeLetter'),'Н');assert.equal(app.run('JSON.stringify(data)'),ink);assert.equal(app.run('LearnerExperience.store().summary().sessions'),1);assert.equal(mainRows(app).find(r=>r.attrs['aria-label']==='он').children[0].parts.output.textContent,'100%');
 // Hidden practice must use the real scale, not a zero-width canvas as tolerance.
 details=app.nodes.practice.children.find(r=>r.id==='additional-practice');const extra=descendants(details).find(r=>r.dataset.component?.startsWith('gost-')).children[0].parts,extraId=extra.canvas.attrs['data-surface-id'];
 const model=app.run(`WorksheetCatalog.elements.find(e=>'element-v1-'+e.id+'-0'===${JSON.stringify(extraId)}).model`);for(const line of model)draw(extra.canvas,line.map(([x,y])=>[x+9,y]));const before=extra.output.textContent;extra.canvas.rect={width:0,height:0};app.run('refresh()');assert.equal(extra.output.textContent,before);
-app.nodes['finish-session'].onclick();assert.equal(app.run('LearnerExperience.store().summary().sessions'),2);
+fillControlProbes(app);app.nodes['finish-session'].onclick();assert.equal(app.run('LearnerExperience.store().summary().sessions'),2);
 console.log('PASS canary N: word replaces repeated combination; two part types; optional practice; draw → finish → reload; expansion survives reflow; hidden-width score unchanged');
 if(process.env.SHORT_PRACTICE_CANARY==='1')process.exit(0);
 // Exact old automatic text is replaceable; explicit authored content is not.

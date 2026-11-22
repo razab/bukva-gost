@@ -291,11 +291,8 @@ final class TabletTests: XCTestCase {
     func testNativeDeveloperProgressAndResult() {
         select("410")
         let finish = app.webViews.firstMatch.buttons["Завершить занятие"]
-        scrollTo(finish); finish.tap()
-        XCTAssertTrue(app.navigationBars["Занятие сохранено"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.staticTexts["Сложность"].exists)
-        attach("native-result")
-        close()
+        scrollTo(finish)
+        XCTAssertFalse(finish.isEnabled)
         app.buttons["lesson-menu"].tap(); app.buttons["Моя практика"].tap()
         XCTAssertTrue(app.navigationBars["Моя практика"].waitForExistence(timeout: 5))
         attach("native-progress")
@@ -319,6 +316,13 @@ final class TabletTests: XCTestCase {
         settings(); scrollTo(developer); developer.tap()
         let defaults = app.buttons["Сбросить технические настройки"]
         scrollTo(defaults); defaults.tap(); close()
+        settings()
+        let trialOption = app.switches["show-independent"]
+        if trialOption.value as? String == "0" {
+            trialOption.coordinate(withNormalizedOffset: CGVector(dx: 0.94, dy: 0.5)).tap()
+            XCTAssertTrue(waitForToggle(trialOption, value: "1"))
+        }
+        close()
         let independentAction = app.webViews.firstMatch.buttons["Самостоятельная проба"]
         scrollTo(independentAction); independentAction.tap()
         let independent = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "Самостоятельно: а")).firstMatch

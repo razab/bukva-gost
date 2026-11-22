@@ -6,11 +6,11 @@ window.NativeApp={
   const independent=document.querySelector('#try-independent');
   if(independent.textContent!=='Самостоятельная проба')independent.textContent='Самостоятельная проба';
   if(!window.webkit?.messageHandlers?.nativeLesson)return;
-  const work=LearnerExperience.work();
+  const work=LearnerExperience.work(),nextLetter=LetterCurriculum.lesson(activeLetter).next;
   const state={kind:'state',letter:activeLetter,preferences,variant,stylusOnly,options:LearnerExperience.options,activeLevel:LearnerExperience.activeLevel(),
    canUndo:history.length>0,hasWork:work.written.length>0,writing:activePointer!==null,
    hasAnyInk:Object.values(data).some(strokes=>strokes.length>0),
-   independent:LearnerExperience.independent,canNext:!!LetterCurriculum.lesson(activeLetter).next&&!LearnerExperience.hasBackwardWork(work),
+   independent:LearnerExperience.independent,nextLetter,canNext:!!nextLetter&&!LearnerExperience.hasBackwardWork(work),
    count:document.querySelector('#session-count').textContent,
    backupSummary:document.querySelector('#backup-summary').textContent,
    notice:document.querySelector('#message').textContent,
@@ -49,7 +49,7 @@ window.NativeApp={
    case 'import':await document.querySelector('#import-backup').onchange({target:{files:[new File([payload.text],payload.name,{type:'application/json'})],value:''}});break;
    case 'restore':document.querySelector('#restore-backup').click();break;
    case 'finish':{
-    LearnerExperience.finish();
+    if(!LearnerExperience.finish())return false;
     const dialog=document.querySelector('#session-result');
     if(dialog.open){const session=LearnerExperience.store().sessions(activeLetter).at(-1);
      window.webkit?.messageHandlers?.nativeLesson?.postMessage({kind:'result',letter:activeLetter,statistics:session?.statistics||LearnerExperience.statistics(LearnerExperience.work()),saved:LearnerExperience.store().lastSaveSucceeded});

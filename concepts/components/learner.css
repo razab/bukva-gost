@@ -94,3 +94,14 @@ body.learner[data-variant] .sheet{padding-bottom:max(140px,calc(var(--cell-heigh
 .learner .cell-foot .score{position:relative;min-width:48px;min-height:48px}
 .learner .score[data-direction=backward]::after{content:"Не по стрелке";position:absolute;bottom:0;left:50%;transform:translateX(-50%);white-space:nowrap;font:9px/12px system-ui,sans-serif;color:#b66255;pointer-events:none}
 .learner .warmup-arrow{fill:none;stroke:#527b61;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke;pointer-events:none}
+
+
+.learner .finish-action{display:grid;gap:5px;justify-items:center}
+.learner #finish-session{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:48px;font-weight:650}
+.learner #finish-session:disabled{background:#edf2ed;border-color:#e3ebe4;color:#65786b;opacity:1}
+.learner #finish-session:disabled svg{display:none}
+.learner #finish-session:enabled{background:#2c674f;border-color:#2c674f;color:#fff;padding-inline:16px}
+.learner #finish-session:enabled:active{background:#24573f}
+.learner #finish-progress{color:#536b5e;font-size:12px;font-variant-numeric:tabular-nums}
+.learner :is(#next-letter,#result-next):not([hidden]){display:inline-flex;gap:9px;align-items:center;justify-content:center;min-width:92px;min-height:48px}
+.learner .next-glyph{width:23px;height:25px}

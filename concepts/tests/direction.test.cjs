@@ -80,7 +80,7 @@ for(const character of ['А','О']){
  const routes=plain(app.run('demonstrationFor(models)'));
  draw(cell().canvas,routes);assert.equal(cell().output.textContent,'100%');clear();
  draw(cell().canvas,routes.map(line=>[...line].reverse()));assert.equal(cell().output.dataset.direction,'backward');assert(parseInt(cell().output.textContent)<90);
- assert.equal(app.nodes['next-letter'].disabled,true);assert.equal(app.nodes['finish-session'].disabled,false);
+ assert.equal(app.nodes['next-letter'].disabled,true);assert.equal(app.nodes['finish-session'].disabled,true);
  const raw=plain(app.run('data["gost-file-b90-upper-0"]'));
  clear();assert.equal(cell().output.textContent,'—');assert.equal(app.nodes['next-letter'].disabled,false);app.nodes.undo.onclick();assert.deepEqual(plain(app.run('data["gost-file-b90-upper-0"]')),raw);assert.equal(app.nodes['next-letter'].disabled,true);
  app=boot(app.saved);assert.equal(cell().output.dataset.direction,'backward');assert(parseInt(cell().output.textContent)<90);clear();

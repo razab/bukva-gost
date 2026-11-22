@@ -1,3 +1,4 @@
+const {fillControlProbes}=require('./helpers/finish-probes.cjs');
 const fs=require('fs'),path=require('path'),assert=require('assert/strict');
 const h=fs.readFileSync(path.join(__dirname,'worksheet.test.cjs'),'utf8').split('let app=boot();')[0];
 const boot=saved=>new Function('require','__dirname',h+"return boot(arguments[2],'learner');")(require,__dirname,saved);
@@ -37,6 +38,48 @@ const boot=saved=>new Function('require','__dirname',h+"return boot(arguments[2]
  console.log('PASS: three independent settings default off, toggle through controls, persist and restore existing independent work');
 }
 
+{
+ let page=boot({'drawing-active-letter-v1':'Б'});
+ const id='gost-file-b90-upper-0',finish=()=>page.nodes['finish-session'];
+ const assessed=()=>page.run(`surfaces.find(s=>s.id==="${id}").assessment().score`);
+ const completion=()=>page.run('LearnerExperience.completion()');
+ const textId=page.run('surfaces.find(s=>s.required&&s.id.includes("sequence-v2")).id');
+ const drawOffset=target=>{
+  for(let dx=0;dx<=12;dx+=.1){
+   page.run(`data["${id}"]=demonstrationFor(models).map(line=>line.map(([x,y])=>[(x+${dx})/150,y/180]));refresh(["${id}"])`);
+   if(assessed()===target){page.run('save();refresh()');return;}
+  }
+  assert.fail('Could not create a real '+target+' percent assessment');
+ };
+ assert.equal(finish().disabled,true);
+ assert.equal(page.nodes['next-letter'].attrs['aria-label'],'Следующая буква: Г');
+ fillControlProbes(page,{skip:[textId]});
+ assert(completion().total>6);
+ assert.equal(completion().passed,completion().total-1);
+ assert.equal(finish().disabled,true,'An empty text probe blocks finishing');
+ fillControlProbes(page);
+ drawOffset(94);
+ assert.equal(finish().disabled,true,'94 is below the cutoff');
+ assert(page.run('LearnerExperience.work().traceScore')>95,'The average is not the gate');
+ assert.equal(page.run('LearnerExperience.finish()'),false);
+ assert.equal(page.run('LearnerExperience.store().summary().sessions'),0);
+ drawOffset(95);
+ assert.equal(assessed(),95);
+ assert.equal(finish().disabled,false);
+ assert.equal(page.nodes['finish-progress'].hidden,true);
+ assert.equal(page.run('LearnerExperience.finish()'),true);
+ assert.equal(page.run('LearnerExperience.store().summary().sessions'),1);
+ page=boot(page.saved);
+ assert.equal(finish().disabled,false);
+ page.run(`reset("${id}")`);
+ assert.equal(finish().disabled,true);
+ page.nodes.undo.onclick();
+ assert.equal(finish().disabled,false);
+ page.run("build(0,'Ъ')");
+ assert.equal(page.nodes['next-letter'].hidden,true);
+ console.log('PASS: every guided control probe must reach 95%, including text; 94/95, finish guard, reset, undo, reload and course transition');
+ if(process.env.FINISH_AT_95_CANARY==='1')process.exit(0);
+}
 const saved={'letter-preferences-v1':JSON.stringify({size:61,bold:100,tolerance:3,rowGap:4,columnGap:12,letterGap:20,letterGapDefaultVersion:2}),'letter-worksheet-v3-0':JSON.stringify({'old-note':[[[.1,.2],[.3,.4]]]})};
 let app=boot(saved),run=s=>app.run(s);assert.equal(run('learnerMode'),true);assert.equal(run('preferences.size'),52);assert.equal(JSON.parse(saved['letter-preferences-v1']).size,61);assert.equal(run('data["old-note"].length'),1);
 const row=stage=>app.nodes.practice.children.find(r=>r.dataset.lessonStage===stage);
@@ -142,15 +185,16 @@ function draw(canvas,stroke){fire(canvas,'pointerdown',stroke[0]);for(const p of
  if(process.env.RETIRED_FRAGMENTS_CANARY==='1')process.exit(0);
  app=boot(saved);
 }
-let cell=row('upper-letter').children[0].parts,model=run('demonstrationFor(models)');draw(cell.canvas,model[0]);assert.equal(cell.output.dataset.band,'pending');assert.equal(app.nodes['finish-session'].disabled,false);for(const line of model.slice(1))draw(cell.canvas,line);assert.equal(cell.output.textContent,'100%');assert.equal(cell.output.dataset.band,'green');
+let cell=row('upper-letter').children[0].parts,model=run('demonstrationFor(models)');draw(cell.canvas,model[0]);assert.equal(cell.output.dataset.band,'pending');assert.equal(app.nodes['finish-session'].disabled,true);for(const line of model.slice(1))draw(cell.canvas,line);assert.equal(cell.output.textContent,'100%');assert.equal(cell.output.dataset.band,'green');
 cell.output.onclick();assert.equal(cell.button.hidden,false);cell.button.onclick();assert.equal(cell.output.textContent,'—');app.nodes.undo.onclick();assert.equal(cell.output.textContent,'100%');
+fillControlProbes(app);assert.equal(app.nodes['finish-session'].disabled,false);
 const tracing=run('JSON.stringify(data)');run("LearnerExperience.setOption('independent',true)");app.nodes['try-independent'].onclick();let block=app.nodes.practice.children.find(r=>r.id==='independent-practice');assert(block);let independent=block.children[1].children[1].parts;assert(!independent.canvas.attrs['data-surface-id'].includes('upper-0'));assert(!block.children[1].children[1].html.includes('class="corridor"'));assert.equal(independent.output.textContent,'—');
 const lower=run('demonstrationFor(lowercase)');for(const line of lower)draw(independent.canvas,line);assert.equal(independent.output.textContent,'100%');assert.equal(run('LearnerExperience.work().independent'),1);assert.equal(run('data["gost-file-b90-upper-0"].length'),run('demonstrationFor(DrawingGlyphs.А.model).length'));
 app.nodes['finish-session'].onclick();assert.equal(app.nodes['session-result'].attrs.open,'');assert.equal(run('LearnerExperience.store().summary().sessions'),1);app.nodes['finish-session'].onclick();assert.equal(run('LearnerExperience.store().summary().sessions'),1);assert.equal(run('LearnerExperience.store().sessions("А")[0].independentScore'),100);app.nodes['result-next'].onclick();assert.equal(run('activeLetter'),'О');assert.equal(run('LearnerExperience.independent'),false);assert.equal(run('data["old-note"]'),undefined);
 run("build(0,'А')");assert.equal(run('data["old-note"].length'),1);app=boot(saved);run=s=>app.run(s);assert.equal(run('LearnerExperience.store().summary().sessions'),1);assert.equal(run('data["gost-file-b90-upper-0"].length'),run('demonstrationFor(DrawingGlyphs.А.model).length'));assert.equal(run('data["independent-gost-b90-а"].length'),lower.length);assert.equal(run('LearnerExperience.independent'),false);
-// A session records even a partial attempt; no100% gate, and no mastery claim.
-run("build(0,'О')");cell=row('lower-letter').children[0].parts;model=run('demonstrationFor(lowercase)');draw(cell.canvas,model[0].slice(0,4));app.nodes['finish-session'].onclick();assert.equal(run('LearnerExperience.store().summary().sessions'),2);assert.equal(run('LearnerExperience.store().sessions("О").length'),1);
-console.log('PASS canary: old ink/settings preserved; neutral incomplete score; reset/undo; separate unguided practice; finish without100%; idempotent completion/reload/next/return; no mastery claim');
+// A partial attempt survives but cannot finish the lesson.
+run("build(0,'О')");cell=row('lower-letter').children[0].parts;model=run('demonstrationFor(lowercase)');draw(cell.canvas,model[0].slice(0,4));app.nodes['finish-session'].onclick();assert.equal(run('LearnerExperience.store().summary().sessions'),1);fillControlProbes(app,{replace:true});app.nodes['finish-session'].onclick();assert.equal(run('LearnerExperience.store().summary().sessions'),2);assert.equal(run('LearnerExperience.store().sessions("О").length'),1);
+console.log('PASS canary: old ink/settings preserved; neutral incomplete score; reset/undo; separate unguided practice; partial work stays open; idempotent completion/reload/next/return; no mastery claim');
 if(process.env.LEARNER_CANARY_ONLY==='1')process.exit(0);
 const order=run('LetterCurriculum.order');
 const retainedParts={
@@ -173,7 +217,7 @@ console.log('PASS: all33 learner lessons, authored settings and known-letter tas
 
 let errors=0,fail=true,safe={};const progress=app.run('LearningProgress');const journal=new progress({getItem(){return null},setItem(k,v){if(fail)throw Error('full');safe[k]=v}},()=>errors++);journal.finish('А',{traced:1,signature:'same'});assert.equal(journal.lastSaveSucceeded,false);assert.equal(errors,1);fail=false;journal.finish('А',{traced:1,signature:'same'});assert.equal(journal.lastSaveSucceeded,true);assert.equal(journal.summary().sessions,1);assert(safe['gost-learning-progress-v1']);console.log('PASS: storage failure stays recoverable; retry persists without duplicate session');
 // Hiding an independent field changes its visibility, not the practiced work.
-app=boot({});run=s=>app.run(s);run("LearnerExperience.setOption('independent',true)");app.nodes['try-independent'].onclick();block=app.nodes.practice.children.find(r=>r.id==='independent-practice');independent=block.children[1].children[1].parts;for(const line of run('demonstrationFor(lowercase)'))draw(independent.canvas,line);assert.equal(run('LearnerExperience.work().independent'),1);app.nodes['try-independent'].onclick();assert.equal(run('LearnerExperience.work().independent'),1);assert.equal(app.nodes['finish-session'].disabled,false);app.nodes['finish-session'].onclick();assert.equal(run('LearnerExperience.store().sessions("А")[0].independent'),1);const hiddenReload=boot(app.saved);assert.equal(hiddenReload.run('LearnerExperience.work().independent'),1);assert.equal(hiddenReload.nodes['finish-session'].disabled,false);console.log('PASS: hidden independent work remains in completion/progress after hide and reload');
+app=boot({});run=s=>app.run(s);run("LearnerExperience.setOption('independent',true)");app.nodes['try-independent'].onclick();block=app.nodes.practice.children.find(r=>r.id==='independent-practice');independent=block.children[1].children[1].parts;for(const line of run('demonstrationFor(lowercase)'))draw(independent.canvas,line);assert.equal(run('LearnerExperience.work().independent'),1);app.nodes['try-independent'].onclick();assert.equal(run('LearnerExperience.work().independent'),1);assert.equal(app.nodes['finish-session'].disabled,true);fillControlProbes(app);app.nodes['finish-session'].onclick();assert.equal(run('LearnerExperience.store().sessions("А")[0].independent'),1);const hiddenReload=boot(app.saved);assert.equal(hiddenReload.run('LearnerExperience.work().independent'),1);assert.equal(hiddenReload.nodes['finish-session'].disabled,false);console.log('PASS: hidden independent work remains in completion/progress after hide and reload');
 
 // Durations come from real accepted pen intervals, not page-open/idle time.
 app=boot({});run=s=>app.run(s);run('measuredTime=0;performance.now=()=>measuredTime');
@@ -187,17 +231,19 @@ fire(timedUpper.canvas,'pointerdown',run('models[0][0]'));run('measuredTime+=900
 timed(timedUpper.canvas,[run('models[0]')],700);assert.equal(run('LearnerExperience.statistics(LearnerExperience.work()).upper.meanMs'),4000);app.nodes.undo.onclick();assert.equal(run('LearnerExperience.statistics(LearnerExperience.work()).upper.meanMs'),3300);
 let warm=app.nodes.practice.children.find(r=>r.dataset.lessonStage==='lower-elements').children[0].parts;warm.canvas.emit('pointerdown',[1,1]);warm.canvas.emit('pointerup',[2,2]);const text=app.nodes.practice.children.find(r=>r.dataset.component==='letter-sequence'),textModel=run(`LetterSequence.compose(${JSON.stringify(text.attrs['aria-label'])},sequenceSources,{gap:preferences.letterGap}).model`);timed(text.children[0].parts.canvas,textModel,5000);
 run("LearnerExperience.setOption('independent',true)");app.nodes['try-independent'].onclick();block=app.nodes.practice.children.find(r=>r.id==='independent-practice');timed(block.children[1].children[1].parts.canvas,run('demonstrationFor(lowercase)'),12000);
-stats=run('LearnerExperience.statistics(LearnerExperience.work())');assert.equal(stats.overall.count,4);assert.equal(stats.overall.score,run('LearnerExperience.work().traceScore'));assert(stats.overall.score<100);assert.equal(stats.upper.count,1);assert.equal(stats.lower.count,1);assert.equal(stats.upper.meanMs,3300);assert.equal(stats.lower.meanMs,4200);
-app.nodes['finish-session'].onclick();assert(app.nodes['result-statistics'].innerHTML.includes('3,3 с'));assert(app.nodes['result-statistics'].innerHTML.includes('4,2 с'));assert(app.nodes['result-statistics'].innerHTML.includes('<dd>Обычно</dd>'));const finishedStats=run('LearnerExperience.store().sessions("А").at(-1).statistics');assert.equal(finishedStats.overall.count,4);const finishedCount=run('LearnerExperience.store().summary().sessions');app.nodes['finish-session'].onclick();assert.equal(run('LearnerExperience.store().summary().sessions'),finishedCount);
+fillControlProbes(app);
+const controlCount=run('LearnerExperience.completion().total');
+stats=run('LearnerExperience.statistics(LearnerExperience.work())');assert.equal(stats.overall.count,controlCount+1);assert.equal(stats.overall.score,run('LearnerExperience.work().traceScore'));assert(stats.overall.score<100);assert.equal(stats.upper.count,3);assert.equal(stats.lower.count,3);assert.equal(stats.upper.meanMs,3300);assert.equal(stats.lower.meanMs,4200);
+app.nodes['finish-session'].onclick();assert(app.nodes['result-statistics'].innerHTML.includes('3,3 с'));assert(app.nodes['result-statistics'].innerHTML.includes('4,2 с'));assert(app.nodes['result-statistics'].innerHTML.includes('<dd>Обычно</dd>'));const finishedStats=run('LearnerExperience.store().sessions("А").at(-1).statistics');assert.equal(finishedStats.overall.count,controlCount+1);const finishedCount=run('LearnerExperience.store().summary().sessions');app.nodes['finish-session'].onclick();assert.equal(run('LearnerExperience.store().summary().sessions'),finishedCount);
 const restoredTimes=boot(app.saved);assert.equal(restoredTimes.run('LearnerExperience.statistics(LearnerExperience.work()).upper.meanMs'),3300);assert.equal(restoredTimes.run('LearnerExperience.store().sessions("А").at(-1).statistics.lower.meanMs'),4200);
 run('configure({tolerance:2})');app.nodes['finish-session'].onclick();assert(app.nodes['result-statistics'].innerHTML.includes('<dd>Идеально</dd>'));run('configure({tolerance:3.5})');app.nodes['finish-session'].onclick();assert(app.nodes['result-statistics'].innerHTML.includes('Свой допуск ±3,5 px'));assert.equal(run('LearnerExperience.store().sessions("А")[0].statistics.tolerance'),4);
 // Old strokes have percentages but no fabricated zero-second duration.
-const legacy=boot({'letter-worksheet-v3-0':JSON.stringify({'gost-file-b90-upper-0':run('demonstrationFor(models)').map(line=>line.map(([x,y])=>[x/150,y/180]))})});assert.equal(legacy.run('LearnerExperience.statistics(LearnerExperience.work()).upper.count'),1);assert.equal(legacy.run('LearnerExperience.statistics(LearnerExperience.work()).upper.meanMs'),null);legacy.nodes['finish-session'].onclick();assert(legacy.nodes['result-statistics'].innerHTML.includes('время —'));
+const legacy=boot({'letter-worksheet-v3-0':JSON.stringify({'gost-file-b90-upper-0':run('demonstrationFor(models)').map(line=>line.map(([x,y])=>[x/150,y/180]))})});assert.equal(legacy.run('LearnerExperience.statistics(LearnerExperience.work()).upper.count'),1);assert.equal(legacy.run('LearnerExperience.statistics(LearnerExperience.work()).upper.meanMs'),null);fillControlProbes(legacy);legacy.nodes['finish-session'].onclick();assert(legacy.nodes['result-statistics'].innerHTML.includes('время —'));
 console.log('PASS session summary: difficulty/manual tolerance, separate100%/3.3s and100%/4.2s, idle excluded, cancellation/reset/undo/reload, warmup/text overall included, independent excluded, historical snapshots/idempotency and unknown legacy time');
 
 // The picker reports a completed snapshot, never the current unfinished ink.
 app=boot({});run=s=>app.run(s);const tileFor=c=>app.nodes['lesson-grid'].children[run('LetterCurriculum.order').indexOf(c)],bandFor=c=>tileFor(c).children.find(n=>n.className==='lesson-rate-track');
-for(const line of run('demonstrationFor(models)'))draw(row('upper-letter').children[0].parts.canvas,line);app.nodes['choose-letter'].onclick();assert.equal(bandFor('А'),undefined,'Unfinished perfect ink may not create a success bar');assert.equal(tileFor('А').children[1].textContent,'');app.nodes['finish-session'].onclick();assert.equal(bandFor('А').dataset.band,'green');assert.equal(tileFor('А').children[1].textContent,'100% · Обычно');
+for(const line of run('demonstrationFor(models)'))draw(row('upper-letter').children[0].parts.canvas,line);app.nodes['choose-letter'].onclick();assert.equal(bandFor('А'),undefined,'Unfinished perfect ink may not create a success bar');assert.equal(tileFor('А').children[1].textContent,'');fillControlProbes(app);app.nodes['finish-session'].onclick();assert.equal(bandFor('А').dataset.band,'green');assert.equal(tileFor('А').children[1].textContent,'100% · Обычно');
 const savedSession=app.saved['gost-learning-progress-v1'];
 app.nodes['level-precise'].onclick();
 app.nodes['choose-letter'].onclick();

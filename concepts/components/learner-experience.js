@@ -120,12 +120,37 @@ const LearnerExperience={
   }root.append(block)
 
  },
- mounted(changed){if(changed)this.independent=false;this.initialize();this.syncOptions();this.refresh();const next=LetterCurriculum.lesson(activeLetter).next;document.querySelector('#next-letter').hidden=!next;document.querySelector('#result-next').hidden=!next;document.querySelector('#try-independent').setAttribute('aria-expanded',String(this.independent));document.querySelector('#try-independent').textContent=this.independent?'Скрыть самостоятельную пробу':this.hasStoredIndependent()?'Продолжить самостоятельную пробу':'Попробовать без контура';document.title=activeLetter+' '+activeLetter.toLowerCase()+' · Буквы по ГОСТ';this.renderOverview()},
+ mounted(changed){if(changed)this.independent=false;this.initialize();this.syncOptions();this.refresh();const next=LetterCurriculum.lesson(activeLetter).next;
+  for(const id of ['next-letter','result-next']){
+   const button=document.querySelector('#'+id);button.hidden=!next;
+   if(next){
+    const glyph=character=>{
+     const source=sequenceSources[character],[x,y,right,bottom]=source.inkBounds;
+     return `<svg class="next-glyph" viewBox="${x-2} ${y-2} ${right-x+4} ${bottom-y+4}" aria-hidden="true">${fontOutline(source.model,'fill="currentColor"')}</svg>`;
+    };
+    button.innerHTML=glyph(activeLetter)+'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg>'+glyph(next);
+    button.setAttribute('aria-label','Следующая буква: '+next);
+   }
+  }document.querySelector('#try-independent').setAttribute('aria-expanded',String(this.independent));document.querySelector('#try-independent').textContent=this.independent?'Скрыть самостоятельную пробу':this.hasStoredIndependent()?'Продолжить самостоятельную пробу':'Попробовать без контура';document.title=activeLetter+' '+activeLetter.toLowerCase()+' · Буквы по ГОСТ';this.renderOverview()},
  hasStoredIndependent(){return [activeLetter.toLowerCase(),activeLetter].some(c=>data['independent-gost-b90-'+c]?.length)},
  storedIndependent(exclude=new Set()){return [activeLetter.toLowerCase(),activeLetter].flatMap(character=>{const id='independent-gost-b90-'+character;if(exclude.has(id)||!data[id]?.length)return [];const result=assessWriting(data[id],sequenceSources[character].model,preferences.tolerance/(preferences.size/100));return [{id,assessment:()=>result}]})},
  work(){const fields=surfaces.filter(s=>s.id&&!s.id.startsWith('art')),visibleIds=new Set(fields.map(s=>s.id)),visibleWritten=fields.filter(s=>!s.assessment().empty),hiddenIndependent=this.options.independent?this.storedIndependent(visibleIds):[];const written=[...visibleWritten,...hiddenIndependent];const independent=written.filter(s=>s.id.startsWith('independent-')),traced=written.filter(s=>!s.id.startsWith('independent-'));const average=items=>items.length?Math.round(items.reduce((n,s)=>n+s.assessment().score,0)/items.length):null;return {fields,written,visibleWritten,hiddenIndependent,independent:independent.length,traced:traced.length,traceScore:average(traced),independentScore:average(independent)}},
  hasBackwardWork(work=this.work()){return work.visibleWritten.some(s=>!s.additional&&!s.id.startsWith('independent-')&&s.assessment().direction?.backwards)},
- refresh(){if(!this.ready)return;const work=this.work(),core=work.fields.filter(s=>!s.additional),written=work.visibleWritten.filter(s=>!s.additional),extra=work.visibleWritten.length-written.length;document.querySelector('#session-count').textContent=written.length+' / '+core.length+(extra?' · дополнительно: '+extra:'')+(work.hiddenIndependent.length?' · самостоятельно: '+work.hiddenIndependent.length:'');document.querySelector('#finish-session').disabled=!work.written.length;const backward=this.hasBackwardWork(work);document.querySelector('#next-letter').disabled=backward;document.querySelector('#result-next').disabled=backward},
+ finishThreshold:95,
+ completion(work=this.work()){
+  const required=work.fields.filter(surface=>surface.required);
+  const passed=required.filter(surface=>{
+   const result=surface.assessment();
+   return !result.empty&&result.score>=this.finishThreshold;
+  }).length;
+  return {passed,total:required.length,ready:required.length>0&&passed===required.length};
+ },
+ refresh(){if(!this.ready)return;const work=this.work(),core=work.fields.filter(s=>!s.additional),written=work.visibleWritten.filter(s=>!s.additional),extra=work.visibleWritten.length-written.length;document.querySelector('#session-count').textContent=written.length+' / '+core.length+(extra?' · дополнительно: '+extra:'')+(work.hiddenIndependent.length?' · самостоятельно: '+work.hiddenIndependent.length:'');const completion=this.completion(work),finish=document.querySelector('#finish-session'),hint=document.querySelector('#finish-progress');
+  finish.disabled=activePointer!==null||!completion.ready;
+  const progress=completion.passed+' / '+completion.total+' проб от '+this.finishThreshold+'%';
+  if(hint.textContent!==progress)hint.textContent=progress;
+  hint.hidden=completion.ready;
+  const backward=this.hasBackwardWork(work);document.querySelector('#next-letter').disabled=backward;document.querySelector('#result-next').disabled=backward},
  difficulty(tolerance,level){
   if(!Number.isFinite(tolerance))return 'Сложность не записана';
   const recorded=level?this.levels[level]?.label:({12:'Легче',8:'Обычно',4:'Точнее',2:'Идеально',1:'Невозможно'})[tolerance];
@@ -142,7 +167,7 @@ const LearnerExperience={
   document.querySelector('#result-statistics').innerHTML=`<div class="session-stat"><dt>Сложность</dt><dd>${this.difficulty(statistics.tolerance,statistics.level)}</dd></div>`+group(activeLetter,'Заглавная',statistics.upper)+group(activeLetter.toLowerCase(),'Строчная',statistics.lower)+`<div class="session-stat session-stat-total"><dt>Общий средний</dt><dd>${percent(statistics.overall.score)}<small>Элементы, буквы и тексты</small></dd></div>`;
   document.querySelector('#result-statistics-note').textContent='Время — касания пера, без пауз. Самостоятельные пробы не учитываются.'+([statistics.upper,statistics.lower].some(g=>g.count>g.timedCount)?' У проб без замера время не указано.':'');
  },
- finish(){if(activePointer!==null||(typeof NumberPractice!=='undefined'&&NumberPractice.active))return;const work=this.work();if(!work.written.length)return;this.recordAttempts(work);const statistics=this.statistics(work);const unchangedProfile=['size','bold','tolerance','letterGap'].every(key=>preferences[key]===this.preferences[key]);const signature=JSON.stringify(work.written.map(s=>[s.id,data[s.id]]))+(unchangedProfile?'':this.profile('trace'))+((statistics.upper.timedCount||statistics.lower.timedCount)?JSON.stringify([statistics.upper.meanMs,statistics.lower.meanMs,statistics.upper.timedCount,statistics.lower.timedCount]):'');const session=this.store().finish(activeLetter,{...work,statistics,signature:(signature+';assessment:2;direction:'+statistics.assessment.slice('geometry-direction-v'.length)).split('').reduce((h,c)=>Math.imul(h^c.charCodeAt(0),16777619)>>>0,2166136261).toString(16)});if(!session)return;document.querySelector('#result-title').textContent=this.store().lastSaveSucceeded?'Занятие сохранено':'Занятие завершено';this.renderResult(session.statistics??{...statistics,tolerance:undefined});document.querySelector('#session-result').showModal();this.renderOverview()},
+ finish(){if(activePointer!==null||(typeof NumberPractice!=='undefined'&&NumberPractice.active))return false;const work=this.work();if(!this.completion(work).ready)return false;this.recordAttempts(work);const statistics=this.statistics(work);const unchangedProfile=['size','bold','tolerance','letterGap'].every(key=>preferences[key]===this.preferences[key]);const signature=JSON.stringify(work.written.map(s=>[s.id,data[s.id]]))+(unchangedProfile?'':this.profile('trace'))+((statistics.upper.timedCount||statistics.lower.timedCount)?JSON.stringify([statistics.upper.meanMs,statistics.lower.meanMs,statistics.upper.timedCount,statistics.lower.timedCount]):'');const session=this.store().finish(activeLetter,{...work,statistics,signature:(signature+';assessment:2;direction:'+statistics.assessment.slice('geometry-direction-v'.length)).split('').reduce((h,c)=>Math.imul(h^c.charCodeAt(0),16777619)>>>0,2166136261).toString(16)});if(!session)return false;document.querySelector('#result-title').textContent=this.store().lastSaveSucceeded?'Занятие сохранено':'Занятие завершено';this.renderResult(session.statistics??{...statistics,tolerance:undefined});document.querySelector('#session-result').showModal();this.renderOverview();return true},
  completedResult(sessions){
   for(let i=sessions.length-1;i>=0;i--){const session=sessions[i],score=session.statistics?.overall.score??session.traceScore;if(session.traced>0&&Number.isFinite(score))return {score,session}}
   return null;
