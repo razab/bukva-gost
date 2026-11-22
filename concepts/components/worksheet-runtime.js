@@ -43,7 +43,7 @@ const message=document.querySelector('#message');
 const writingTimes=new WritingTimes(localStorage,()=>{message.textContent='Время письма остаётся в этой вкладке; сохранить его не удалось.'});
 let composition;const compositions=new Map();
 function editComposition(patch){if(activePointer!==null)return;composition.update(variant,patch);const oldHistory=history;build(variant);history=oldHistory;refresh()}
-const worksheetBuild='2026-11-22.76';
+const worksheetBuild='2026-11-22.77';
 const practiceGeometry=size=>({width:size*1.5,height:size*1.8});
 const preferenceDefaults=Object.freeze({size:118,bold:100,tolerance:8,rowGap:22,columnGap:12,letterGap:20,leftInset:15,penWidth:3,smoothing:0,practiceRepeats:0});
 const preferenceLimits={size:[30,160],bold:[100,150],tolerance:[.5,16],rowGap:[0,80],columnGap:[0,60],letterGap:[0,50],leftInset:[0,30],penWidth:[.5,8],smoothing:[0,2],practiceRepeats:[0,10]};
@@ -172,7 +172,12 @@ function setupSurface(canvas,id,width,height,scoreNode,resetButton,model=models,
    if(s.length===1)ctx.lineTo(s[0][0]*width+.001,s[0][1]*height);
    ctx.stroke();
   }
-  if(scoreNode&&options.assess!==false){const key=feedbackState();if(!sameFeedback(assessmentState,key)){lastAssessment=assessWriting([...(data[id]||[]),...(draft?[draft]:[])],model,key.tolerance,{width,height,scale:cssWidth/viewport.width});assessmentState=key}const result=lastAssessment;scoreNode.textContent=result.empty?'—':result.score+'%';const pending=learnerMode&&(draft!==null||(result.coverage||0)<.9);scoreNode.dataset.band=result.empty?'empty':pending?'pending':result.direction?.backwards?'red':result.score>=90?'green':result.score>=80?'orange':'red';scoreNode.dataset.direction=result.direction?.backwards?'backward':'correct';scoreNode.setAttribute('aria-label',result.empty?'Проба пуста':`Сходство ${result.score} процентов.${result.direction?.backwards?' Штрих проведён против стрелки.':''} Показать сброс пробы`)}if(correction&&scoreNode?.getAttribute('aria-expanded')==='true'&&options.assess!==false)requestCorrection();resetButton.disabled=!(data[id]?.length);if(scoreNode){scoreNode.disabled=!(data[id]?.length);if(scoreNode.disabled)closeReset()}if(learnerMode&&typeof WorksheetDock!=='undefined')WorksheetDock.mirror(canvas,rect)}
+  if(scoreNode&&options.assess!==false){const key=feedbackState();if(!sameFeedback(assessmentState,key)){lastAssessment=assessWriting([...(data[id]||[]),...(draft?[draft]:[])],model,key.tolerance,{width,height,scale:cssWidth/viewport.width});assessmentState=key}const result=lastAssessment;scoreNode.textContent=result.empty?'—':result.score+'%';let band='empty';
+   if(!result.empty){
+    if(learnerMode)band=draft!==null?'pending':result.score>=LearnerExperience.finishThreshold?'green':'red';
+    else band=result.score>=90?'green':result.score>=80?'orange':'red';
+   }
+   scoreNode.dataset.band=band;scoreNode.dataset.direction=result.direction?.backwards?'backward':'correct';scoreNode.setAttribute('aria-label',result.empty?'Проба пуста':`Сходство ${result.score} процентов.${result.direction?.backwards?' Штрих проведён против стрелки.':''} Показать сброс пробы`)}if(correction&&scoreNode?.getAttribute('aria-expanded')==='true'&&options.assess!==false)requestCorrection();resetButton.disabled=!(data[id]?.length);if(scoreNode){scoreNode.disabled=!(data[id]?.length);if(scoreNode.disabled)closeReset()}if(learnerMode&&typeof WorksheetDock!=='undefined')WorksheetDock.mirror(canvas,rect)}
  function queueRender(){if(renderFrame===null)renderFrame=requestAnimationFrame(()=>{renderFrame=null;render()})}
  function feedbackState(){const ink=data[id]||null;return {ink,length:ink?.length||0,draft,draftLength:draft?.length||0,tolerance:preferences.tolerance*viewport.width/Math.max(1,cssWidth)}}
  function sameFeedback(a,b){return a&&b&&a.ink===b.ink&&a.length===b.length&&a.draft===b.draft&&a.draftLength===b.draftLength&&a.tolerance===b.tolerance}

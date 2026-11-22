@@ -777,7 +777,10 @@ final class LessonTests: XCTestCase {
                 }
                 return false;
             };
-            const at94=useScore(94),locked94=finish.disabled,at95=useScore(95);
+            const score=document.querySelector('[data-surface-id="'+upper+'"]').closest('.cell').querySelector('.score');
+            const at93=useScore(93),red93=getComputedStyle(score).color,locked93=finish.disabled;
+            const at94=useScore(94),red94=getComputedStyle(score).color,locked94=finish.disabled;
+            const at95=useScore(95),green95=getComputedStyle(score).color;
             save();
             const ready=!finish.disabled,caption=next.getAttribute('aria-label');
             const color=getComputedStyle(finish).backgroundColor;
@@ -790,14 +793,17 @@ final class LessonTests: XCTestCase {
                 return r.width>=48&&r.height>=48&&[r.left+5,r.left+r.width/2,r.right-5].every(
                     x=>control.contains(document.elementFromPoint(x,r.top+r.height/2)));
             };
-            return {before,blocked,at94,locked94,at95,ready,caption,color,
+            return {before,blocked,at93,locked93,red93,at94,locked94,red94,at95,green95,ready,caption,color,
                 targets:hit(finish)&&hit(next)&&(b.left-a.right>=8||b.top-a.bottom>=8),
                 check:getComputedStyle(finish.querySelector('svg')).display!=='none'};
             """, arguments: [:], in: nil, contentWorld: .page) as? [String: Any]
-        for key in ["before", "at94", "locked94", "at95", "ready", "targets", "check"] {
+        for key in ["before", "at93", "locked93", "at94", "locked94", "at95", "ready", "targets", "check"] {
             XCTAssertEqual(report?[key] as? Bool, true, key)
         }
         XCTAssertEqual(report?["blocked"] as? Bool, false)
+        XCTAssertEqual(report?["red93"] as? String, "rgb(165, 72, 60)")
+        XCTAssertEqual(report?["red94"] as? String, report?["red93"] as? String)
+        XCTAssertEqual(report?["green95"] as? String, "rgb(42, 121, 81)")
         XCTAssertEqual(report?["caption"] as? String, "Следующая буква: Г")
         XCTAssertEqual(report?["color"] as? String, "rgb(44, 103, 79)")
         for size in [CGSize(width: 1194, height: 750), CGSize(width: 834, height: 1130), CGSize(width: 390, height: 760)] {
