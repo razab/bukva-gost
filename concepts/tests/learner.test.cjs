@@ -21,8 +21,28 @@ function draw(canvas,stroke){fire(canvas,'pointerdown',stroke[0]);for(const p of
  const expectedRows=practiceRows().map(r=>[r.dataset.lessonStage,r.dataset.component]);
  const expectedCounts=practiceRows().map(r=>r.children.length),originalOther=otherFields();
  const composition=app.saved['gost-learner-composition-v1-410'];
+ const assertBlank=({canvas,output,button,ink})=>{
+  assert.equal(run(`data[${JSON.stringify(canvas.attrs['data-surface-id'])}]?.length||0`),0);
+  assert.equal(ink.innerHTML,'');
+  assert.equal(output.textContent,'—');
+  assert.equal(output.disabled,true);
+  assert.equal(button.hidden,true);
+ };
+ for(const row of practiceRows())for(const cell of row.children)assertBlank(cell.parts);
  const originalCell=row('upper-letter').children[0].parts;
  for(const line of run('demonstrationFor(models)'))draw(originalCell.canvas,line);
+ setRepeats(5);
+ for(const r of practiceRows()){
+  assert.equal(r.children.length,5);
+  for(const [index,cell] of r.children.entries()){
+   if(r.dataset.lessonStage==='upper-letter'&&index===0){
+    assert.equal(cell.parts.output.textContent,'100%');
+    assert.match(cell.parts.ink.innerHTML,/<path d="M/);
+    assert.equal(cell.parts.canvas.style.opacity,'0');
+   }
+   else assertBlank(cell.parts);
+  }
+ }
  setRepeats(6);
  assert.deepEqual(practiceRows().map(r=>[r.dataset.lessonStage,r.dataset.component]),expectedRows);
  assert(practiceRows().every(r=>r.children.length===6));

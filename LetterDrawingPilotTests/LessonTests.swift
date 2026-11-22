@@ -62,6 +62,96 @@ final class LessonTests: XCTestCase {
     }
 
     @MainActor
+    func testRepeatCountKeepsScoresWithVisibleInk() async throws {
+        let mounted = try await loadedLesson(requireA: false)
+        let url = try XCTUnwrap(mounted.url)
+        let host = try XCTUnwrap(mounted.superview)
+        let config = WKWebViewConfiguration()
+        config.websiteDataStore = .nonPersistent()
+        let web = WKWebView(frame: mounted.frame, configuration: config)
+        host.addSubview(web)
+        defer { web.removeFromSuperview() }
+        web.loadFileURL(url, allowingReadAccessTo: url.deletingLastPathComponent())
+        for _ in 0..<80 {
+            if (try? await web.evaluateJavaScript("typeof NativeApp === 'object'") as? Bool) == true { break }
+            try await Task.sleep(for: .milliseconds(100))
+        }
+        let report = try await web.callAsyncJavaScript("""
+            await NativeApp.command('select',{letter:'Б'});
+            await NativeApp.command('style',{index:4});
+            const frame=()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+            const repeats=async count=>{
+                await NativeApp.command('configure',{practiceRepeats:count});
+                await frame();
+            };
+            const fields=stage=>[...document.querySelectorAll(`[data-lesson-stage="${stage}"] .cell`)];
+            const state=cell=>{
+                const canvas=cell.querySelector('canvas'),score=cell.querySelector('.score');
+                const {x,y,width,height}=canvas.getBoundingClientRect();
+                return {score:score.textContent,disabled:score.disabled,rect:[x,y,width,height]};
+            };
+            await repeats(3);
+            const untouched=fields('upper-letter').map(state);
+            const lowerId='gost-file-b90-lower-0';
+            data[lowerId]=DrawingGlyphs.б.demonstration.map(path=>path.map(([x,y])=>[x/150,y/180]));
+            save();
+            refresh([lowerId]);
+            await repeats(5);
+            window.scrollTo(0,0);
+            // Reproduce a missing canvas layer without touching any scored field.
+            for(const canvas of document.querySelectorAll('#practice canvas'))canvas.style.setProperty('opacity','0','important');
+            await frame();
+            return {untouched,upper:fields('upper-letter').map(state),lower:fields('lower-letter').map(state)};
+            """, arguments: [:], in: nil, contentWorld: .page) as? [String: Any]
+        let untouched = try XCTUnwrap(report?["untouched"] as? [[String: Any]])
+        let upper = try XCTUnwrap(report?["upper"] as? [[String: Any]])
+        let lower = try XCTUnwrap(report?["lower"] as? [[String: Any]])
+        XCTAssertEqual(untouched.count, 3)
+        XCTAssertEqual(upper.count, 5)
+        XCTAssertEqual(lower.count, 5)
+        XCTAssertEqual(lower.first?["score"] as? String, "100%")
+        XCTAssertEqual(lower.first?["disabled"] as? Bool, false)
+        for blank in untouched + upper + Array(lower.dropFirst()) {
+            XCTAssertEqual(blank["score"] as? String, "—")
+            XCTAssertEqual(blank["disabled"] as? Bool, true)
+        }
+        for (index, cell) in lower.enumerated() {
+            let rect = try XCTUnwrap(cell["rect"] as? [Double])
+            XCTAssertEqual(rect.count, 4)
+            let config = WKSnapshotConfiguration()
+            config.rect = CGRect(x: rect[0], y: rect[1], width: rect[2], height: rect[3])
+            let image = try await web.takeSnapshot(configuration: config)
+            XCTAssertEqual(try hasBlueInk(image), index == 0, "Visible ink in lowercase field \(index + 1)")
+        }
+        let attachment = XCTAttachment(image: try await web.takeSnapshot(configuration: nil))
+        attachment.name = "repeats-empty-and-drawn"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
+    private func hasBlueInk(_ image: UIImage) throws -> Bool {
+        let source = try XCTUnwrap(image.cgImage)
+        let pixelCount = source.width * source.height
+        var rgba = [UInt8](repeating: 0, count: pixelCount * 4)
+        return try rgba.withUnsafeMutableBytes { (bytes: UnsafeMutableRawBufferPointer) -> Bool in
+            let context = try XCTUnwrap(CGContext(
+                data: bytes.baseAddress, width: source.width, height: source.height,
+                bitsPerComponent: 8, bytesPerRow: source.width * 4,
+                space: CGColorSpaceCreateDeviceRGB(),
+                bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+            ))
+            context.draw(source, in: CGRect(x: 0, y: 0, width: source.width, height: source.height))
+            for i in stride(from: 0, to: bytes.count, by: 4) {
+                let red = Int(bytes[i])
+                let green = Int(bytes[i + 1])
+                let blue = Int(bytes[i + 2])
+                if blue > red + 45 && blue > green + 25 { return true }
+            }
+            return false
+        }
+    }
+
+    @MainActor
     func testConnectedAuditRoutes() async throws {
         let web = try await loadedLesson(requireA: false)
         let report = try await web.callAsyncJavaScript("""

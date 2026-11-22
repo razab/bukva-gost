@@ -113,6 +113,17 @@ Practice of letters, numbers, signs, their parts and text SHALL check stroke dir
 - **WHEN** a learner follows the earlier valid split direction for а, Ж/ж or О/о
 - **THEN** the direction check still accepts the applicable previous route in practice of letters and text. The ordinary demonstration shows the current route.
 
+### Requirement: Процент и чернила одной пробы
+Процент MUST соответствовать отображаемым штрихам своего поля. Поле без штрихов показывает «—» и не открывает сброс.
+
+#### Scenario: Перестроить ряд с тремя пробами на пять
+- **WHEN** автор увеличивает число повторов с трёх до пяти, в том числе при уже заполненных полях
+- **THEN** первоначальные поля показывают свои прежние чернила и пересчитанный процент, а два дополнительных поля без сохранённых штрихов показывают прочерк
+
+#### Scenario: Повторно показать уже написанное
+- **WHEN** открывается лист с сохранённой пробой или пересобираются его поля
+- **THEN** сохранённые штрихи видны вместе с процентом до первого контакта пера, даже если слой живого ввода ещё не отрисован
+
 ## Evidence
 
 - `concepts/components/input-policy.js`

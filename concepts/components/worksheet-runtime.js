@@ -43,7 +43,7 @@ const message=document.querySelector('#message');
 const writingTimes=new WritingTimes(localStorage,()=>{message.textContent='Время письма остаётся в этой вкладке; сохранить его не удалось.'});
 let composition;const compositions=new Map();
 function editComposition(patch){if(activePointer!==null)return;composition.update(variant,patch);const oldHistory=history;build(variant);history=oldHistory;refresh()}
-const worksheetBuild='2026-11-22.69';
+const worksheetBuild='2026-11-22.70';
 const practiceGeometry=size=>({width:size*1.5,height:size*1.8});
 const preferenceDefaults=Object.freeze({size:118,bold:100,tolerance:8,rowGap:22,columnGap:12,letterGap:20,leftInset:15,penWidth:3,smoothing:0,practiceRepeats:0});
 const preferenceLimits={size:[30,160],bold:[100,150],tolerance:[.5,16],rowGap:[0,80],columnGap:[0,60],letterGap:[0,50],leftInset:[0,30],penWidth:[.5,8],smoothing:[0,2],practiceRepeats:[0,10]};
@@ -128,12 +128,51 @@ function undo(){if(activePointer!==null||!history.length)return;const change=his
 function refresh(ids=null){const changed=ids&&new Set(ids);surfaces.filter(s=>!changed||changed.has(s.id)).forEach(s=>s.render());document.querySelector('#undo').disabled=!history.length;if(learnerMode)LearnerExperience.refresh()}
 function reset(id){if(activePointer!==null||!data[id]?.length)return;snapshot(id);data[id]=[];writingTimes.set(worksheetStorageKey(),id,null);save();refresh([id])}
 function bindSurfaceAction(button,action){if(typeof WorksheetInput!=='undefined')return WorksheetInput.bindAction(button,action);button.onclick=action;return ()=>{if(button.onclick===action)button.onclick=null}}
-function setupSurface(canvas,id,width,height,scoreNode,resetButton,model=models,viewport={x:0,y:0,width,height},correction=null){
+function setupSurface(canvas,id,width,height,scoreNode,resetButton,model=models,viewport={x:0,y:0,width,height},correction=null,committedInk=null){
  let draft=null,startPoint=null,pointer=null,strokeStarted=null,renderFrame=null,lastAssessment={empty:true,score:0},assessmentState=null,cssWidth=viewport.width*preferences.size/100,feedbackCache=null,manualJob=null,manualResult=null,manualVersion=0,destroyed=false;
  canvas.setAttribute('data-surface-id',id);
  const ctx=canvas.getContext('2d'),listeners=[],unbindActions=[];const listen=(type,fn)=>{canvas.addEventListener(type,fn);listeners.push([type,fn])};
- // Long wrapped text needs a bounded backing bitmap; CSS and ink coordinates stay unchanged.
- function render(options={}){const rect=canvas.getBoundingClientRect(),ratio=Math.min(devicePixelRatio||1,8192/Math.max(1,rect.width,rect.height),Math.sqrt(4194304/Math.max(1,rect.width*rect.height)));cssWidth=rect.width||viewport.width*preferences.size/100;canvas.width=Math.max(1,Math.floor(rect.width*ratio));canvas.height=Math.max(1,Math.floor(rect.height*ratio));ctx.setTransform(canvas.width/viewport.width,0,0,canvas.height/viewport.height,-viewport.x*canvas.width/viewport.width,-viewport.y*canvas.height/viewport.height);ctx.lineWidth=preferences.penWidth*viewport.width/(rect.width||viewport.width*preferences.size/100);ctx.strokeStyle='#335e99';ctx.lineCap='round';ctx.lineJoin='round';for(const raw of [...(data[id]||[]),...(draft?[draft]:[])]){const s=PenAppearance.smooth(raw,preferences.smoothing,raw!==draft);if(!s.length)continue;ctx.beginPath();ctx.moveTo(s[0][0]*width,s[0][1]*height);for(const p of s.slice(1))ctx.lineTo(p[0]*width,p[1]*height);if(s.length===1)ctx.lineTo(s[0][0]*width+.001,s[0][1]*height);ctx.stroke()}if(scoreNode&&options.assess!==false){const key=feedbackState();if(!sameFeedback(assessmentState,key)){lastAssessment=assessWriting([...(data[id]||[]),...(draft?[draft]:[])],model,key.tolerance,{width,height,scale:cssWidth/viewport.width});assessmentState=key}const result=lastAssessment;scoreNode.textContent=result.empty?'—':result.score+'%';const pending=learnerMode&&(draft!==null||(result.coverage||0)<.9);scoreNode.dataset.band=result.empty?'empty':pending?'pending':result.direction?.backwards?'red':result.score>=90?'green':result.score>=80?'orange':'red';scoreNode.dataset.direction=result.direction?.backwards?'backward':'correct';scoreNode.setAttribute('aria-label',result.empty?'Проба пуста':`Сходство ${result.score} процентов.${result.direction?.backwards?' Штрих проведён против стрелки.':''} Показать сброс пробы`)}if(correction&&scoreNode?.getAttribute('aria-expanded')==='true'&&options.assess!==false)requestCorrection();resetButton.disabled=!(data[id]?.length);if(scoreNode){scoreNode.disabled=!(data[id]?.length);if(scoreNode.disabled)closeReset()}if(learnerMode&&typeof WorksheetDock!=='undefined')WorksheetDock.mirror(canvas,rect)}
+ let displayedInk=null;
+ function paintCommittedInk(strokes,inkWidth){
+  if(!committedInk)return;
+  // Saved ink remains visible even when WebKit has not presented the canvas layer.
+  const {smoothing}=preferences;
+  if(displayedInk?.strokes!==strokes||displayedInk?.length!==strokes?.length||displayedInk?.smoothing!==smoothing){
+   const commands=(strokes||[]).map(raw=>{
+    const points=PenAppearance.smooth(raw,smoothing).map(([x,y])=>[x*width,y*height]);
+    if(points.length===1)points.push([points[0][0]+.001,points[0][1]]);
+    return path(points);
+   }).join(' ');
+   committedInk.innerHTML=commands?`<path d="${commands}"/>`:'';
+   displayedInk={strokes,length:strokes?.length,smoothing};
+  }
+  const widthAttribute=String(inkWidth),opacity=draft?'1':'0';
+  if(committedInk.getAttribute('stroke-width')!==widthAttribute)committedInk.setAttribute('stroke-width',widthAttribute);
+  if(canvas.style.opacity!==opacity){
+   committedInk.style.visibility=draft?'hidden':'visible';
+   canvas.style.opacity=opacity;
+  }
+ }
+ function render(options={}){
+  const rect=canvas.getBoundingClientRect(),strokes=data[id];
+  cssWidth=rect.width||viewport.width*preferences.size/100;
+  const inkWidth=preferences.penWidth*viewport.width/cssWidth;
+  paintCommittedInk(strokes,inkWidth);
+  // Keep the bitmap for live writing and the loupe; bound it for long text rows.
+  const ratio=Math.min(devicePixelRatio||1,8192/Math.max(1,rect.width,rect.height),Math.sqrt(4194304/Math.max(1,rect.width*rect.height)));
+  canvas.width=Math.max(1,Math.floor(rect.width*ratio));
+  canvas.height=Math.max(1,Math.floor(rect.height*ratio));
+  ctx.setTransform(canvas.width/viewport.width,0,0,canvas.height/viewport.height,-viewport.x*canvas.width/viewport.width,-viewport.y*canvas.height/viewport.height);
+  ctx.lineWidth=inkWidth;ctx.strokeStyle='#335e99';ctx.lineCap='round';ctx.lineJoin='round';
+  for(const raw of [...(strokes||[]),...(draft?[draft]:[])]){
+   const s=PenAppearance.smooth(raw,preferences.smoothing,raw!==draft);
+   if(!s.length)continue;
+   ctx.beginPath();ctx.moveTo(s[0][0]*width,s[0][1]*height);
+   for(const p of s.slice(1))ctx.lineTo(p[0]*width,p[1]*height);
+   if(s.length===1)ctx.lineTo(s[0][0]*width+.001,s[0][1]*height);
+   ctx.stroke();
+  }
+  if(scoreNode&&options.assess!==false){const key=feedbackState();if(!sameFeedback(assessmentState,key)){lastAssessment=assessWriting([...(data[id]||[]),...(draft?[draft]:[])],model,key.tolerance,{width,height,scale:cssWidth/viewport.width});assessmentState=key}const result=lastAssessment;scoreNode.textContent=result.empty?'—':result.score+'%';const pending=learnerMode&&(draft!==null||(result.coverage||0)<.9);scoreNode.dataset.band=result.empty?'empty':pending?'pending':result.direction?.backwards?'red':result.score>=90?'green':result.score>=80?'orange':'red';scoreNode.dataset.direction=result.direction?.backwards?'backward':'correct';scoreNode.setAttribute('aria-label',result.empty?'Проба пуста':`Сходство ${result.score} процентов.${result.direction?.backwards?' Штрих проведён против стрелки.':''} Показать сброс пробы`)}if(correction&&scoreNode?.getAttribute('aria-expanded')==='true'&&options.assess!==false)requestCorrection();resetButton.disabled=!(data[id]?.length);if(scoreNode){scoreNode.disabled=!(data[id]?.length);if(scoreNode.disabled)closeReset()}if(learnerMode&&typeof WorksheetDock!=='undefined')WorksheetDock.mirror(canvas,rect)}
  function queueRender(){if(renderFrame===null)renderFrame=requestAnimationFrame(()=>{renderFrame=null;render()})}
  function feedbackState(){const ink=data[id]||null;return {ink,length:ink?.length||0,draft,draftLength:draft?.length||0,tolerance:preferences.tolerance*viewport.width/Math.max(1,cssWidth)}}
  function sameFeedback(a,b){return a&&b&&a.ink===b.ink&&a.length===b.length&&a.draft===b.draft&&a.draftLength===b.draftLength&&a.tolerance===b.tolerance}

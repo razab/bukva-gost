@@ -30,12 +30,12 @@ const PracticeElement={
   cell.style.setProperty('--cell-width',`${frame.width*scale}px`);cell.style.setProperty('--cell-height',`${frame.height*scale}px`);
   const positionScore=()=>{if(Number.isFinite(scoreX))cell.style.setProperty('--score-x',`${(scoreX-frame.x)*scale}px`)};positionScore();
   if(typeof LearnerExperience!=='undefined'&&typeof learnerMode!=='undefined'&&learnerMode&&LearnerExperience.guideProfile(id)==='reduced')cell.className+=' reduced-guide';
-  cell.innerHTML=`<div class="writing" data-assessment="geometry"><svg viewBox="${frame.x} ${frame.y} ${frame.width} ${frame.height}" aria-hidden="true">${guide(model)}</svg><svg class="correction-layer" viewBox="${frame.x} ${frame.y} ${frame.width} ${frame.height}" aria-hidden="true"></svg><canvas tabindex="-1" aria-label="${label}"></canvas></div><div class="cell-foot"><button type="button" class="score" aria-expanded="false" aria-label="Сходство, открыть сброс">—</button><button type="button" class="reset" hidden aria-label="Сбросить эту пробу" title="Сбросить эту пробу">↺</button></div>`;
+  cell.innerHTML=`<div class="writing" data-assessment="geometry"><svg viewBox="${frame.x} ${frame.y} ${frame.width} ${frame.height}" aria-hidden="true">${guide(model)}</svg><svg class="committed-ink" viewBox="${frame.x} ${frame.y} ${frame.width} ${frame.height}" aria-hidden="true" fill="none" stroke="var(--ink)" stroke-linecap="round" stroke-linejoin="round"></svg><svg class="correction-layer" viewBox="${frame.x} ${frame.y} ${frame.width} ${frame.height}" aria-hidden="true"></svg><canvas tabindex="-1" aria-label="${label}"></canvas></div><div class="cell-foot"><button type="button" class="score" aria-expanded="false" aria-label="Сходство, открыть сброс">—</button><button type="button" class="reset" hidden aria-label="Сбросить эту пробу" title="Сбросить эту пробу">↺</button></div>`;
   const canvas=cell.querySelector('canvas');
   canvas.setAttribute('data-view-box',JSON.stringify(frame));canvas.setAttribute('data-scale',String(scale));canvas.setAttribute('data-domain',JSON.stringify({width,height}));canvas.setAttribute('data-ruling-levels',JSON.stringify(rulingLevels));
   row.append(cell);
   const releaseRuling=RowRuling.attach(row,cell.querySelector('.writing'),frame,rulingLevels);
-  const surface=setupSurface(canvas,id,width,height,cell.querySelector('.score'),cell.querySelector('.reset'),model,frame,cell.querySelector('.correction-layer'));
+  const surface=setupSurface(canvas,id,width,height,cell.querySelector('.score'),cell.querySelector('.reset'),model,frame,cell.querySelector('.correction-layer'),cell.querySelector('.committed-ink'));
   return {element:cell,surface:{...surface,reframe(nextPreferences){
    // Preserve canvas, listeners, model, ink coordinates and animation. Only
    // the viewport padding changes when the tolerance is committed.
