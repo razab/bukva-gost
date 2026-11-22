@@ -5,6 +5,7 @@ import UniformTypeIdentifiers
 struct NativeWorkspace: View {
     @StateObject private var controller = PilotLesson.Coordinator()
     @State private var numbers = false
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     private var version: String {
         let release = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "—"
         let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "—"
@@ -54,6 +55,9 @@ struct NativeWorkspace: View {
             if #available(iOS 18.0, *), destination == .letters {
                 sheetNavigation(destination)
                     .presentationSizing(LetterPickerSizing())
+            } else if #available(iOS 18.0, *), destination == .result, !dynamicTypeSize.isAccessibilitySize {
+                sheetNavigation(destination)
+                    .presentationSizing(SessionResultSizing())
             } else {
                 sheetNavigation(destination)
             }
@@ -66,7 +70,7 @@ struct NativeWorkspace: View {
     private func sheetNavigation(_ destination: NativeSheet) -> some View {
         NavigationStack {
             sheetContent(destination)
-                .navigationTitle(destination == .result && controller.result?.saved == false ? "Занятие завершено" : destination.title)
+                .navigationTitle(destination == .result ? "" : destination.title)
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .confirmationAction) {
@@ -105,6 +109,13 @@ private struct LetterPickerSizing: PresentationSizing {
     }
 }
 
+@available(iOS 18.0, *)
+private struct SessionResultSizing: PresentationSizing {
+    func proposedSize(for root: PresentationSizingRoot, context: PresentationSizingContext) -> ProposedViewSize {
+        ProposedViewSize(width: 720, height: 424)
+    }
+}
+
 private struct NativeNumbers: View {
     @StateObject private var controller = PilotLesson.Coordinator(fragment: "numbers")
     var body: some View {
@@ -125,9 +136,10 @@ private struct NativeNumbers: View {
 
 private struct LetterImage: View {
     let letter: String
+    var color: Color = .primary
     var body: some View {
         Image("Letter-" + String(letter.unicodeScalars.first!.value, radix: 16))
-            .renderingMode(.template).resizable().scaledToFit().foregroundStyle(.primary)
+            .renderingMode(.template).resizable().scaledToFit().foregroundStyle(color)
             .accessibilityHidden(true)
     }
 }
@@ -428,36 +440,214 @@ private struct NativeProgress: View {
 
 private struct NativeSessionResult: View {
     @ObservedObject var controller: PilotLesson.Coordinator
+    @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @State private var stamped = false
     let result: NativeResult
-    private func summary(_ group: SessionGroup) -> String {
-        guard let score = group.score else { return "—" }
-        return "\(score)%" + (group.meanMs.map { " · " + ($0 / 1000).formatted(.number.precision(.fractionLength(1))) + " с" } ?? "")
+
+    private let green = Color(red: 0.16, green: 0.38, blue: 0.29)
+    private var ink: Color { colorScheme == .dark ? Color(red: 0.67, green: 0.87, blue: 0.74) : green }
+    private var detailInk: Color {
+        colorScheme == .dark ? Color(red: 0.73, green: 0.79, blue: 0.75)
+            : Color(red: 0.30, green: 0.36, blue: 0.33)
     }
+    private let numberLocale = Locale(identifier: "ru_RU")
+
     var body: some View {
-        Form {
-            Section {
-                LabeledContent("Сложность", value: result.statistics.difficulty)
-                LabeledContent("Заглавная", value: summary(result.statistics.upper))
-                LabeledContent("Строчная", value: summary(result.statistics.lower))
-                LabeledContent("Общий средний", value: summary(result.statistics.overall))
-                LabeledContent("Допуск", value: "±" + result.statistics.tolerance.formatted() + " px")
-            } footer: { Text("Время — касания пера, без пауз. Самостоятельные пробы не учитываются.") }
-            Section {
-                Button("Ещё потренироваться") { controller.sheet = nil }
-                if controller.state.canNext, let next = controller.state.nextLetter {
-                    Button {
-                        controller.afterDismiss { controller.command("next") }
-                    } label: {
-                        HStack(spacing: 8) {
-                            Text(result.letter)
-                            Image(systemName: "arrow.right")
-                            Text(next)
+        GeometryReader { viewport in
+            ScrollView {
+                VStack(spacing: 24) {
+                    if viewport.size.width >= 600 && !dynamicTypeSize.isAccessibilitySize {
+                        HStack(alignment: .center, spacing: 32) {
+                            achievement.frame(width: 246)
+                            statistics.frame(maxWidth: .infinity)
                         }
-                        .font(.headline)
+                    } else {
+                        stacked
                     }
-                    .accessibilityLabel("Следующая буква: " + next)
+                    Divider()
+                    actions
+                }
+                .frame(maxWidth: 672)
+                .padding(.horizontal, 24)
+                .padding(.top, 16)
+                .padding(.bottom, 24)
+                .frame(maxWidth: .infinity, minHeight: viewport.size.height)
+            }
+        }
+        .accessibilityIdentifier("session-result-content")
+        .onAppear {
+            if result.saved && !reduceMotion && !stamped {
+                withAnimation(.spring(duration: 0.36, bounce: 0.22)) { stamped = true }
+            }
+        }
+    }
+
+    private var stacked: some View {
+        VStack(alignment: .leading, spacing: 22) {
+            achievement
+            statistics
+        }
+    }
+
+    private var achievement: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            RoundedRectangle(cornerRadius: 16)
+                .fill(colorScheme == .dark ? Color(red: 0.13, green: 0.21, blue: 0.18)
+                      : Color(red: 0.92, green: 0.95, blue: 0.89))
+                .frame(height: 142)
+                .overlay {
+                    Canvas { context, size in
+                        let rules = Path { path in
+                            for fraction in [0.20, 0.38, 0.73, 0.91] {
+                                let y = size.height * fraction
+                                path.move(to: CGPoint(x: 14, y: y))
+                                path.addLine(to: CGPoint(x: size.width - 14, y: y))
+                            }
+                        }
+                        context.stroke(rules, with: .color(ink.opacity(0.24)), lineWidth: 1)
+                    }
+                    LetterImage(letter: result.letter, color: ink)
+                        .frame(width: 192, height: 110)
+                        .offset(x: 8, y: -1)
+                }
+                .overlay(alignment: .bottomTrailing) {
+                    stamp.padding(10)
+                }
+                .accessibilityLabel(Text("Буква " + result.letter))
+                .accessibilityAddTraits(.isImage)
+            Text(result.saved ? "Занятие сохранено" : "Занятие завершено")
+                .font(.title2.bold())
+                .accessibilityAddTraits(.isHeader)
+                .accessibilityIdentifier("session-result-title")
+                .fixedSize(horizontal: false, vertical: true)
+            if !result.saved {
+                Text("Результат не удалось сохранить.")
+                    .font(.subheadline)
+                    .foregroundStyle(detailInk)
+            }
+        }
+    }
+
+    private var stamp: some View {
+        let animated = result.saved && !reduceMotion
+        return Image(systemName: result.saved ? "checkmark" : "exclamationmark")
+            .font(.system(size: 22, weight: .bold))
+            .foregroundStyle(.white)
+            .frame(width: 44, height: 44)
+            .background(result.saved ? green : Color(red: 0.53, green: 0.32, blue: 0.09), in: .circle)
+            .padding(3)
+            .background(Color(uiColor: .systemBackground), in: .circle)
+            .rotationEffect(.degrees(animated && !stamped ? -20 : -8))
+            .scaleEffect(animated && !stamped ? 1.26 : 1)
+            .accessibilityHidden(true)
+    }
+
+    private var statistics: some View {
+        let stats = result.statistics
+        return VStack(alignment: .leading, spacing: 10) {
+            HStack(alignment: .firstTextBaseline, spacing: 10) {
+                Text(percent(stats.overall))
+                    .font(.largeTitle.weight(.bold).monospacedDigit())
+                    .foregroundStyle(ink)
+                Text("Средняя точность")
+                    .font(.subheadline.weight(.medium))
+                    .foregroundStyle(detailInk)
+            }
+            .accessibilityElement(children: .combine)
+            .accessibilityIdentifier("session-result-overall")
+
+            Text(stats.difficulty + " · ±" + stats.tolerance.formatted(.number.locale(numberLocale)) + " px")
+                .font(.subheadline.weight(.medium))
+                .foregroundStyle(detailInk)
+                .accessibilityIdentifier("session-result-difficulty")
+
+            Divider()
+            scoreLine("Заглавная", group: stats.upper)
+            Divider()
+            scoreLine("Строчная", group: stats.lower)
+            Divider()
+            Text("Время — касания пера, без пауз. Самостоятельные пробы не учитываются.")
+                .font(.footnote)
+                .foregroundStyle(detailInk)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+
+    private func percent(_ group: SessionGroup) -> String {
+        group.score.map { "\($0)%" } ?? "—"
+    }
+
+    private func scoreLine(_ title: String, group: SessionGroup) -> some View {
+        LabeledContent {
+            VStack(alignment: .trailing, spacing: 3) {
+                let time = group.meanMs.map {
+                    ($0 / 1000).formatted(.number.precision(.fractionLength(1)).locale(numberLocale)) + " с"
+                }
+                Text(percent(group) + (time.map { " · " + $0 } ?? (group.count > 0 ? " · время —" : "")))
+                    .font(.body.weight(.semibold).monospacedDigit())
+                if let count = group.timedCount, count > 0, count < group.count {
+                    Text("Время по \(count) из \(group.count)")
+                        .font(.footnote)
+                        .foregroundStyle(detailInk)
                 }
             }
+            .foregroundStyle(.primary)
+        } label: {
+            Text(title)
+        }
+        .accessibilityElement(children: .combine)
+    }
+
+    private var actions: some View {
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: 12) {
+                Spacer(minLength: 0)
+                repeatLesson
+                nextLesson
+            }
+            VStack(spacing: 10) {
+                nextLesson
+                repeatLesson
+            }
+        }
+        .buttonBorderShape(.capsule)
+    }
+
+    private var repeatLesson: some View {
+        Button { controller.sheet = nil } label: {
+            Text("Ещё потренироваться")
+                .font(.body.weight(.semibold))
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.horizontal, 10)
+                .frame(minWidth: 44, minHeight: 44)
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.bordered)
+        .tint(ink)
+        .accessibilityIdentifier("session-result-repeat")
+    }
+
+    @ViewBuilder private var nextLesson: some View {
+        if controller.state.canNext, let next = controller.state.nextLetter {
+            Button {
+                controller.afterDismiss { controller.command("next") }
+            } label: {
+                HStack(spacing: 9) {
+                    Text(result.letter)
+                    Image(systemName: "arrow.right")
+                    Text(next)
+                }
+                .font(.body.weight(.semibold))
+                .padding(.horizontal, 14)
+                .frame(minWidth: 44, minHeight: 44)
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(green)
+            .accessibilityLabel("Следующая буква: " + next)
+            .accessibilityIdentifier("session-result-next")
         }
     }
 }
