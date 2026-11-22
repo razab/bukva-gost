@@ -231,6 +231,61 @@ final class LessonTests: XCTestCase {
     }
 
     @MainActor
+    func testConnectedLowercaseIInWorksheet() async throws {
+        let lesson = try await loadedLesson(requireA: false)
+        let url = try XCTUnwrap(lesson.url)
+        let configuration = WKWebViewConfiguration()
+        configuration.websiteDataStore = .nonPersistent()
+        let web = WKWebView(frame: lesson.frame, configuration: configuration)
+        try XCTUnwrap(lesson.superview).addSubview(web)
+        defer { web.removeFromSuperview() }
+        web.loadFileURL(url, allowingReadAccessTo: url.deletingLastPathComponent())
+        for _ in 0..<70 {
+            if (try? await web.evaluateJavaScript("typeof NativeApp === 'object'") as? Bool) == true { break }
+            try await Task.sleep(for: .milliseconds(100))
+        }
+        let report = try await web.callAsyncJavaScript("""
+            await NativeApp.command('select',{letter:'И'});
+            await NativeApp.command('level',{level:'precise'});
+            await NativeApp.command('option',{key:'schemes',enabled:true});
+            const id='gost-file-b90-lower-0';
+            const canvas=document.querySelector('[data-surface-id="'+id+'"]'),cell=canvas.closest('.cell');
+            const score=cell.querySelector('.score');
+            canvas.scrollIntoView({block:'center'});
+            canvas.setPointerCapture=()=>{};
+            const box=canvas.getBoundingClientRect(),frame=JSON.parse(canvas.dataset.viewBox);
+            const [body]=demonstrationFor(lowercase);
+            const draw=points=>points.forEach(([x,y],index)=>canvas.dispatchEvent(new PointerEvent(
+                index===0?'pointerdown':index===points.length-1?'pointerup':'pointermove',{
+                    pointerId:1,pointerType:'pen',isPrimary:true,bubbles:true,cancelable:true,
+                    clientX:box.left+(x-frame.x)*box.width/frame.width,
+                    clientY:box.top+(y-frame.y)*box.height/frame.height
+                })));
+            draw(body);
+            const correct=score.textContent, contacts=data[id]?.length;
+            const saved=readInk(worksheetStorageKey())?.[id]?.length;
+            score.click(); cell.querySelector('.reset').click();
+            const stem=StrokeDirection.route(lowercase)[1];
+            draw([...stem].reverse());
+            const reverse=score.dataset.direction;
+            window.scrollTo({top:0,behavior:'instant'});
+            const arrows=[...document.querySelectorAll('#hero-scheme-lower [data-scheme-arrow]')].length;
+            const steps=[...document.querySelectorAll('#hero-scheme-lower [data-step-number]')].length;
+            return {correct,contacts,saved,reverse,arrows,steps};
+            """, arguments: [:], in: nil, contentWorld: .page) as? [String: Any]
+        XCTAssertEqual(report?["correct"] as? String, "100%")
+        XCTAssertEqual(report?["contacts"] as? Int, 1)
+        XCTAssertEqual(report?["saved"] as? Int, 1)
+        XCTAssertEqual(report?["reverse"] as? String, "backward")
+        XCTAssertEqual(report?["arrows"] as? Int, 2)
+        XCTAssertEqual(report?["steps"] as? Int, 1)
+        let attachment = XCTAttachment(image: try await web.takeSnapshot(configuration: nil))
+        attachment.name = "connected-lowercase-i"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
+    @MainActor
     func testBeWarmupAndJoinedLowercase() async throws {
         let web = try await loadedLesson(requireA: false)
         let report = try await web.callAsyncJavaScript("""
@@ -279,8 +334,8 @@ final class LessonTests: XCTestCase {
             writingTimes.append=()=>{};
             let results;
             try {
-                results=[[[...body,...stem.slice(1)]],[body,stem],[[...stem].reverse()]].map((strokes,i)=>{
-                    const id='gost-file-b90-lower-'+i;
+                const id='gost-file-b90-lower-0';
+                results=[[[...body,...stem.slice(1)]],[body,stem],[[...stem].reverse()]].map(strokes=>{
                     const canvas=document.querySelector(`[data-surface-id="${id}"]`);
                     const score=canvas.closest('.cell').querySelector('.score');
                     delete data[id];

@@ -26,9 +26,9 @@ const LetterSequence={
    const composed=allowPrevious=>glyphs.flatMap(g=>((allowPrevious&&StrokeDirection.alternatives.get(g.model))||StrokeDirection.route(g.model)).map(line=>translate(line,g)));
    const alternative=glyphs.some(g=>StrokeDirection.alternatives.has(g.model))?composed(true):undefined;
    StrokeDirection.register(model,composed(false),true,alternative);
-   const loops=glyphs.flatMap(g=>(StrokeDirection.joinedLoops.get(g.model)||[]).map(loop=>translate(loop.model[0],g)));
-   StrokeDirection.registerJoinedLoops(model,loops);
-   if(alternative)StrokeDirection.registerJoinedLoops(alternative,loops);
+   const paths=glyphs.flatMap(g=>(StrokeDirection.joinedPaths.get(g.model)||[]).map(prefix=>({path:translate(prefix.model[0],g),retrace:prefix.retrace})));
+   StrokeDirection.registerJoinedPaths(model,paths);
+   if(alternative)StrokeDirection.registerJoinedPaths(alternative,paths);
   }
   return {text,model,glyphs,breaks,width:maxOrigin+150,height:180+lineY};
 

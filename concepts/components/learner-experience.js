@@ -66,7 +66,7 @@ const LearnerExperience={
  store(){return this.progress||(this.progress=new LearningProgress(localStorage,()=>{message.textContent='Журнал пока доступен только в этой вкладке.'}))},
  attempts(){return this.attemptStore||(this.attemptStore=new PracticeAttempts(localStorage,()=>{message.textContent='Сравнение попыток пока доступно только в этой вкладке.'}))},
  guideProfile(id){return id.startsWith('independent-')?'anchors':'full'},
- directionVersion:7,
+ directionVersion:8,
  profile(id){return 'geometry:'+drawingGeometryRevision+';assessment:2;direction:'+this.directionVersion+';size:'+preferences.size+';bold:'+preferences.bold+';tolerance:'+preferences.tolerance+';gap:'+preferences.letterGap+';guide:'+this.guideProfile(id)},
  recordAttempts(work){for(const surface of work.written)this.attempts().record({letter:activeLetter,id:surface.id,label:surface.label||'Самостоятельная проба',profile:this.profile(surface.id),strokes:data[surface.id],score:surface.assessment().score})},
  comparableAttempts(letter){return this.attempts().tasks(letter).filter(task=>!WorksheetCatalog.isRetiredTrial(task.id)&&(this.options.independent||!task.id.startsWith('independent-'))&&task.profile===this.profile(task.id))},

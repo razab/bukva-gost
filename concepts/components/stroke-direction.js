@@ -1,31 +1,31 @@
 // Teaching direction is separate from font geometry and permits pen lifts.
 const StrokeDirection={
- routes:new WeakMap(),alternatives:new WeakMap(),geometry:new WeakMap(),cache:new WeakMap(),warmups:new Map(),warmupCues:new WeakMap(),joinedLoops:new WeakMap(),cell:12,
+ routes:new WeakMap(),alternatives:new WeakMap(),geometry:new WeakMap(),cache:new WeakMap(),warmups:new Map(),warmupCues:new WeakMap(),joinedPaths:new WeakMap(),cell:12,
  register(model,teaching=model,complete=false,alternative){this.routes.set(model,teaching);if(complete)this.geometry.set(model,teaching);if(alternative)this.alternatives.set(model,alternative)},
- registerJoinedLoops(model,loops){
-  if(!loops.length)return;
-  this.joinedLoops.set(model,loops.map(loop=>{
-   const [sample]=TraceFeedback.sample([loop],8);
+ registerJoinedPaths(model,paths){
+  if(!paths.length||this.joinedPaths.has(model))return;
+  this.joinedPaths.set(model,paths.map(({path,retrace=false})=>{
+   const [sample]=TraceFeedback.sample([path],8);
    return {
-    model:[loop],
-    start:loop[0],
+    model:[path],
+    start:path[0],end:path.at(-1),retrace,
     checkpoints:[.25,.5,.75].map(fraction=>sample[Math.floor((sample.length-1)*fraction)])
    };
   }));
  },
- closeIndex(line,{start,checkpoints},radius){
+ endIndex(line,{start,end,checkpoints},radius){
   const distance=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);
   if(line.length<5||distance(line[0],start)>radius)return -1;
   let i=1;
-  for(const target of [...checkpoints,start]){
+  for(const target of [...checkpoints,end]){
    while(i<line.length&&distance(line[i],target)>radius)i++;
    if(i===line.length)return -1;
    i++;
   }
-  // The pen may continue immediately down the stem. Cut at the closest return.
+  // Cut at the closest pass to the end, before any continuation down the stem.
   let closest=i-1;
-  while(i<line.length&&distance(line[i],start)<=radius){
-   if(distance(line[i],start)<distance(line[closest],start))closest=i;
+  while(i<line.length&&distance(line[i],end)<=radius){
+   if(distance(line[i],end)<distance(line[closest],end))closest=i;
    i++;
   }
   return closest;
@@ -49,6 +49,7 @@ const StrokeDirection={
   }
   const {route,cue}=this.warmups.get(id);
   this.register(model,route,whole,whole?this.alternatives.get(glyphModel):undefined);
+  if(whole&&this.joinedPaths.has(glyphModel))this.joinedPaths.set(model,this.joinedPaths.get(glyphModel));
   this.warmupCues.set(model,cue);
  },
  route(model){return this.routes.get(model)||model},
@@ -73,11 +74,11 @@ const StrokeDirection={
   const options={tolerance,scale,forWarmup};
   const alternative=this.alternatives.get(model);
   if(!alternative||forWarmup)return this.assessRoute(actual,model,options);
-  if(this.joinedLoops.has(model)){
+  if(this.joinedPaths.has(model)){
    const current=this.assessRoute(actual,model,options);
    if(!current.backwards)return current;
   }
-  let checked=0,backwards=0,flagged=false;
+  let checked=0,backwards=0,flagged=false,retraceLength=0;
   for(const line of actual){
    const current=this.assessRoute([line],model,options);
    const previous=current.backwards?this.assessRoute([line],alternative,options):null;
@@ -85,18 +86,19 @@ const StrokeDirection={
    checked+=result.checked;
    backwards+=result.checked*(1-result.ratio);
    flagged||=result.backwards;
+   retraceLength+=result.retraceLength||0;
   }
-  return {backwards:flagged,ratio:checked?Math.max(0,1-backwards/checked):1,checked};
+  return {backwards:flagged,ratio:checked?Math.max(0,1-backwards/checked):1,checked,retraceLength};
  },
  assessRoute(actual,model,options){
   const {tolerance,scale}=options;
   const standard=this.measure(actual,model,options);
-  const loops=this.joinedLoops.get(model);
-  if(!standard.backwards||!loops)return standard;
+  const paths=this.joinedPaths.get(model);
+  if(!standard.backwards||!paths)return standard;
 
-  // Only a completed, correctly directed loop licenses the upward return.
-  // Any following motion is still graded against the descending stem.
-  let checkedLoop=0;
+  // A completed directed prefix licenses its connected climb.
+  // Further motion still uses the standard direction of the stem.
+  let checkedPrefix=0,retraceLength=0;
   const continuations=[];
   for(const line of actual){
    if(!line.length)continue;
@@ -104,20 +106,34 @@ const StrokeDirection={
    if(last&&Math.hypot(last[0]-line[0][0],last[1]-line[0][1])<=1/scale)continuations.at(-1).push(...line);
    else continuations.push([...line]);
   }
+  const joinRadius=Math.min(16,tolerance+2/scale);
   const remainder=continuations.map(line=>{
-   for(const loop of loops){
-    const close=this.closeIndex(line,loop,Math.min(16,tolerance+2/scale));
-    if(close<1)continue;
-    const result=this.measure([line.slice(0,close+1)],loop.model,options);
+   for(const prefix of paths){
+    const end=this.endIndex(line,prefix,joinRadius);
+    if(end<1)continue;
+    const result=this.measure([line.slice(0,end+1)],prefix.model,options);
     if(result.backwards||!result.checked)continue;
-    checkedLoop+=result.checked;
-    return line.slice(close);
+    checkedPrefix+=result.checked;
+    const remaining=line.slice(end);
+    if(prefix.retrace)retraceLength+=this.tracedReturn(remaining,prefix,joinRadius);
+    return remaining;
    }
    return line;
   });
-  if(!checkedLoop)return standard;
-  const rest=this.measure(remainder,model,options),checked=checkedLoop+rest.checked;
-  return {backwards:rest.backwards,ratio:(checkedLoop+rest.checked*rest.ratio)/checked,checked};
+  if(!checkedPrefix)return standard;
+  const rest=this.measure(remainder,model,options),checked=checkedPrefix+rest.checked;
+  return {backwards:rest.backwards,ratio:(checkedPrefix+rest.checked*rest.ratio)/checked,checked,retraceLength};
+ },
+ tracedReturn(line,{end,model:[path]},radius){
+  const bottom=path.at(-2),dx=bottom[0]-end[0],dy=bottom[1]-end[1],length=Math.hypot(dx,dy);
+  let covered=0;
+  for(const [x,y] of line.slice(1)){
+   const ax=x-end[0],ay=y-end[1];
+   if(Math.abs(ax*dy-ay*dx)>radius*length)break;
+   covered=Math.max(covered,(ax*dx+ay*dy)/length);
+   if(covered>=length)return length;
+  }
+  return covered;
  },
  measure(actual,model,{tolerance,scale,forWarmup}){
   const grid=this.prepare(model),radius=tolerance+2/scale,ambiguity=Math.max(.8,Math.min(4,tolerance*scale/2))/scale,minReverse=(forWarmup?6:10)/scale, reverseShare=forWarmup?0:.05;
@@ -153,9 +169,9 @@ const StrokeDirection={
   }
   return {backwards:backwards>0,ratio:checked?Math.max(0,1-backwards/checked):1,checked};
  },
- apply(geometry,strokes,model,options){
+ apply(geometry,direction){
   if(geometry.empty)return geometry;
-  const direction=this.assess(strokes,model,options),score=direction.backwards?Math.min(89,Math.round(geometry.score*direction.ratio)):geometry.score;
+  const score=direction.backwards?Math.min(89,Math.round(geometry.score*direction.ratio)):geometry.score;
   return {...geometry,shapeScore:geometry.score,direction,score};
  }
 };

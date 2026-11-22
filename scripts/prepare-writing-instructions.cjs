@@ -33,6 +33,11 @@ put('З',[join(m('З')[0],rev(m('З')[1])),m('З')[2]],['Верхняя дуга
 const I=m('И')[0];put('И',[[I[0],I[1]],[I[2],I[3]],[I[2],I[1]]],['Левая стойка сверху вниз','Правая стойка сверху вниз','Диагональ сверху справа вниз влево']);
 const i=m('и')[0];put('и',[i.slice(0,-1),rev(i.slice(-2))],['Левая стойка с нижним закруглением','Правая стойка сверху вниз']);
 put('Й',[...copy(routes['И']),m('Й')[1]],[...steps['И'],'Верхний знак слева направо']);put('й',[...copy(routes['и']),line(55,45,75,45)],[...steps['и'],'Верхний знак слева направо']);
+const splitI={и:routes.и,й:routes.й};
+const joinedI=[...i,splitI.и[1].at(-1)];
+const joinedIName='Вниз слева, по низу вправо, вверх и обратно вниз по правой стойке';
+put('и',[joinedI],[joinedIName]);
+put('й',[joinedI,splitI.й[2]],[joinedIName,'Верхний знак слева направо']);
 put('К',[line(45,45,45,135),join(m('К')[2].slice(0,3),rev(m('К')[1])),m('К')[2].slice(2)],['Стойка сверху вниз','Верхняя ветвь целиком к стойке','Нижняя ветвь от развилки']);put('к',[line(44,75,44,135),join(m('к')[3],rev(m('к')[1])),m('к')[2]],steps['К']);
 put('Л',[line(95,45,95,135),[[95,45],...rev(m('Л')[0].slice(0,6))]],['Правая стойка сверху вниз','Верх и левая наклонная вниз']);put('л',[line(85,75,85,135),[[85,75],...rev(m('л')[0].slice(0,6))]],steps['Л']);
 for(const c of ['М','м']){const p=m(c)[0];put(c,[[p[1],p[0]],[p[3],p[4]],[p[3],p[2]],[p[1],p[2]]],['Левая стойка сверху вниз','Правая стойка сверху вниз','Правая диагональ к середине','Левая диагональ к середине'])}
@@ -98,6 +103,11 @@ for(const row of index.rows)for(const [caseName,c]of [['upper',row.letter],['low
 for(const [c,route] of Object.entries(previousDirection))if(c!=='а')review[c].alternateDirection=route;
 // Closing the loop is accepted only after tracing the rest of the body.
 review.а.directionRoute=previousDirection.а;
+for(const c of ['и','й']){
+ review[c].directionRoute=splitI[c];
+ review[c].joinedPrefix=true;
+ review[c].adaptation='Корпус в один контакт, с возвратом по правой стойке в пределах контура ГОСТ типа Б.';
+}
 for(const c of [...Object.keys(connected),'а'])review[c].adaptation='Уточнённый учебный ход для прямого ГОСТ типа Б после проверки непрерывности.';
 for(const c of 'Ээ')review[c].adaptation='Связный внешний ход прямого ГОСТ типа Б. Направление средней черты слева направо соответствует рисунку 5.';
 review.б.adaptation='Связный учебный маршрут по наблюдаемому движению на прямом контуре ГОСТ типа Б: петля, подъём и верхняя черта. В исходной схеме ход показан раздельно.';

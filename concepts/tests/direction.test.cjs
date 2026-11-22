@@ -75,6 +75,39 @@ for(const scale of [.3,.6,.92,1.6])for(const tolerance of [1,8,16]){
   assert.equal(check(true).backwards,true,'A reversed circuit must still fail');
  }
 }
+for(const letter of ['И','Й']){
+ app.run(`build(0,${JSON.stringify(letter)})`);
+ const lower=app.nodes.practice.children.find(row=>row.dataset.lessonStage==='lower-letter').children[0].parts;
+ const [body,...accent]=plain(app.run('demonstrationFor(lowercase)'));
+ const [oldLeft,oldRight]=plain(app.run('StrokeDirection.route(lowercase)'));
+ const joinedUp=body.slice(0,-1);
+ const wrong=[...oldRight].reverse();
+ for(const [label,lines,backward] of [
+  ['one contact down-up-down',[body,...accent],false],
+  ['one contact ending at upper right',[joinedUp,...accent],false],
+  ['previous separate contacts',[oldLeft,oldRight,...accent],false],
+  ['isolated climb',[wrong],true],
+  ['return on the wrong side',[[...body].reverse(),...accent],true]
+ ]){
+  draw(lower.canvas,lines);
+  assert.equal(lower.output.dataset.direction,backward?'backward':'correct',letter+' '+label);
+  if(!backward)assert.equal(lower.output.textContent,'100%',letter+' '+label);
+  clear(lower);
+ }
+}
+const bodyInText=plain(app.run(`(()=>{
+ const sequence=LetterSequence.compose('Они й',DrawingGlyphs,{gap:20,maxWidth:150});
+ const trace=(reversed=false)=>sequence.glyphs.flatMap(({model,x,y},i)=>{
+  const lines=i===2&&reversed?[[...StrokeDirection.route(model)[1]].reverse()]:demonstrationFor(model);
+  return lines.map(line=>line.map(([a,b])=>[(a+x)/sequence.width,(b+y)/sequence.height]));
+ });
+ const check=ink=>assessWriting(ink,sequence.model,4,{width:sequence.width,height:sequence.height});
+ return [check(trace()).direction.backwards,check(trace()).score,check(trace(true)).direction.backwards];
+})()`));
+assert.equal(bodyInText[0],false,'joined body in wrapped text with an alternate direction glyph');
+assert(bodyInText[1]>=95);
+assert.equal(bodyInText[2],true,'isolated climb remains backward in text');
+
 for(const character of ['А','О']){
  app.run(`build(0,${JSON.stringify(character)})`);
  const routes=plain(app.run('demonstrationFor(models)'));
@@ -171,7 +204,7 @@ for(const text of ['ААА','СОК','её ЯЯ']){
  const check=lines=>run(`(()=>{const sequence=LetterSequence.compose(${JSON.stringify(text)},DrawingGlyphs,{gap:20,maxWidth:150});return StrokeDirection.assess(${JSON.stringify(lines.map(l=>l.map(([x,y])=>[x/composed.width,y/composed.height])))},sequence.model,{width:sequence.width,height:sequence.height})})()`);
  assert.equal(check(routes).backwards,false,text+' correct');assert.equal(check(routes.map(l=>[...l].reverse())).backwards,true,text+' reverse');
 }
-assert.equal(run('drawingGeometryRevision'),'4633c1e3');assert(run("LearnerExperience.profile('x').includes('direction:7')"));
+assert.equal(run('drawingGeometryRevision'),'4633c1e3');assert(run("LearnerExperience.profile('x').includes('direction:8')"));
 let wholeWarmups=0;
 for(const character of run('LetterCurriculum.order')){
  run(`build(0,${JSON.stringify(character)})`);

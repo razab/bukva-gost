@@ -21,14 +21,14 @@ for(const g of [...Object.values(DrawingGlyphs),...extraGlyphs])PracticeElement.
 WorksheetCatalog.setLetterSources(sequenceSources,activeLetter);
 function registerTeachingDirections(){
  if(typeof StrokeDirection==='undefined')return;
- for(const glyph of [...Object.values(DrawingGlyphs),...extraGlyphs])StrokeDirection.register(glyph.model,glyph.instruction?.directionRoute||glyph.demonstration||glyph.model,true,glyph.instruction?.alternateDirection);
+ for(const glyph of [...Object.values(DrawingGlyphs),...extraGlyphs]){
+  const instruction=glyph.instruction;
+  StrokeDirection.register(glyph.model,instruction?.directionRoute||glyph.demonstration||glyph.model,true,instruction?.alternateDirection);
+  if(instruction?.joinedPrefix||glyph===DrawingGlyphs['а'])StrokeDirection.registerJoinedPaths(glyph.model,[{path:glyph.model[0],retrace:instruction?.joinedPrefix}]);
+ }
  for(const part of WorksheetCatalog.elements)StrokeDirection.registerWarmup(part,sequenceSources[part.letters[0]].model);
 }
 registerTeachingDirections();
-if(typeof StrokeDirection!=='undefined'){
- const lowercaseA=DrawingGlyphs['а'].model;
- StrokeDirection.registerJoinedLoops(lowercaseA,[lowercaseA[0]]);
-}
 function fontOutline(model,extra=''){const glyph=modelGlyph.get(model);return !glyph?'':`<path d="${glyph.outline}" transform="translate(30 140) scale(${fontScale} ${-fontScale})" stroke="${(extra.match(/fill="([^"]+)"/)||[])[1]||'none'}" stroke-width="${boldExpansion()/fontScale}" stroke-linejoin="round" ${extra}/>`}
 const svgNS='http://www.w3.org/2000/svg';
 const path=line=>line.map((p,i)=>`${i?'L':'M'}${p[0]} ${p[1]}`).join(' ');
@@ -43,7 +43,7 @@ const message=document.querySelector('#message');
 const writingTimes=new WritingTimes(localStorage,()=>{message.textContent='Время письма остаётся в этой вкладке; сохранить его не удалось.'});
 let composition;const compositions=new Map();
 function editComposition(patch){if(activePointer!==null)return;composition.update(variant,patch);const oldHistory=history;build(variant);history=oldHistory;refresh()}
-const worksheetBuild='2026-11-22.75';
+const worksheetBuild='2026-11-22.76';
 const practiceGeometry=size=>({width:size*1.5,height:size*1.8});
 const preferenceDefaults=Object.freeze({size:118,bold:100,tolerance:8,rowGap:22,columnGap:12,letterGap:20,leftInset:15,penWidth:3,smoothing:0,practiceRepeats:0});
 const preferenceLimits={size:[30,160],bold:[100,150],tolerance:[.5,16],rowGap:[0,80],columnGap:[0,60],letterGap:[0,50],leftInset:[0,30],penWidth:[.5,8],smoothing:[0,2],practiceRepeats:[0,10]};
@@ -311,7 +311,7 @@ function nearest(points,other){return points.map(p=>{
  return Math.sqrt(best);
 });}
 const mean=values=>values.length?values.reduce((a,b)=>a+b,0)/values.length:0;
-function measureStrokeQuality(actualStrokes,expectedStrokes,{tolerance=4.5}={}){
+function measureStrokeQuality(actualStrokes,expectedStrokes,{tolerance=4.5,retraceLength=0}={}){
  const actual=samples(actualStrokes),expected=samples(expectedStrokes);
  if(!actual.points.length||!expected.points.length)return {score:0,coverage:0,precision:0,lengthRatio:0,error:0};
  const missing=nearest(expected.points,actual.points),extra=nearest(actual.points,expected.points);
@@ -319,23 +319,27 @@ function measureStrokeQuality(actualStrokes,expectedStrokes,{tolerance=4.5}={}){
  const completeness=coverage+precision?2*coverage*precision/(coverage+precision):0;
  const fidelity=Math.sqrt(mean(missing.map(d=>Math.exp(-(Math.max(0,d-.7)**2)/(2*tolerance**2))))*mean(extra.map(d=>Math.exp(-(Math.max(0,d-.7)**2)/(2*tolerance**2)))));
  const ratio=expected.length?actual.length/expected.length:0;
- const enoughInk=expected.length<3?1:clamp(ratio/.9),excessInk=ratio>1.35?clamp(1.35/ratio):1;
+ const enoughInk=expected.length<3?1:clamp(ratio/.9);
+ const excessRatio=expected.length?(actual.length-retraceLength)/expected.length:1;
+ const excessInk=excessRatio>1.35?1.35/excessRatio:1;
  return {score:Math.round(100*completeness*fidelity*enoughInk*excessInk),coverage,precision,lengthRatio:ratio,error:(mean(missing)+mean(extra))/2};
 }
 
 
-function evaluate(strokes,model=models,tolerance=preferences.tolerance,{width=150,height=180}={}){
+function evaluate(strokes,model=models,tolerance=preferences.tolerance,{width=150,height=180,retraceLength=0}={}){
  if(!strokes.length)return {empty:true,score:0};
  const actual=strokes.map(s=>s.map(([x,y])=>({x:x*width,y:y*height}))),expected=model.map(s=>s.map(([x,y])=>({x,y})));
  // One geometric assessment for primitives, single letters and arbitrary text.
  // Pen direction, lifts, stroke order and letter-specific rules do not enter it.
- return {empty:false,...measureStrokeQuality(actual,expected,{tolerance})};
+ return {empty:false,...measureStrokeQuality(actual,expected,{tolerance,retraceLength})};
 }
 
 function assessWriting(strokes,model=models,tolerance=preferences.tolerance,options={}){
- const comparison=learnerMode&&typeof StrokeDirection!=='undefined'?StrokeDirection.geometry.get(model)||model:model;
- const geometry=evaluate(strokes,comparison,tolerance,options);
- return learnerMode&&typeof StrokeDirection!=='undefined'?StrokeDirection.apply(geometry,strokes,model,{...options,tolerance,scale:options.scale||preferences.size/100}):geometry;
+ if(!learnerMode||typeof StrokeDirection==='undefined'||!strokes.length)return evaluate(strokes,model,tolerance,options);
+ const direction=StrokeDirection.assess(strokes,model,{...options,tolerance,scale:options.scale||preferences.size/100});
+ const comparison=StrokeDirection.geometry.get(model)||model;
+ const geometry=evaluate(strokes,comparison,tolerance,{...options,retraceLength:direction.retraceLength});
+ return StrokeDirection.apply(geometry,direction);
 }
 
 if(!learnerMode){

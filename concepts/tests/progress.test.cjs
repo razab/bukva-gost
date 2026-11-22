@@ -12,10 +12,10 @@ console.log('PASS: stale tabs preserve each other, same-work completion remains 
 
 const detailed={version:1,tolerance:8,size:92,bold:100,upper:{count:2,score:95,meanMs:3300,timedCount:2},lower:{count:1,score:90,meanMs:4200,timedCount:1},overall:{count:5,score:88}};
 const durable={},detailStorage={getItem:k=>durable[k]||null,setItem:(k,v)=>durable[k]=v},details=new Progress(detailStorage);details.finish('А',{traced:5,traceScore:88,statistics:detailed,signature:'details',at:10});assert.equal(new Progress(detailStorage).sessions('А')[0].statistics.upper.meanMs,3300);assert.equal(new Progress(detailStorage).sessions('А')[0].statistics.tolerance,8);
-for(const [version,score] of [[3,89],[4,97],[5,99],[6,98],[7,100]]){
+for(const [version,score] of [[3,89],[4,97],[5,99],[6,98],[7,100],[8,96]]){
  const recorded={...detailed,assessment:'geometry-direction-v'+version,overall:{count:5,score}};
  details.finish('А',{traced:5,traceScore:score,statistics:recorded,signature:'version-'+version,at:10+version});
 }
-assert.deepEqual(Array.from(new Progress(detailStorage).sessions('А').slice(-5),s=>[s.statistics.assessment,s.statistics.overall.score]),[['geometry-direction-v3',89],['geometry-direction-v4',97],['geometry-direction-v5',99],['geometry-direction-v6',98],['geometry-direction-v7',100]]);
+assert.deepEqual(Array.from(new Progress(detailStorage).sessions('А').slice(-6),s=>[s.statistics.assessment,s.statistics.overall.score]),[['geometry-direction-v3',89],['geometry-direction-v4',97],['geometry-direction-v5',99],['geometry-direction-v6',98],['geometry-direction-v7',100],['geometry-direction-v8',96]]);
 const bad=structuredClone(detailed);bad.lower.meanMs=-1;bad.upper.timedCount=100;const clean=Progress.statistics(bad);assert.equal(clean.upper.meanMs,null);assert.equal(clean.upper.timedCount,0);assert.equal(clean.lower.meanMs,null);assert.equal(Progress.statistics({...detailed,tolerance:99}),null);assert.equal(Progress.statistics({...detailed,overall:{count:1,score:100}}),null);
 console.log('PASS: session statistics survive reload with captured difficulty, separate means and overall; malformed timing/counts never turn into fake durations');
