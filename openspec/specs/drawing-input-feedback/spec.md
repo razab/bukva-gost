@@ -97,6 +97,14 @@ Practice of letters, numbers, signs, their parts and text SHALL check stroke dir
 - **WHEN** the learner briefly corrects a stroke and continues in the taught direction
 - **THEN** only a continuous unambiguous reverse run reaching at least 5% of its corresponding taught stroke length and at least 10 CSS px from its start counts for direction. A shorter correction does not lower the direction grade, show «Не по стрелке», or block the next lesson. Geometry is assessed independently.
 
+#### Scenario: Trace a whole letter in warmup
+- **WHEN** a warmup contains the whole letter geometry
+- **THEN** its cues and direction assessment use the letter's taught route, including separate strokes and allowed pen lifts.
+
+#### Scenario: Use an earlier lowercase б route
+- **WHEN** a learner follows the earlier split route for lowercase б
+- **THEN** direction assessment accepts that route in single-letter and text practice, while the schema and animation show the connected route.
+
 ## Evidence
 
 - `concepts/components/input-policy.js`

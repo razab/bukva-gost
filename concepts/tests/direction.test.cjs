@@ -121,17 +121,38 @@ for(const [length,reverse,expected] of [[300,12,false],[300,18,true],[100,8,fals
  const check=run(`StrokeDirection.assess(${JSON.stringify(ink.map(line=>line.map(([x,y])=>[x/150,y/400])))},${JSON.stringify(model)},{width:150,height:400})`);
  assert.equal(check.backwards,expected,length+' long with '+reverse+' back');
 }
+for(const text of ['б','ба']){
+ const result=run(`(()=>{
+  const sequence=LetterSequence.compose(${JSON.stringify(text)},DrawingGlyphs);
+  const options={width:sequence.width,height:sequence.height};
+  const check=route=>StrokeDirection.assess(route.map(line=>line.map(([x,y])=>[x/sequence.width,y/sequence.height])),sequence.model,options);
+  const current=StrokeDirection.route(sequence.model),previous=StrokeDirection.alternatives.get(sequence.model);
+  return [check(current).backwards,check(previous).backwards,check(current.map(line=>[...line].reverse())).backwards];
+ })()`);
+ assert.deepEqual(plain(result),[false,false,true],text+' connected and earlier split form');
+}
+assert.equal(run(`(()=>{
+ const s=LetterSequence.compose('бб',DrawingGlyphs),glyph=DrawingGlyphs.б;
+ const lines=s.glyphs.flatMap(({x,y},i)=>(i===0?glyph.demonstration:glyph.instruction.alternateDirection).map(l=>l.map(([a,b])=>[(a+x)/s.width,(b+y)/s.height])));
+ return StrokeDirection.assess(lines,s.model,{width:s.width,height:s.height}).backwards;
+})()`),false,'connected and split б can coexist in a word');
 for(const text of ['ААА','СОК','её ЯЯ']){
  const composed=run(`LetterSequence.compose(${JSON.stringify(text)},DrawingGlyphs,{gap:20,maxWidth:150})`),routes=plain(run(`StrokeDirection.route(LetterSequence.compose(${JSON.stringify(text)},DrawingGlyphs,{gap:20,maxWidth:150}).model)`));
  const check=lines=>run(`(()=>{const sequence=LetterSequence.compose(${JSON.stringify(text)},DrawingGlyphs,{gap:20,maxWidth:150});return StrokeDirection.assess(${JSON.stringify(lines.map(l=>l.map(([x,y])=>[x/composed.width,y/composed.height])))},sequence.model,{width:sequence.width,height:sequence.height})})()`);
  assert.equal(check(routes).backwards,false,text+' correct');assert.equal(check(routes.map(l=>[...l].reverse())).backwards,true,text+' reverse');
 }
-assert.equal(run('drawingGeometryRevision'),'4633c1e3');assert(run("LearnerExperience.profile('x').includes('direction:5')"));
+assert.equal(run('drawingGeometryRevision'),'4633c1e3');assert(run("LearnerExperience.profile('x').includes('direction:6')"));
+let wholeWarmups=0;
 for(const character of run('LetterCurriculum.order')){
  run(`build(0,${JSON.stringify(character)})`);
  const parts=run('WorksheetCatalog.elements');
  for(let at=0;at<parts.length;at++){
   const reference=`WorksheetCatalog.elements[${at}].model`;
+  const glyph=`DrawingGlyphs[${JSON.stringify(parts[at].letters[0])}].model`;
+  if(run(`JSON.stringify(${reference})===JSON.stringify(${glyph})`)){
+   wholeWarmups++;
+   assert(run(`StrokeDirection.route(${reference})===StrokeDirection.route(${glyph})`),parts[at].id+' must use the whole letter teaching route');
+  }
   const directed=plain(run(`StrokeDirection.route(${reference})`));
   if(parts[at].id==='gost-b90-437-part-2')assert(directed[0][0][0]>directed[0].at(-1)[0],'З warmup must retain its right-to-left arrow');
   const size=directed.reduce((sum,line)=>sum+line.slice(1).reduce((n,[x,y],i)=>n+Math.hypot(x-line[i][0],y-line[i][1]),0),0);
@@ -145,6 +166,7 @@ for(const character of run('LetterCurriculum.order')){
   }
  }
 }
+assert.equal(wholeWarmups,22);
 run("build(0,'А')");if(!cell().output.disabled)clear();
 run("var checks=0,originalAssess=assessWriting;assessWriting=(...args)=>{checks++;return originalAssess(...args)}");
 draw(cell().canvas,plain(run('demonstrationFor(models)')));

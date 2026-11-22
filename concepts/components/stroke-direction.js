@@ -1,7 +1,7 @@
 // Teaching direction is separate from font geometry and permits pen lifts.
 const StrokeDirection={
- routes:new WeakMap(),geometry:new WeakMap(),cache:new WeakMap(),warmups:new Map(),warmupCues:new WeakMap(),joinedLoops:new WeakMap(),cell:12,
- register(model,teaching=model,complete=false){this.routes.set(model,teaching);if(complete)this.geometry.set(model,teaching)},
+ routes:new WeakMap(),alternatives:new WeakMap(),geometry:new WeakMap(),cache:new WeakMap(),warmups:new Map(),warmupCues:new WeakMap(),joinedLoops:new WeakMap(),cell:12,
+ register(model,teaching=model,complete=false,alternative){this.routes.set(model,teaching);if(complete)this.geometry.set(model,teaching);if(alternative)this.alternatives.set(model,alternative)},
  registerJoinedLoops(model,loops){
   if(!loops.length)return;
   this.joinedLoops.set(model,loops.map(loop=>{
@@ -31,8 +31,9 @@ const StrokeDirection={
   return closest;
  },
  registerWarmup({id,model},glyphModel){
+  const whole=model.length===glyphModel.length&&model.every((line,index)=>line===glyphModel[index]);
   if(!this.warmups.has(id)){
-   const route=model.map(line=>{
+   const route=whole?this.route(glyphModel):model.map(line=>{
     // Keep authored cues independent from the threshold for grading handwriting.
     const direction=this.assess([line.map(([x,y])=>[x/150,y/180])],glyphModel,{forWarmup:true});
     return direction.ratio<.2?[...line].reverse():line;
@@ -47,7 +48,7 @@ const StrokeDirection={
    this.warmups.set(id,{route,cue});
   }
   const {route,cue}=this.warmups.get(id);
-  this.register(model,route);
+  this.register(model,route,whole,whole?this.alternatives.get(glyphModel):undefined);
   this.warmupCues.set(model,cue);
  },
  route(model){return this.routes.get(model)||model},
@@ -70,6 +71,21 @@ const StrokeDirection={
  assess(strokes,model,{width=150,height=180,tolerance=8,scale=1,forWarmup=false}={}){
   const actual=TraceFeedback.sample(strokes.map(line=>line.map(([x,y])=>[x*width,y*height])),2/scale,1536);
   const options={tolerance,scale,forWarmup};
+  const alternative=this.alternatives.get(model);
+  if(!alternative||forWarmup)return this.assessRoute(actual,model,options);
+  let checked=0,backwards=0,flagged=false;
+  for(const line of actual){
+   const current=this.assessRoute([line],model,options);
+   const previous=current.backwards?this.assessRoute([line],alternative,options):null;
+   const result=previous?.checked&&!previous.backwards?previous:current;
+   checked+=result.checked;
+   backwards+=result.checked*(1-result.ratio);
+   flagged||=result.backwards;
+  }
+  return {backwards:flagged,ratio:checked?Math.max(0,1-backwards/checked):1,checked};
+ },
+ assessRoute(actual,model,options){
+  const {tolerance,scale}=options;
   const standard=this.measure(actual,model,options);
   const loops=this.joinedLoops.get(model);
   if(!standard.backwards||!loops)return standard;

@@ -62,6 +62,42 @@ final class LessonTests: XCTestCase {
     }
 
     @MainActor
+    func testBeWarmupAndJoinedLowercase() async throws {
+        let web = try await loadedLesson(requireA: false)
+        let report = try await web.callAsyncJavaScript("""
+            build(variant,'Б');
+            const warmup=WorksheetCatalog.elements.find(p=>p.letters[0]==='Б');
+            const checks=[
+                [PracticeElement.key(warmup.id,0),DrawingGlyphs.Б.demonstration],
+                ['gost-file-b90-lower-0',DrawingGlyphs.б.demonstration],
+                ['gost-file-b90-lower-1',DrawingGlyphs.б.instruction.alternateDirection],
+                ['gost-file-b90-lower-2',DrawingGlyphs.б.demonstration.map(line=>[...line].reverse())]
+            ];
+            const assessed=checks.map(([id,lines])=>{
+                data[id]=lines.map(line=>line.map(([x,y])=>[x/150,y/180]));
+                refresh([id]);
+                const result=surfaces.find(s=>s.id===id).assessment();
+                return {score:result.score,backward:result.direction.backwards};
+            });
+            await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+            return {assessed, steps:DrawingGlyphs.б.demonstration.length, schemeSteps:document.querySelectorAll('#hero-scheme-lower [data-step-number]').length};
+            """, arguments: [:], in: nil, contentWorld: .page) as? [String: Any]
+        let results = try XCTUnwrap(report?["assessed"] as? [[String: Any]])
+        XCTAssertEqual(results[0]["score"] as? Int, 100)
+        XCTAssertEqual(results[0]["backward"] as? Bool, false)
+        XCTAssertEqual(results[1]["score"] as? Int, 100)
+        XCTAssertEqual(results[1]["backward"] as? Bool, false)
+        XCTAssertEqual(results[2]["backward"] as? Bool, false)
+        XCTAssertEqual(results[3]["backward"] as? Bool, true)
+        XCTAssertEqual(report?["steps"] as? Int, 1)
+        XCTAssertEqual(report?["schemeSteps"] as? Int, 1)
+        let attachment = XCTAttachment(image: try await web.takeSnapshot(configuration: nil))
+        attachment.name = "be-scheme-and-practice"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
+    @MainActor
     func testJoinedLowercaseA() async throws {
         let web = try await loadedLesson(requireA: false)
         let outcomes = try await web.callAsyncJavaScript("""
