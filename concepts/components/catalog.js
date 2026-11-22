@@ -4,6 +4,19 @@ const pictures=[{"id":"art-kite","name":"Воздушный змей","fixed":"M
 // Only parts belonging to the active glyphs are offered by the page editor.
 // Models come from the same teaching routes as the actual font demonstrations.
 const elements=[];
+const retiredParts=new Set(Object.entries({
+ б:['route-v2-0','route-v2-1'],                       // Upper bar and its join to the loop.
+ К:['route-v2-1'], к:['route-v2-1','route-v2-3'],    // Junction fragments.
+ З:['part-1'], з:['part-2'],                         // Bridge between the curves.
+ Д:['part-0'],                                      // Earlier route between the two feet.
+ Ж:['route-v2-0','route-v2-2','route-v2-3','route-v2-4'],
+ ж:['part-0','part-1','route-v2-3'],                 // Branches now drawn through the centre.
+ ц:['part-1']                                       // Stem continues into the tail.
+}).flatMap(([character,parts])=>parts.map(part=>`gost-b90-${character.codePointAt(0).toString(16)}-${part}`)));
+const isRetiredTrial=id=>{
+ const prefix='element-v1-';
+ return id.startsWith(prefix)&&retiredParts.has(id.slice(prefix.length,id.lastIndexOf('-')));
+};
 function setLetterSources(sources,letter='А'){
  if(letter!=='А'){
   const parts=[];
@@ -36,7 +49,7 @@ function setLetterSources(sources,letter='А'){
    }
    if(dots.length)parts.push({id:'gost-b90-'+character.codePointAt(0).toString(16)+'-dots',name:character+' · Точки',letters:[character],model:dots});
   }
-  elements.splice(0,elements.length,...parts);return;
+  elements.splice(0,elements.length,...parts.filter(part=>!retiredParts.has(part.id)));return;
  }
 
  const upper=sources['А'].model||sources['А'],lower=sources['а'].model||sources['а'];
@@ -51,5 +64,5 @@ function setLetterSources(sources,letter='А'){
 }
 const elementsFor=(letters=elements.flatMap(d=>d.letters))=>elements.filter(d=>d.letters.some(letter=>letters.includes(letter)));
 const renderPicture=picture=>picture.decor+`<path d="${picture.trace}" fill="none" stroke="#a8bcb2" stroke-width="2.5" stroke-dasharray="5 7" stroke-linecap="round" stroke-linejoin="round"/><path d="${picture.fixed}" fill="none" stroke="#759287" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/>`;
-return {pictures,elements,elementsFor,setLetterSources,renderPicture};
+return {pictures,elements,elementsFor,setLetterSources,renderPicture,isRetiredTrial};
 })();

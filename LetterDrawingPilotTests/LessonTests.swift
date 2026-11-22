@@ -62,6 +62,34 @@ final class LessonTests: XCTestCase {
     }
 
     @MainActor
+    func testAdditionalExercisesUseCurrentMovements() async throws {
+        let web = try await loadedLesson(requireA: false)
+        let report = try await web.callAsyncJavaScript("""
+            build(variant,'Б');
+            const details=document.querySelector('#additional-practice');
+            details.open=true;
+            details.scrollIntoView({block:'start'});
+            await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+            return {
+                optionalParts:details.querySelectorAll('[data-lesson-stage$="-elements"]').length,
+                optionalTexts:details.querySelectorAll('[data-component="letter-sequence"]').length,
+                primaryLoop:!!document.querySelector('[data-component="gost-b90-431-part-8"]'),
+                wholeLetter:DrawingGlyphs.б.demonstration.length,
+                heading:details.querySelector('summary').textContent
+            };
+            """, arguments: [:], in: nil, contentWorld: .page) as? [String: Any]
+        XCTAssertEqual(report?["optionalParts"] as? Int, 0)
+        XCTAssertGreaterThan(report?["optionalTexts"] as? Int ?? 0, 0)
+        XCTAssertEqual(report?["primaryLoop"] as? Bool, true)
+        XCTAssertEqual(report?["wholeLetter"] as? Int, 1)
+        XCTAssertEqual(report?["heading"] as? String, "Ещё упражнения")
+        let attachment = XCTAttachment(image: try await web.takeSnapshot(configuration: nil))
+        attachment.name = "additional-exercises-be"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
+    @MainActor
     func testRepeatCountKeepsScoresWithVisibleInk() async throws {
         let mounted = try await loadedLesson(requireA: false)
         let url = try XCTUnwrap(mounted.url)

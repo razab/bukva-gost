@@ -77,6 +77,34 @@ function draw(canvas,stroke){fire(canvas,'pointerdown',stroke[0]);for(const p of
  if(process.env.PRACTICE_REPEATS_CANARY==='1')process.exit(0);
  app=boot(saved);
 }
+{
+ const retired='gost-b90-431-route-v2-0',loop='gost-b90-431-part-8';
+ const oldId='element-v1-'+retired+'-0',silhouette=[[[.4,.3],[.56,.3]]];
+ const savedBe={'drawing-active-letter-v1':'Б'};
+ app=boot(savedBe);
+ const beKey=run('worksheetStorageKey()');
+ savedBe[beKey]=JSON.stringify({[oldId]:silhouette});
+ savedBe['gost-learner-composition-v1-411']=JSON.stringify({version:1,variants:{0:{
+  elementsVersion:2,elements:[{component:retired,repeats:3},{component:loop,repeats:5}]
+ }}});
+ app=boot(savedBe);
+ assert.deepEqual(JSON.parse(run('JSON.stringify(composition.get(0).elements)')),[{component:loop,repeats:5}]);
+ assert.equal(row('lower-elements').dataset.component,loop);
+ assert.equal(row('lower-elements').children.length,5);
+ assert.equal(row('lower-letter').children.length,3);
+ const extra=app.nodes.practice.children.find(e=>e.id==='additional-practice');
+ assert(extra,'Additional text practice is still available');
+ const parts=extra.children[1].children;
+ assert(parts.some(r=>r.dataset.component==='letter-sequence'));
+ assert(!parts.some(r=>r.dataset.component?.startsWith('gost-b90-431-')));
+ assert.equal(run(`surfaces.some(s=>s.id===${JSON.stringify(oldId)})`),false);
+ assert.deepEqual(JSON.parse(savedBe[beKey])[oldId],silhouette);
+ run(`LearnerExperience.attempts().record({letter:'Б',id:${JSON.stringify(oldId)},label:'Прежний элемент',profile:LearnerExperience.profile(${JSON.stringify(oldId)}),strokes:data[${JSON.stringify(oldId)}],score:30})`);
+ assert.equal(run("LearnerExperience.attempts().tasks('Б').length"),1);
+ assert.equal(run("LearnerExperience.comparableAttempts('Б').length"),0);
+ if(process.env.RETIRED_FRAGMENTS_CANARY==='1')process.exit(0);
+ app=boot(saved);
+}
 let cell=row('upper-letter').children[0].parts,model=run('demonstrationFor(models)');draw(cell.canvas,model[0]);assert.equal(cell.output.dataset.band,'pending');assert.equal(app.nodes['finish-session'].disabled,false);for(const line of model.slice(1))draw(cell.canvas,line);assert.equal(cell.output.textContent,'100%');assert.equal(cell.output.dataset.band,'green');
 cell.output.onclick();assert.equal(cell.button.hidden,false);cell.button.onclick();assert.equal(cell.output.textContent,'—');app.nodes.undo.onclick();assert.equal(cell.output.textContent,'100%');
 const tracing=run('JSON.stringify(data)');app.nodes['try-independent'].onclick();let block=app.nodes.practice.children.find(r=>r.id==='independent-practice');assert(block);let independent=block.children[1].children[1].parts;assert(!independent.canvas.attrs['data-surface-id'].includes('upper-0'));assert(!block.children[1].children[1].html.includes('class="corridor"'));assert.equal(independent.output.textContent,'—');
@@ -87,7 +115,20 @@ run("build(0,'А')");assert.equal(run('data["old-note"].length'),1);app=boot(sav
 run("build(0,'О')");cell=row('lower-letter').children[0].parts;model=run('demonstrationFor(lowercase)');draw(cell.canvas,model[0].slice(0,4));app.nodes['finish-session'].onclick();assert.equal(run('LearnerExperience.store().summary().sessions'),2);assert.equal(run('LearnerExperience.store().sessions("О").length'),1);
 console.log('PASS canary: old ink/settings preserved; neutral incomplete score; reset/undo; separate unguided practice; finish without100%; idempotent completion/reload/next/return; no mastery claim');
 if(process.env.LEARNER_CANARY_ONLY==='1')process.exit(0);
-const order=run('LetterCurriculum.order');for(const letter of order){run(`build(0,${JSON.stringify(letter)})`);assert.equal(app.nodes.letters.children.length,0);assert.equal(app.nodes['lesson-grid'].children.length,33);assert(app.nodes.practice.children.some(r=>r.dataset.lessonStage==='lower-elements'));assert(app.nodes.practice.children.some(r=>r.dataset.lessonStage==='upper-elements'));assert.equal(row('lower-letter').children.length,3);assert.equal(row('upper-letter').children.length,3);assert(run('LearnerExperience.layout(composition.defaults(0)).textRows.every(r=>LetterCurriculum.canUseText(activeLetter,r.text))'));assert.equal(run('data["gost-file-b90-upper-0"]?.length||0')>=0,true)}
+const order=run('LetterCurriculum.order');
+const retainedParts={
+ 'Б':['gost-b90-431-part-8'],
+ 'Ж':['gost-b90-416-part-3','gost-b90-436-part-2'],
+ 'Ё':['gost-b90-401-dots','gost-b90-451-dots'],
+ 'Й':['gost-b90-419-practice-v3-top-mark','gost-b90-439-route-v2-1'],
+ 'Э':['gost-b90-42d-part-1','gost-b90-44d-part-1']
+};
+for(const letter of order){run(`build(0,${JSON.stringify(letter)})`);assert.equal(app.nodes.letters.children.length,0);assert.equal(app.nodes['lesson-grid'].children.length,33);assert(app.nodes.practice.children.some(r=>r.dataset.lessonStage==='lower-elements'));assert(app.nodes.practice.children.some(r=>r.dataset.lessonStage==='upper-elements'));assert.equal(row('lower-letter').children.length,3);assert.equal(row('upper-letter').children.length,3);assert(run('LearnerExperience.layout(composition.defaults(0)).textRows.every(r=>LetterCurriculum.canUseText(activeLetter,r.text))'));assert.equal(run('data["gost-file-b90-upper-0"]?.length||0')>=0,true);
+ const registered=Array.from(run('WorksheetCatalog.elements.map(p=>p.id)'));
+ for(const id of retainedParts[letter]||[])assert(registered.includes(id),letter+' keeps '+id);
+ assert.equal(run('surfaces.some(s=>WorksheetCatalog.isRetiredTrial(s.id))'),false,letter+' offers a retired trial');
+ if(letter==='Ж')assert.equal(registered.length,2,'Ж/ж warmups retain only the central stems');
+}
 const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8'),dev=html.match(/<dialog id="developer-panel"[\s\S]*?<\/dialog>/)[0];for(const id of ['picture-picker','element-picker','sequence-picker','setting-size','setting-bold','setting-leftInset','setting-rowGap','setting-columnGap','setting-letterGap','clear-all'])assert(dev.includes('id="'+id+'"'),id+' missing from developer popup');assert(!/<dialog id="developer-panel"[^>]*\sopen(?:\s|>)/.test(html));assert(dev.includes('id="setting-tolerance"'));assert(!html.includes('parent-full-guide'));assert(html.includes('Буквы по ГОСТ'));
 // Corrupt history is recoverable and does not touch existing worksheet storage.
 const corrupt=boot({...saved,'gost-learning-progress-v1':'{broken'});assert.equal(corrupt.run('LearnerExperience.store().summary().sessions'),0);assert.equal(corrupt.run('data["old-note"]?.length||0'),0);
