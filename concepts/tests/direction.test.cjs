@@ -4,7 +4,7 @@ const boot=saved=>new Function('require','__dirname',h+'return boot(arguments[2]
 let app=boot();const plain=v=>JSON.parse(JSON.stringify(v));
 function cell(){return app.nodes.practice.children.find(r=>r.dataset.lessonStage==='upper-letter').children[0].parts}
 function draw(canvas,lines){const frame=JSON.parse(canvas.attrs['data-view-box']),rect=canvas.getBoundingClientRect();for(const line of lines){const points=line.map(([x,y])=>[(x-frame.x)*rect.width/frame.width,(y-frame.y)*rect.height/frame.height]);canvas.emit('pointerdown',points[0]);for(const p of points.slice(1))canvas.emit('pointermove',p);canvas.emit('pointerup',points.at(-1))}}
-function clear(){cell().output.onclick();cell().button.onclick()}
+function clear(parts=cell()){parts.output.onclick();parts.button.onclick()}
 for(const level of ['standard','easy','precise']){
  app.nodes['level-'+level].onclick();
  const scale=app.run('preferences.size/100');
@@ -47,6 +47,8 @@ assert.deepEqual(lowerASave(),savedJoined);
 clearLowerA();
 for(const [name,lines,backward] of [
  ['closed then lift',[loopA,stemA],false],
+ ['continue a paused loop',[loopA.slice(0,40),[...loopA.slice(39),...stemA.slice(1)]],false],
+ ['trace each connected segment with lifts',joinedA.slice(1).map((point,index)=>[joinedA[index],point]),false],
  ['standalone reverse',[[...stemA].reverse()],true],
  ['reverse body then stem',[[...loopA].reverse(),stemA],true],
  ['joined followed by reverse',[joinedA,[...stemA].reverse()],true],
@@ -100,17 +102,45 @@ for(const [character,glyph] of Object.entries(glyphs)){
  if(length>12)assert.equal(check(route.map(l=>[...l].reverse())).backwards,true,character+' reverse route accepted');
  for(let i=0;i<route.length;i++){
   const line=route[i],length=line.slice(1).reduce((n,p,j)=>n+Math.hypot(p[0]-line[j][0],p[1]-line[j][1]),0);
-  if(length>=12)assert.equal(check(route.map((l,j)=>i===j?[...l].reverse():l)).backwards,true,character+' one backward stroke accepted');
+  if(length>=12)assert.equal(check(route.map((l,j)=>i===j?[...l].reverse():l)).backwards,true,character+' single reverse policy');
  }
  for(const scale of [.3,.6,1.6])for(const tolerance of [1,16]){
   const normalized=route.map(l=>l.map(([x,y])=>[x/150,y/180]));
   assert.equal(run(`StrokeDirection.assess(${JSON.stringify(normalized)},${model},{scale:${scale},tolerance:${tolerance/scale}}).backwards`),false,character+' correct scaled');
   const longEnough=route.some(line=>line.some(([x,y])=>Math.hypot(x-line.at(-1)[0],y-line.at(-1)[1])*scale>=10));
-  assert.equal(run(`StrokeDirection.assess(${JSON.stringify(normalized.map(l=>[...l].reverse()))},${model},{scale:${scale},tolerance:${tolerance/scale}}).backwards`),longEnough,character+' reverse scaled');
+  if(longEnough)assert.equal(run(`StrokeDirection.assess(${JSON.stringify(normalized.map(l=>[...l].reverse()))},${model},{scale:${scale},tolerance:${tolerance/scale}}).backwards`),true,character+' reverse scaled');
  }
  assert.equal(check(route.map(l=>l.map(([x,y],i)=>[x+Math.sin(i)*.3,y+Math.cos(i)*.3]))).backwards,false,character+' jitter rejected');
  for(const [dx,dy] of [[-4,0],[4,0],[0,-4],[0,4]])assert.equal(check(route.map(l=>l.map(([x,y])=>[x+dx/.92,y+dy/.92]))).backwards,false,character+' in-corridor offset rejected');
 }
+for(const level of ['easy','standard','precise']){
+ run(`LearnerExperience.setLevel(${JSON.stringify(level)});build(0,'Э')`);
+ const route=plain(run("DrawingGlyphs['э'].demonstration"));
+ const surface=app.nodes.practice.children.find(row=>row.dataset.lessonStage==='lower-letter').children[0].parts;
+ for(const [bar,backwards] of [[route[1],false],[[...route[1]].reverse(),true]]){
+  draw(surface.canvas,[route[0],bar]);
+  assert.equal(surface.output.dataset.direction,backwards?'backward':'correct',level+' lowercase Э middle bar');
+  clear(surface);
+ }
+}
+for(const text of ['Оо','Жж']){
+ const result=run(`(()=>{
+  const sequence=LetterSequence.compose(${JSON.stringify(text)},DrawingGlyphs);
+  const options={width:sequence.width,height:sequence.height};
+  const check=route=>StrokeDirection.assess(route.map(line=>line.map(([x,y])=>[x/sequence.width,y/sequence.height])),sequence.model,options);
+  return [check(StrokeDirection.route(sequence.model)).backwards,check(StrokeDirection.alternatives.get(sequence.model)).backwards];
+ })()`);
+ assert.deepEqual(plain(result),[false,false],text+' old routes still accepted');
+}
+assert.equal(run(`(()=>{
+ const s=LetterSequence.compose('ао',DrawingGlyphs);
+ const lines=s.glyphs.flatMap(({x,y},i)=>{
+  const route=DrawingGlyphs[i===0?'а':'о'].demonstration;
+  const a=route[0];
+  return (i===0?[a.slice(0,40),a.slice(39)]:route).map(line=>line.map(([px,py])=>[(px+x)/s.width,(py+y)/s.height]));
+ });
+ return StrokeDirection.assess(lines,s.model,{width:s.width,height:s.height}).backwards;
+})()`),false,'resume a paused loop in a word containing a letter with an alternate route');
 const vertical=[[[45,40],[45,140]]],normal=vertical.map(l=>l.map(([x,y])=>[x/150,y/180]));
 assert.equal(run(`StrokeDirection.assess(${JSON.stringify(normal)},${JSON.stringify(vertical)}).backwards`),false);
 assert.equal(run(`StrokeDirection.assess(${JSON.stringify(normal.map(l=>[...l].reverse()))},${JSON.stringify(vertical)}).backwards`),true);
@@ -141,7 +171,7 @@ for(const text of ['ААА','СОК','её ЯЯ']){
  const check=lines=>run(`(()=>{const sequence=LetterSequence.compose(${JSON.stringify(text)},DrawingGlyphs,{gap:20,maxWidth:150});return StrokeDirection.assess(${JSON.stringify(lines.map(l=>l.map(([x,y])=>[x/composed.width,y/composed.height])))},sequence.model,{width:sequence.width,height:sequence.height})})()`);
  assert.equal(check(routes).backwards,false,text+' correct');assert.equal(check(routes.map(l=>[...l].reverse())).backwards,true,text+' reverse');
 }
-assert.equal(run('drawingGeometryRevision'),'4633c1e3');assert(run("LearnerExperience.profile('x').includes('direction:6')"));
+assert.equal(run('drawingGeometryRevision'),'4633c1e3');assert(run("LearnerExperience.profile('x').includes('direction:7')"));
 let wholeWarmups=0;
 for(const character of run('LetterCurriculum.order')){
  run(`build(0,${JSON.stringify(character)})`);

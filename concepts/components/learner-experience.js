@@ -38,7 +38,7 @@ const LearnerExperience={
  store(){return this.progress||(this.progress=new LearningProgress(localStorage,()=>{message.textContent='Журнал пока доступен только в этой вкладке.'}))},
  attempts(){return this.attemptStore||(this.attemptStore=new PracticeAttempts(localStorage,()=>{message.textContent='Сравнение попыток пока доступно только в этой вкладке.'}))},
  guideProfile(id){return id.startsWith('independent-')?'anchors':'full'},
- directionVersion:6,
+ directionVersion:7,
  profile(id){return 'geometry:'+drawingGeometryRevision+';assessment:2;direction:'+this.directionVersion+';size:'+preferences.size+';bold:'+preferences.bold+';tolerance:'+preferences.tolerance+';gap:'+preferences.letterGap+';guide:'+this.guideProfile(id)},
  recordAttempts(work){for(const surface of work.written)this.attempts().record({letter:activeLetter,id:surface.id,label:surface.label||'Самостоятельная проба',profile:this.profile(surface.id),strokes:data[surface.id],score:surface.assessment().score})},
  repeat(letter,task){if(activePointer!==null)return;this.independent=task.id.startsWith('independent-');build(variant,letter);if(this.independent&&!document.querySelector('#independent-practice'))reflowPage();document.querySelector('#progress-panel').close();const target=[...document.querySelectorAll('canvas[data-surface-id]')].find(c=>c.dataset.surfaceId===task.id)||[...document.querySelectorAll('canvas[data-surface-id]')].find(c=>c.getAttribute('aria-label')===task.label);target?.scrollIntoView?.({block:'center',behavior:'smooth'});target?.focus?.({preventScroll:true})},

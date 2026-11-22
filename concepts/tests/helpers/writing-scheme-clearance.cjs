@@ -14,7 +14,7 @@ module.exports=function({letters,negative=false}={}){
   if(override){scheme.notes.set(g.demonstration,saved);scheme.cache.delete(g.demonstration)}return issues;
  }
  if(negative){
-  const oldE=JSON.parse(JSON.stringify(glyphs.Е.instruction.notation));oldE[3]={label:[58,62],offset:-11,range:[.08,.9]};assert(inspect('Е',oldE).includes('arrow/letter'),'must detect the reported Е overlap');
+  const oldE=JSON.parse(JSON.stringify(glyphs.Е.instruction.notation));oldE[2]={label:[58,62],offset:-11,range:[.08,.9]};assert(inspect('Е',oldE).includes('arrow/letter'),'must detect the reported Е overlap');
   const olde=JSON.parse(JSON.stringify(glyphs.е.instruction.notation));olde[2]={label:[61,121],offset:12,range:[.08,.92]};const failures=inspect('е',olde);assert(failures.includes('arrow/letter')&&failures.includes('number/arrow'),'must detect both reported е overlaps');
  }
  for(const c of selected)assert.deepEqual(inspect(c),[],c+' scheme collision at bold150');

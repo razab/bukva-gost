@@ -73,6 +73,10 @@ const StrokeDirection={
   const options={tolerance,scale,forWarmup};
   const alternative=this.alternatives.get(model);
   if(!alternative||forWarmup)return this.assessRoute(actual,model,options);
+  if(this.joinedLoops.has(model)){
+   const current=this.assessRoute(actual,model,options);
+   if(!current.backwards)return current;
+  }
   let checked=0,backwards=0,flagged=false;
   for(const line of actual){
    const current=this.assessRoute([line],model,options);
@@ -93,7 +97,14 @@ const StrokeDirection={
   // Only a completed, correctly directed loop licenses the upward return.
   // Any following motion is still graded against the descending stem.
   let checkedLoop=0;
-  const remainder=actual.map(line=>{
+  const continuations=[];
+  for(const line of actual){
+   if(!line.length)continue;
+   const last=continuations.at(-1)?.at(-1);
+   if(last&&Math.hypot(last[0]-line[0][0],last[1]-line[0][1])<=1/scale)continuations.at(-1).push(...line);
+   else continuations.push([...line]);
+  }
+  const remainder=continuations.map(line=>{
    for(const loop of loops){
     const close=this.closeIndex(line,loop,Math.min(16,tolerance+2/scale));
     if(close<1)continue;
@@ -131,7 +142,9 @@ const StrokeDirection={
     if(reverse){
      if(!run){
       start=a;
-      threshold=Math.max(minReverse,reverseShare*reverse.strokeLength);
+      // A whole short stroke can be shorter than the usual screen threshold.
+      const floor=forWarmup?minReverse:Math.min(minReverse,Math.max(4/scale,reverse.strokeLength*.9));
+      threshold=Math.max(floor,reverseShare*reverse.strokeLength);
      }
      run+=length;
      substantial||=Math.hypot(b[0]-start[0],b[1]-start[1])>=threshold;

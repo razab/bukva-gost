@@ -62,6 +62,55 @@ final class LessonTests: XCTestCase {
     }
 
     @MainActor
+    func testConnectedAuditRoutes() async throws {
+        let web = try await loadedLesson(requireA: false)
+        let report = try await web.callAsyncJavaScript("""
+            LearnerExperience.setLevel('precise');
+            build(variant,'Э');
+            const id='gost-file-b90-lower-0';
+            const [body,bar]=DrawingGlyphs.э.demonstration;
+            const scores=[bar,[...bar].reverse()].map(line=>{
+                data[id]=[body,line].map(path=>path.map(([x,y])=>[x/150,y/180]));
+                refresh([id]);
+                return surfaces.find(s=>s.id===id).assessment().score;
+            });
+            LearnerExperience.setLevel('standard');
+            const rows=[];
+            for(const letter of ['Э','О','П']){
+                build(variant,letter);
+                const glyph=DrawingGlyphs[letter];
+                const id='gost-file-b90-upper-0';
+                const validate=route=>{
+                    data[id]=route.map(line=>line.map(([x,y])=>[x/150,y/180]));
+                    refresh([id]);
+                    return surfaces.find(s=>s.id===id).assessment().score;
+                };
+                const route=glyph.demonstration;
+                const score=validate(route),oldScore=validate(glyph.instruction.alternateDirection||route);
+                validate(route);
+                rows.push({score,oldScore,contacts:route.length,
+                    middleRight:letter==='Э'&&route[1][0][0]<route[1].at(-1)[0]});
+            }
+            window.scrollTo(0,0);
+            await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+            return {rows,scores};
+            """, arguments: [:], in: nil, contentWorld: .page) as? [String: Any]
+        let entries = try XCTUnwrap(report?["rows"] as? [[String: Any]])
+        let scores = try XCTUnwrap(report?["scores"] as? [Int])
+        XCTAssertEqual(scores.count, 2)
+        XCTAssertEqual(scores.first, 100)
+        XCTAssertLessThan(scores.last ?? 100, 90)
+        XCTAssertEqual(entries.compactMap { $0["score"] as? Int }, [100, 100, 100])
+        XCTAssertEqual(entries.compactMap { $0["oldScore"] as? Int }, [100, 100, 100])
+        XCTAssertEqual(entries.compactMap { $0["contacts"] as? Int }, [2, 1, 2])
+        XCTAssertEqual(entries.first?["middleRight"] as? Bool, true)
+        let attachment = XCTAttachment(image: try await web.takeSnapshot(configuration: nil))
+        attachment.name = "connected-pe-scheme"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
+    @MainActor
     func testBeWarmupAndJoinedLowercase() async throws {
         let web = try await loadedLesson(requireA: false)
         let report = try await web.callAsyncJavaScript("""

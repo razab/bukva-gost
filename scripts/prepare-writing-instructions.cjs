@@ -55,9 +55,51 @@ for(const [c,t]of [['Ь',45],['ь',75]])put(c,[line(45,t,45,135),[...rev(m(c)[0]
 for(const c of ['Э','э'])put(c,[m(c)[0].slice(0,9),m(c)[0].slice(8),rev(m(c)[1])],['Верхняя часть и правая сторона вниз','Нижнее закругление влево','Средняя горизонталь справа налево']);
 for(const [c,t]of [['Ю',45],['ю',75]])put(c,[line(45,t,45,135),...halves(m(c)[2]),m(c)[1]],['Стойка сверху вниз',names.leftArc,names.rightArc,'Соединение слева направо']);
 for(const c of ['Я','я'])put(c,copy(original[c].demonstration),['Правая стойка сверху вниз','Округлая часть от верха влево','Наклонная от середины вниз влево']);
+const connected={
+ Д:[[1],[2],[4],[3,5]],д:[[1],[3,2]],Е:[[1,3],[2],[4]],Ё:[[1,3],[2],[4],[5],[6]],
+ П:[[1],[3,2]],Ц:[[1,3,4],[2]],Ш:[[1,4],[2],[3]],Щ:[[1,4,5],[2],[3]],щ:[[1,2,5],[3],[4]],
+ Ъ:[[3,1],[2]],ъ:[[3,1],[2]],Ж:[[1],[2,4],[3,5]],ж:[[1],[2,4],[3,5]],
+ О:[[1,-2]],о:[[1,-2]],г:[[1,2]],С:[[1,2]],с:[[1,2]],т:[[1],[2,3],[4]],
+ ш:[[1,2],[3],[4]],ц:[[1],[2,3]],Э:[[1,2],[3]],э:[[1,2],[3]]
+};
+const previousDirection={б:[...halves(beLoop),line(45,45,85,45),beJoin]};
+for(const c of 'аЖжОо')previousDirection[c]=[...routes[c]];
+const movementNames={
+ Д:['Правая стойка сверху вниз','Верх и левая наклонная вниз','Левый нижний штрих','Нижняя черта с переходом в правую ножку'],
+ д:['Левый корпус к основанию','Верхняя дуга с переходом в правую стойку'],
+ Е:['Стойка с переходом в нижнюю черту','Верхняя черта вправо','Средняя черта вправо'],
+ Ё:['Стойка с переходом в нижнюю черту','Верхняя черта вправо','Средняя черта вправо','Левая точка','Правая точка'],
+ П:['Левая стойка сверху вниз','Верхняя черта с переходом в правую стойку'],
+ Ц:['Левая стойка, низ и правая ножка одним движением','Правая стойка сверху вниз'],
+ Ш:['Левая стойка с переходом в нижнюю черту','Правая стойка сверху вниз','Средняя стойка сверху вниз'],
+ Щ:['Левая стойка, низ и правая ножка одним движением','Правая стойка сверху вниз','Средняя стойка сверху вниз'],
+ щ:['Левая стойка, низ и правая ножка одним движением','Правая стойка сверху вниз','Средняя стойка сверху вниз'],
+ Ъ:['Верхняя черта с переходом в стойку','Округлая часть'],
+ ъ:['Верхняя черта с переходом в стойку','Округлая часть'],
+ Ж:['Средняя стойка вниз','Правая верхняя ветвь через стык к левой нижней','Левая верхняя ветвь через стык к правой нижней'],
+ ж:['Средняя стойка вниз','Правая верхняя ветвь через стык к левой нижней','Левая верхняя ветвь через стык к правой нижней'],
+ О:['Овал от верхней точки влево и вокруг'],о:['Овал от верхней точки влево и вокруг'],
+ г:['От верхней дуги через середину к нижней'],
+ С:['От верхнего края через левую сторону к нижнему'],с:['От верхнего края через левую сторону к нижнему'],
+ т:['Левая стойка сверху вниз','Верхняя черта с переходом в правую стойку','Средняя стойка сверху вниз'],
+ ш:['Левая часть с переходом в нижнюю черту','Правая стойка сверху вниз','Средняя стойка сверху вниз'],
+ ц:['Левая часть с нижним закруглением','Правая стойка с выходом вправо и вниз'],
+ Э:['Внешний корпус одним движением','Средняя черта слева направо'],
+ э:['Внешний корпус одним движением','Средняя черта слева направо']
+};
+for(const [c,plan] of Object.entries(connected)){
+ const paths=routes[c];
+ if('Ээ'.includes(c))paths[2]=rev(paths[2]);
+ put(c,plan.map(parts=>parts.map(n=>n<0?rev(paths[-n-1]):paths[n-1]).reduce(join)),movementNames[c]);
+}
+put('а',[join(...m('а'))],['Замкнуть корпус и сразу спуститься по правой стойке']);
 const index=JSON.parse(fs.readFileSync(root+'/references/stroke-order/index.json')),sourceURL=index.sources.find(s=>s.id==='LENSK').url,review={};
 for(const row of index.rows)for(const [caseName,c]of [['upper',row.letter],['lower',row.letter.toLowerCase()]]){const s=row[caseName];review[c]={steps:steps[c],basis:s.type,source:sourceURL,figure:s.figure,group:s.group,base:s.base||null,adaptation:'Учебный порядок из схемы адаптирован к прямому ГОСТ типа Б. Номера обозначают элементы; совпадающие направленные стыки показываются без искусственного отрыва.'}}
-review.б.alternateDirection=[...halves(beLoop),line(45,45,85,45),beJoin];
+for(const [c,route] of Object.entries(previousDirection))if(c!=='а')review[c].alternateDirection=route;
+// Closing the loop is accepted only after tracing the rest of the body.
+review.а.directionRoute=previousDirection.а;
+for(const c of [...Object.keys(connected),'а'])review[c].adaptation='Уточнённый учебный ход для прямого ГОСТ типа Б после проверки непрерывности.';
+for(const c of 'Ээ')review[c].adaptation='Связный внешний ход прямого ГОСТ типа Б. Направление средней черты слева направо соответствует рисунку 5.';
 review.б.adaptation='Связный учебный маршрут по наблюдаемому движению на прямом контуре ГОСТ типа Б: петля, подъём и верхняя черта. В исходной схеме ход показан раздельно.';
 const notation=JSON.parse(fs.readFileSync(root+'/references/isopromat-fonts/scheme-notation.json'));for(const [c,info]of Object.entries(review)){assert.equal(notation[c]?.length,routes[c].length,c+' notation coverage');info.notation=notation[c];for(const note of info.notation){assert(note.label.length===2&&note.label.every(Number.isFinite));if(note.shift)assert(note.shift.length===2&&note.shift.every(Number.isFinite),c+' invalid annotation shift');if(!note.dot)assert(Number.isFinite(note.offset)&&note.range[0]>=0&&note.range[0]<note.range[1]&&note.range[1]<=1)}}
 const selectedArg=process.argv.find(a=>a.startsWith('--letters=')),selected=selectedArg?[...new Set([...selectedArg.slice(10)])]:Object.keys(review);for(const c of selected){assert(routes[c]&&steps[c],c+' missing reviewed order');assert.equal(routes[c].length,steps[c].length,c+' route/label mismatch');for(const l of routes[c])assert(l.length>=2&&l.flat().every(Number.isFinite),c+' invalid path')}

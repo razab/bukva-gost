@@ -12,11 +12,15 @@ for(const c of ['К','к']){
  for(const line of [upper,lower])for(let i=1;i<line.length;i++)assert(line[i][1]>=line[i-1][1]-.1,'Arm unexpectedly reverses upward');
 }
 for(const c of ['О','о']){
- const [left,right]=after[c].demonstration;assert.equal(after[c].demonstration.length,2);assert.deepEqual([...left[0]],[...right[0]]);assert.deepEqual([...left.at(-1)],[...right.at(-1)]);
+ const glyph=after[c], [left,right]=glyph.instruction.alternateDirection;
+ assert.equal(glyph.demonstration.length,1);
+ assert.equal(glyph.instruction.alternateDirection.length,2);
+ assert.deepEqual([...left[0]],[...right[0]]);assert.deepEqual([...left.at(-1)],[...right.at(-1)]);
+ assert.equal(JSON.stringify(glyph.demonstration[0]),JSON.stringify([...left,...right.slice(0,-1).reverse()]));
  const x=left[0][0];assert(left.every(p=>p[0]<=x+.001)&&right.every(p=>p[0]>=x-.001));
  for(const line of [left,right]){assert(line.at(-1)[1]-line[0][1]>50);for(let i=1;i<line.length;i++)assert(line[i][1]>=line[i-1][1]-.2,'O half must descend')}
 }
-console.log('PASS: K/k stem → complete upper arm reaching stem → lower leg; O/o separate descending halves; all66 contours unchanged; only reviewed И/Й assessment/storage geometry revised; reviewed writing instructions checked separately');
+console.log('PASS: K/k stem → complete upper arm reaching stem → lower leg; O/o one closed loop with earlier descending halves accepted; all66 contours unchanged; only reviewed И/Й assessment/storage geometry revised; reviewed writing instructions checked separately');
 
 // Build47: a reviewed warm-up comes from the clean teaching route, not noisy
 // raster junctions. Three е movements partition existing edges exactly.
